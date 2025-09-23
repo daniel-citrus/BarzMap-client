@@ -17,7 +17,7 @@ const SearchInput = ({
             ]
                 .filter(Boolean)
                 .join(' '),
-        [className],
+        [className]
     );
 
     const inputClass = useMemo(
@@ -28,7 +28,7 @@ const SearchInput = ({
             ]
                 .filter(Boolean)
                 .join(' '),
-        [inputClassName],
+        [inputClassName]
     );
 
     useEffect(() => {
@@ -86,7 +86,7 @@ const SearchInput = ({
                 {value && (
                     <button
                         type='button'
-                        className='inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/80 px-3 py-2 text-xs font-medium text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-white hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:gap-2 sm:text-sm'
+                        className='inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/80 px-3 py-2 text-xs font-medium text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-white hover:text-slate-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:gap-2 sm:text-sm'
                         onClick={handleClear}
                         aria-label='Clear search'
                     >
@@ -110,7 +110,7 @@ const SearchInput = ({
                 )}
                 <button
                     type='submit'
-                    className='inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:gap-2 sm:px-5 sm:text-base'
+                    className='inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:gap-2 sm:px-5 sm:text-base'
                 >
                     <svg
                         aria-hidden='true'

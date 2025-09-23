@@ -11,7 +11,7 @@ const Dashboard = () => {
                 searchValue={address}
                 className='absolute inset-x-0 top-3 z-30 w-full sm:left-1/2 sm:right-auto sm:top-6 sm:max-w-3xl sm:-translate-x-1/2'
             />
-            <MapLibreMap className='h-full w-full' />
+            <MapLibreMap />
         </div>
     );
 };

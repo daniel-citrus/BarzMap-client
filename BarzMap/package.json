@@ -12,9 +12,11 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.5.0",
     "@maptiler/client": "^2.5.1",
+    "@tailwindcss/vite": "^4.1.13",
     "maplibre-gl": "^5.7.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

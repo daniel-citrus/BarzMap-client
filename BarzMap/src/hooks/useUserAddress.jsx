@@ -4,28 +4,27 @@ const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_CLOUD_API;
 
 const buildEndpoint = (latitude, longitude) => {
     const params = new URLSearchParams({ key: MAPTILER_API_KEY ?? '' });
+
     return `https://api.maptiler.com/geocoding/${longitude},${latitude}.json?${params.toString()}`;
 };
 
 const extractAddress = (payload) => {
     const primaryFeature = payload?.features?.[0];
+
     if (!primaryFeature) {
         return '';
     }
 
-    const address = primaryFeature.place_name;
-
-    return address;
+    return primaryFeature.place_name;
 };
 
 const useUserAddress = () => {
     const [address, setAddress] = useState('');
 
     useEffect(() => {
-        let isMounted = true;
-
         const resolveAddress = async () => {
             const storedAddress = window.localStorage.getItem('storedAddress');
+
             if (storedAddress) {
                 setAddress(storedAddress);
                 return;
@@ -53,10 +52,6 @@ const useUserAddress = () => {
                     });
                 });
 
-                if (!isMounted) {
-                    return;
-                }
-
                 const { latitude, longitude } = position.coords;
                 const response = await fetch(
                     buildEndpoint(latitude, longitude)
@@ -70,10 +65,6 @@ const useUserAddress = () => {
 
                 const payload = await response.json();
 
-                if (!isMounted) {
-                    return;
-                }
-
                 const newAddress = extractAddress(payload);
                 setAddress(newAddress);
                 window.localStorage.setItem('storedAddress', newAddress);
@@ -83,10 +74,6 @@ const useUserAddress = () => {
         };
 
         resolveAddress();
-
-        return () => {
-            isMounted = false;
-        };
     }, []);
 
     return { address, setAddress };

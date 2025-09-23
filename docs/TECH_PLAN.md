@@ -22,8 +22,7 @@ Deliver a responsive web client that helps visitors discover outdoor gyms, submi
 - [ ] Install MapLibre, render base map with controls, and enable geolocation.
   - [ ] Map render
   - [ ] Location input
-  - [ ] Map renders location
-  - [ ] 
+  - [ ] Map moves to location
 - [ ] Scaffold park submission form with validation, image upload, and location picker.
 
 ## Integration Plan

@@ -1,11 +1,13 @@
-import GoogleMap from './GoogleMap';
+import AddressModal from './AddressModal';
+import MapLibreMap from './MapLibre';
 import SearchInput from './SearchInput';
 
 const Dashboard = () => {
     return (
         <>
+            <AddressModal />
             <SearchInput />
-            <GoogleMap />
+            <MapLibreMap />
         </>
     );
 };

@@ -1,12 +1,13 @@
-import AddressModal from './AddressModal';
 import MapLibreMap from './MapLibre';
 import SearchInput from './SearchInput';
+import useUserAddress from '../hooks/useUserAddress';
 
 const Dashboard = () => {
+    const { address, attribution } = useUserAddress();
+
     return (
         <>
-            <AddressModal />
-            <SearchInput />
+            <SearchInput/>
             <MapLibreMap />
         </>
     );

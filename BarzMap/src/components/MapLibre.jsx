@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 const DEFAULT_COORDINATES = { lat: 37.7749, lng: -122.4194 };
@@ -59,8 +59,16 @@ const MapLibreMap = ({
             zoom: optionsZoom ?? zoom,
             bearing: optionsBearing ?? bearing,
             pitch: optionsPitch ?? pitch,
+            attributionControl: false,
             ...restOptions,
-        });
+        }).addControl(
+            new AttributionControl({
+                compact: true,
+                customAttribution: `<a href='https://www.maptiler.com/copyright/' target='_blank'>
+                    &copy; MapTiler
+                </a>`,
+            })
+        );
 
         mapRef.current = mapInstance;
         styleRef.current = resolvedStyle;
@@ -70,8 +78,6 @@ const MapLibreMap = ({
             mapRef.current = null;
             styleRef.current = null;
         };
-        // We intentionally instantiate the map once and drive updates via other effects.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -143,10 +149,12 @@ const MapLibreMap = ({
         }
     }, [pitch, optionsPitch]);
 
+    const combinedClassName = [className, 'h-full w-full'].filter(Boolean).join(' ');
+
     return (
         <div
             ref={containerRef}
-            className={className}
+            className={combinedClassName}
             style={{
                 width: '100%',
                 height: '100%',

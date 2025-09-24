@@ -1,43 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SearchInput = ({
     searchValue = '',
     placeholder = 'Search... ',
     onSearch,
-    className,
-    inputClassName,
 }) => {
     const [value, setValue] = useState('');
-
-    const containerClass = useMemo(
-        () =>
-            [
-                'group flex w-full items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 px-3 py-2.5 shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur transition-all hover:shadow-xl focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-100 focus-within:ring-offset-2 focus-within:ring-offset-white sm:gap-3 sm:px-5 sm:py-3',
-                className,
-            ]
-                .filter(Boolean)
-                .join(' '),
-        [className]
-    );
-
-    const inputClass = useMemo(
-        () =>
-            [
-                'flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none sm:text-base',
-                inputClassName,
-            ]
-                .filter(Boolean)
-                .join(' '),
-        [inputClassName]
-    );
 
     useEffect(() => {
         setValue(searchValue);
     }, [searchValue]);
 
-    const handleChange = (event) => {
-        const nextValue = event.target.value;
-        setValue(nextValue);
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        setValue(newValue);
     };
 
     const handleSubmit = (event) => {
@@ -49,13 +25,14 @@ const SearchInput = ({
 
     const handleClear = () => {
         setValue('');
-        if (onSearch) {
-            onSearch('');
-        }
     };
 
     return (
-        <form className={containerClass} onSubmit={handleSubmit} role='search'>
+        <form
+            className='absolute inset-x-0 top-3 z-30 w-full sm:left-1/2 sm:right-auto sm:top-6 sm:max-w-3xl sm:-translate-x-1/2 group flex items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 px-3 py-2.5 shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur transition-all hover:shadow-xl focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-100 focus-within:ring-offset-2 focus-within:ring-offset-white sm:gap-3 sm:px-5 sm:py-3'
+            onSubmit={handleSubmit}
+            role='search'
+        >
             <span className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 shadow-inner transition group-hover:bg-slate-200 group-focus-within:bg-indigo-100 group-focus-within:text-indigo-500 sm:h-11 sm:w-11'>
                 <svg
                     aria-hidden='true'
@@ -78,7 +55,7 @@ const SearchInput = ({
                 value={value}
                 onChange={handleChange}
                 placeholder={placeholder}
-                className={inputClass}
+                className='flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none sm:text-base'
                 aria-label={placeholder}
                 autoComplete='off'
             />

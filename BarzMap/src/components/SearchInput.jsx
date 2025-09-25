@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react';
 
-const SearchInput = ({
-    searchValue = '',
-    placeholder = 'Search... ',
-    onSearch,
-}) => {
+const SearchInput = ({ searchValue = '', onSearch }) => {
     const [value, setValue] = useState('');
 
     useEffect(() => {
         setValue(searchValue);
     }, [searchValue]);
 
-    const handleChange = (e) => {
-        const newValue = e.target.value;
-        setValue(newValue);
+    const onChangeValue = (e) => {
+        setValue(e.target.value);
     };
 
     const handleSubmit = (event) => {
@@ -53,10 +48,10 @@ const SearchInput = ({
             <input
                 type='search'
                 value={value}
-                onChange={handleChange}
-                placeholder={placeholder}
+                onChange={onChangeValue}
+                placeholder='Search...'
                 className='flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none sm:text-base'
-                aria-label={placeholder}
+                aria-label='Search'
                 autoComplete='off'
             />
             <div className='flex items-center gap-1.5 sm:gap-2'>

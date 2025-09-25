@@ -1,6 +1,7 @@
-import useMapLibreInstance from '../hooks/useMapLibreInstance';
+import useMapLibreContext from '../context/useMapLibreContext';
+
 const MapLibreMap = () => {
-    const { mapInstance, mapContainerRef, setMarkers } = useMapLibreInstance();
+    const { mapContainerRef } = useMapLibreContext();
 
     return <div ref={mapContainerRef} className='h-full w-full' />;
 };

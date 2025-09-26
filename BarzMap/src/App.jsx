@@ -1,5 +1,5 @@
 import Dashboard from './components/Dashboard';
-import MapLibreProvider from './context/MapLibreProvider';
+import { MapLibreProvider } from './context/MapLibreContext';
 
 function App() {
     return (

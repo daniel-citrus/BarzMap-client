@@ -31,9 +31,7 @@ const useClientAddress = () => {
     const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState(null);
 
-    /** Initial page load browser geolocation request */
-    useEffect(() => {
-        const resolveAddress = async () => {
+    const resolveAddress = async () => {
             if (!MAPTILER_API_KEY) {
                 console.warn(
                     'Missing MapTiler API key; unable to request address.'
@@ -70,6 +68,8 @@ const useClientAddress = () => {
             }
         };
 
+    /** Initial page load browser geolocation request */
+    useEffect(() => {
         resolveAddress();
     }, []);
 
@@ -92,7 +92,7 @@ const useClientAddress = () => {
         updateCoords();
     }, [address]);
 
-    return { address, setAddress, coordinates, setCoordinates };
+    return { address, setAddress, coordinates, setCoordinates, resolveAddress };
 };
 
 export default useClientAddress;

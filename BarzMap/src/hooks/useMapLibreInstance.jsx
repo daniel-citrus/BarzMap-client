@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const DEFAULT_CENTER = [-122.4194, 37.7749];
-const DEFAULT_ZOOM = 10;
+const DEFAULT_ZOOM = 14;
 const DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
 
 /** Generates a single MapLibre map instance and provides mapInstance state to allow other hook to interact with the map. */
@@ -20,7 +19,6 @@ const useMapLibreInstance = () => {
         const instance = new maplibregl.Map({
             container: mapContainerRef.current,
             style: DEFAULT_STYLE_URL,
-            center: DEFAULT_CENTER,
             zoom: DEFAULT_ZOOM,
             attributionControl: false,
         });

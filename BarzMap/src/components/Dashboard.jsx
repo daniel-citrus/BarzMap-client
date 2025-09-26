@@ -2,7 +2,7 @@ import MapLibreMap from './MapLibre';
 import SearchInput from './SearchInput';
 import useClientAddress from '../hooks/useClientAddress';
 import { useEffect } from 'react';
-import useMapLibreContext from '../context/useMapLibreContext';
+import { useMapLibreContext } from '../context/MapLibreContext';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -19,6 +19,10 @@ const Dashboard = () => {
 
     const onNewAddress = (address) => {
         setAddress(address);
+        mapInstance.flyTo({
+            center: [coordinates.longitude, coordinates.latitude],
+            zoom: 14,
+        });
     };
 
     return (

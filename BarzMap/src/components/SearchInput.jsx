@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const SearchInput = ({ searchValue = '', onSearch }) => {
     const [value, setValue] = useState('');

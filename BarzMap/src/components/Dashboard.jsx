@@ -3,10 +3,12 @@ import SearchInput from './SearchInput';
 import useClientAddress from '../hooks/useClientAddress';
 import { useEffect } from 'react';
 import { useMapLibreContext } from '../context/MapLibreContext';
+import useSampleParkData from '../hooks/useSampleParkData';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
-    const { mapInstance } = useMapLibreContext();
+    const { mapInstance, setMarkers } = useMapLibreContext();
+    const { parks } = useSampleParkData();
 
     useEffect(() => {
         if (coordinates) {
@@ -15,7 +17,7 @@ const Dashboard = () => {
                 zoom: 14,
             });
         }
-    }, [mapInstance, coordinates]);
+    }, [mapInstance, coordinates, setMarkers, parks]);
 
     const onNewAddress = (address) => {
         setAddress(address);

@@ -14,26 +14,20 @@ Deliver a responsive web client that helps visitors discover outdoor gyms, submi
 2. **Submit Park**: Authenticated user opens modal/page form, adds details, uploads images, and receives confirmation.
 3. **Admin Review**: Admin user accesses protected routes rendering pending submissions, approves or rejects with feedback.
 
-## Startup Checklist (Frontend)
+## Startup Checklist
 - [x] Initialize Vite + React project and add Tailwind.
 - [x] Set up project folders (`src/components`, `src/hooks`, shared assets).
 - [x] Wire Auth0 provider, login/logout buttons, and profile display.
-- [ ] Implement protected routing and attach access token to API requests.
-- [ ] Install MapLibre, render base map with controls, and enable geolocation.
-  - [ ] Map render
-  - [ ] Location input
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - [ ] Map moves to location
-=======
-  - [ ] Map renders location
-  - [ ] 
->>>>>>> 23543bb (feat: client geolocation request)
-=======
-  - [ ] Map renders location
-  - [ ] 
->>>>>>> 23543bb (feat: client geolocation request)
-- [ ] Scaffold park submission form with validation, image upload, and location picker.
+- [X] Install MapLibre, render base map with controls, and enable geolocation.
+  - [X] Map render
+  - [X] Location input
+  - [X] Map moves to location
+- [ ] Map markers
+  - [ ] Clickable, module popup with location data
+  - [ ] Hover module
+- [ ] Park submission form with validation
+  - [ ] image upload
+  - [ ] location picker (possibly coordinates)
 
 ## Integration Plan
 - [ ] Install HTTP client (Axios or native fetch wrappers).

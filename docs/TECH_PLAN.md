@@ -23,7 +23,12 @@ Deliver a responsive web client that helps visitors discover outdoor gyms, submi
   - [ ] Map render
   - [ ] Location input
 <<<<<<< HEAD
+<<<<<<< HEAD
   - [ ] Map moves to location
+=======
+  - [ ] Map renders location
+  - [ ] 
+>>>>>>> 23543bb (feat: client geolocation request)
 =======
   - [ ] Map renders location
   - [ ] 

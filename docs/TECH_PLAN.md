@@ -1,7 +1,7 @@
 # BarzMap Frontend Tech Plan
 
 ## Scope & Goals
-Deliver a responsive web client that helps visitors discover outdoor gyms, submit new locations, and lets admin reviewers manage submissions. Frontend must feel fast, handle Auth0 auth flows, and integrate map-based discovery backed by Supabase APIs.
+Deliver a mobile-first responsive web client that helps visitors discover outdoor gyms, submit new locations, and lets admin reviewers manage submissions. Frontend must feel fast, handle Auth0 auth flows, and integrate map-based discovery using internal API and Supabase database tables. 
 
 ## Frontend Stack
 - **React + Vite** for SPA composition and fast local iteration.
@@ -9,25 +9,51 @@ Deliver a responsive web client that helps visitors discover outdoor gyms, submi
 - **MapLibre GL JS** for interactive maps, markers, and clustering.
 - **Auth0 React SDK** to manage authentication and secure API calls.
 
-## Core User Flows
-1. **Find Parks**: Load map, request geolocation, display nearby Supabase data with styled markers and detail popovers.
-2. **Submit Park**: Authenticated user opens modal/page form, adds details, uploads images, and receives confirmation.
-3. **Admin Review**: Admin user accesses protected routes rendering pending submissions, approves or rejects with feedback.
+## Core Functionality
+1. **Find Parks**: 
+   1. Load map
+   2. Request geolocation
+   3. Filter by equipment
+   4. Display gym map markers
+      1. Map marker pop-ups to display description
+      2. Hover pop-up widgets
+   5. List view
+      1. Sort by distance
+2. **User Authentication**
+   1. New account creation
+   2. Profile display
+   3. Profile UI widgets
+3. **Park Submissions**:
+   1. Authenticated users access submission form
+   2. Inputs for park details (address, equipment checklist)
+   3. Photo uploads
+4. **Admin Review**:
+   1. Admin user view existing submissions
+   2. Approve/reject with feedback
 
-## Startup Checklist
-- [x] Initialize Vite + React project and add Tailwind.
-- [x] Set up project folders (`src/components`, `src/hooks`, shared assets).
-- [x] Wire Auth0 provider, login/logout buttons, and profile display.
-- [X] Install MapLibre, render base map with controls, and enable geolocation.
-  - [X] Map render
-  - [X] Location input
-  - [X] Map moves to location
-- [ ] Map markers
-  - [ ] Clickable, module popup with location data
-  - [ ] Hover module
-- [ ] Park submission form with validation
-  - [ ] image upload
-  - [ ] location picker (possibly coordinates)
+## Feature Rollout Checklist
+- [x] Initialize Vite + React + Tailwind project and organize `src/components`, `src/hooks`, and shared assets.
+- [x] Install MapLibre, render the base map with controls, enable geolocation, and ensure the map recenters on the user.
+- [ ] Integrate Auth0 provider with login/logout buttons and profile display.
+- [ ] Render park markers
+  - [ ] Clickable detail popovers
+  - [ ] Hover previews
+- [x] User location
+  - [x] First visit geolocation request
+  - [x] Location search
+- [ ] Park submissions
+  - [ ] Form validation
+  - [ ] Image upload
+  - [ ] Location picker
+    - [ ] Map drag, coordinates, or direct address
+- [ ] Admin dashboard
+  - [ ] Approve or reject submissions
+- [ ] Design system polish
+  - [ ] Animations
+  - [ ] Skeleton loaders
+  - [ ] Mobile optimization
+- [ ] Introduce caching strategies, lazy loading, and bundle size checks
+- [ ] Run accessibility, cross-browser, and device QA
 
 ## Integration Plan
 - [ ] Install HTTP client (Axios or native fetch wrappers).
@@ -35,23 +61,15 @@ Deliver a responsive web client that helps visitors discover outdoor gyms, submi
 - [ ] Consume backend endpoints for parks, equipment, and submissions.
 - [ ] Add Supabase real-time listeners for live park updates.
 
-## Build Roadmap
-### Phase 1 – Foundation
-- Define component architecture (buttons, inputs, modals, map wrappers).
-- Configure routing (Home, Map, Submit, Profile) and responsive layout.
-- Complete Auth0 login/logout + profile surfaces.
-
-### Phase 2 – Discovery & Submission
-- Fetch park markers, cluster dense areas, and show detail views.
-- Build search, filter, and sort interfaces (equipment, distance, keywords).
-- Finalize submission experience with progress states and confirmation messaging.
-
-### Phase 3 – Admin & Content Ops
-- Gate admin dashboard by role claim, list pending parks, and provide review UI.
-- Allow comment-based approve/reject actions and change logs.
-- Prepare media management views for uploaded images.
-
-### Phase 4 – Polish & Launch
-- Apply design system, animations, skeleton loaders, and mobile optimizations.
-- Introduce caching, lazy loading, and bundle checks.
-- Run accessibility, cross-browser, and device QA before production release.
+## Post Launch
+  - [ ] Define reusable component architecture for buttons, inputs, modals, and map wrappers.
+  - [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
+  - [ ] Location search
+    - [ ] Address auto-complete
+    - [ ] Distance calculator
+  - [ ] Park submissions
+    - [ ] Form progress states
+    - [ ] Save progress
+  - [ ] Admin dashboard
+    - [ ] Comment based approvals
+    - [ ] Individual image approval

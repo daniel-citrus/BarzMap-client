@@ -3,25 +3,29 @@ import SearchInput from './SearchInput';
 import useClientAddress from '../hooks/useClientAddress';
 import { useEffect } from 'react';
 import { useMapLibreContext } from '../context/MapLibreContext';
-import useSampleParkData from '../hooks/useSampleParkData';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
-    const { mapInstance, setMarkers } = useMapLibreContext();
-    const { parks } = useSampleParkData();
+    const { mapInstance } = useMapLibreContext();
 
     useEffect(() => {
-        if (coordinates) {
-            mapInstance.flyTo({
-                center: [coordinates.longitude, coordinates.latitude],
-                zoom: 14,
-            });
+        if (!mapInstance.current || !coordinates) {
+            return;
         }
-    }, [mapInstance, coordinates, setMarkers, parks]);
+
+        mapInstance.current.flyTo({
+            center: [coordinates.longitude, coordinates.latitude],
+            zoom: 14,
+        });
+    }, [mapInstance, coordinates]);
 
     const onNewAddress = (address) => {
         setAddress(address);
-        mapInstance.flyTo({
+        if (!mapInstance.current || !coordinates) {
+            return;
+        }
+
+        mapInstance.current.flyTo({
             center: [coordinates.longitude, coordinates.latitude],
             zoom: 14,
         });

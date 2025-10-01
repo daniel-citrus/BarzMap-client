@@ -4,11 +4,11 @@ import useMapLibreInstance from '../hooks/useMapLibreInstance';
 const MapLibreContext = createContext(null);
 
 const MapLibreProvider = ({ children }) => {
-    const { mapContainerRef, mapInstance, setMarkers } = useMapLibreInstance();
+    const { mapContainerRef, mapInstance } = useMapLibreInstance();
 
     const value = useMemo(
-        () => ({ mapContainerRef, mapInstance, setMarkers }),
-        [mapContainerRef, mapInstance, setMarkers]
+        () => ({ mapContainerRef, mapInstance }),
+        [mapContainerRef, mapInstance]
     );
 
     return (

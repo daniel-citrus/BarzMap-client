@@ -38,6 +38,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [ ] Render park markers
   - [ ] Clickable detail popovers
   - [ ] Hover previews
+  - [ ] 2-3 second render delay
 - [x] User location
   - [x] First visit geolocation request
   - [x] Location search

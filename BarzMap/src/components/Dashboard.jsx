@@ -3,10 +3,12 @@ import SearchInput from './SearchInput';
 import useClientAddress from '../hooks/useClientAddress';
 import { useEffect } from 'react';
 import { useMapLibreContext } from '../context/MapLibreContext';
+import useMapMarkers from '../hooks/useMapMarkers';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
+    const { setMarkers } = useMapMarkers();
 
     useEffect(() => {
         if (!mapInstance.current || !coordinates) {

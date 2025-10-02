@@ -28,54 +28,50 @@ const getCoordinates = async (address) => {
  * so the map can center on their position when the page first renders.
  */
 const useClientAddress = () => {
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState('Lakeshore Park, Oakland CA');
     const [coordinates, setCoordinates] = useState(null);
 
     const resolveAddress = async () => {
-            if (!MAPTILER_API_KEY) {
-                console.warn(
-                    'Missing MapTiler API key; unable to request address.'
-                );
-                return;
-            }
+        if (!MAPTILER_API_KEY) {
+            console.warn(
+                'Missing MapTiler API key; unable to request address.'
+            );
+            return;
+        }
 
-            if (typeof navigator === 'undefined' || !navigator.geolocation) {
-                console.error('Geolocation not supported in this environment.');
-                return;
-            }
+        if (typeof navigator === 'undefined' || !navigator.geolocation) {
+            console.error('Geolocation not supported in this environment.');
+            return;
+        }
 
-            try {
-                const position = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        enableHighAccuracy: true,
-                        timeout: 10_000,
-                        maximumAge: 0,
-                    });
+        try {
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 10_000,
+                    maximumAge: 0,
                 });
+            });
 
-                const { longitude, latitude } = position.coords;
-                const newAddress = await getAddress(longitude, latitude);
-                const currentAddress =
-                    window.localStorage.getItem('storedAddress');
+            const { longitude, latitude } = position.coords;
+            const newAddress = await getAddress(longitude, latitude);
+            const currentAddress = window.localStorage.getItem('storedAddress');
 
-                if (currentAddress !== newAddress) {
-                    window.localStorage.setItem('storedAddress', newAddress);
-                }
-
-                setAddress(newAddress);
-            } catch (error) {
-                console.error('Unable to determine user address:', error);
+            if (currentAddress !== newAddress) {
+                window.localStorage.setItem('storedAddress', newAddress);
             }
-        };
 
-    /** Initial page load browser geolocation request */
-    useEffect(() => {
-        resolveAddress();
-    }, []);
+            setAddress(newAddress);
+        } catch (error) {
+            console.error('Unable to determine user address:', error);
+        }
+    };
 
     /** Recalculate coordinates when new address is set */
     useEffect(() => {
+        /** Initial page load browser geolocation request */
         if (!address || address.trim() === '') {
+            resolveAddress();
             return;
         }
 

@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo } from 'react';
-import useMapLibreInstance from '../hooks/useMapLibreInstance';
+import useMapLibreInstance from '../hooks/MapLibre Hooks/useMapLibreInstance';
 
 const MapLibreContext = createContext(null);
 

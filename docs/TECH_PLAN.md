@@ -34,10 +34,8 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 ## Feature Rollout Checklist
 - [x] Initialize Vite + React + Tailwind project and organize `src/components`, `src/hooks`, and shared assets.
 - [x] Install MapLibre, render the base map with controls, enable geolocation, and ensure the map recenters on the user.
-- [ ] Integrate Auth0 provider with login/logout buttons and profile display.
-- [ ] Render park markers
-  - [ ] Clickable detail popovers
-  - [ ] Hover previews
+- [x] Render park markers
+  - [ ] Clickable detail popups
   - [ ] 2-3 second render delay
 - [x] User location
   - [x] First visit geolocation request
@@ -63,8 +61,11 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [ ] Add Supabase real-time listeners for live park updates.
 
 ## Post Launch
+  - [ ] Integrate Auth0 provider with login/logout buttons and profile display.
   - [ ] Define reusable component architecture for buttons, inputs, modals, and map wrappers.
   - [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
+  - [ ] Map markers
+    - [ ] Hover popups
   - [ ] Location search
     - [ ] Address auto-complete
     - [ ] Distance calculator

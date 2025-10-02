@@ -1,13 +1,18 @@
 import { useEffect, useCallback, useRef } from 'react';
-import { useMapLibreContext } from '../context/MapLibreContext';
+import { useMapLibreContext } from '../../context/MapLibreContext';
+import { createRoot } from 'react-dom/client';
 import maplibregl from 'maplibre-gl';
-import useSampleParkData from '../hooks/useSampleParkData';
-import detailedPopup from '../components/map/markers/detailedPopup';
+import useSampleParkData from '../useSampleParkData';
+import DetailedPopup from '../../components/map/markers/detailedPopup';
 
 const useMapMarkers = () => {
     const { parks } = useSampleParkData(); // replace this with a hook w/ useEffect that pulls all relevant park data
     const mapMarkers = useRef([]);
     const { mapInstance } = useMapLibreContext();
+
+    const detailedPopupElement = useRef(document.createElement('div')); // detailed popup element
+    const detailedPopupNode = useRef(createRoot(detailedPopupElement.current)); // node used to render popup element into DOM
+    const detailedPopupInstance = useRef(maplibregl.Popup()); // MapLibre popup object instance for rendering popup into the map
 
     const setMapMarkers = useCallback(
         (featureCollection) => {
@@ -17,21 +22,19 @@ const useMapMarkers = () => {
 
             mapMarkers.current = featureCollection.features.map((feature) => {
                 const [longitude, latitude] = feature.geometry.coordinates;
-
-                return new maplibregl.Marker()
+                const marker = new maplibregl.Marker()
                     .setLngLat([longitude, latitude])
-                    .setPopup(
-                        new maplibregl.Popup()
-                            .setText(feature.properties.name)
-                            .setDOMContent()
-                    )
                     .addTo(mapInstance.current);
+
+                marker.getElement().addEventListener('click', () => {
+                    onDetailOpen();
+                });
+
+                return marker;
             });
         },
         [mapInstance]
     );
-
-    setMapMarkers(parks); // remove when map marker effect is setup
 
     useEffect(() => {
         // Get map markers from supabase (map features)

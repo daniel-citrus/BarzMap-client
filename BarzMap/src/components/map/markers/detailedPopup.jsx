@@ -56,13 +56,13 @@ const DetailedPopup = ({
                 <button
                     type='button'
                     onClick={onClose}
-                    className='absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-white transition hover:bg-slate-700'
+                    className='absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-white transition hover:bg-slate-700'
                 >
                     ×
                 </button>
 
                 <div className='grid h-full grid-cols-1 gap-0 md:grid-cols-[1.2fr_1fr]'>
-                    <div className='flex flex-col overflow-hidden border-r border-slate-100 bg-slate-900 text-white'>
+                    <div className='flex flex-col overflow-hidden border-slate-100 bg-slate-900 text-white'>
                         <div className='relative flex min-h-[50%] flex-1 flex-col'>
                             {hasImages ? (
                                 <>
@@ -145,7 +145,7 @@ const DetailedPopup = ({
                         </div>
                     </div>
 
-                    <div className='flex flex-col overflow-y-auto bg-white p-8'>
+                    <div className='flex flex-col overflow-y-auto bg-white px-8 pb-8 pt-8 md:pt-20'>
                         <div className='flex flex-col gap-3 border-b border-slate-200 pb-6'>
                             {title && (
                                 <h2 className='text-2xl font-semibold text-slate-900'>

@@ -45,6 +45,29 @@ const SAMPLE_PARKS = Object.freeze({
                 coordinates: [-122.27397, 37.76972],
             },
         },
+        {
+            type: 'Feature',
+            properties: {
+                name: 'Barras Paralelas',
+                address:
+                    'Calle niza y av.chapultepec 276, Av Chapultepec 282, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico',
+                equipment: [
+                    'Dip Bars',
+                    'Pull Up Bars',
+                    'Ab Bench',
+                    'Machine Press',
+                    'Ladder',
+                    'Flipping Tire',
+                    'Climbing Rope',
+                    'Ab Machine',
+                    'Gymnastics Rings',
+                ],
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [-99.161944,19.424023],
+            },
+        },
     ],
 });
 

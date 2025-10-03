@@ -35,8 +35,9 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [x] Initialize Vite + React + Tailwind project and organize `src/components`, `src/hooks`, and shared assets.
 - [x] Install MapLibre, render the base map with controls, enable geolocation, and ensure the map recenters on the user.
 - [x] Render park markers
-  - [ ] Onclick detailed popups
-  - [ ] 2-3 second render delay
+  - [x] Onclick detailed popups
+  - [ ] Render based on view
+    - [ ] 2-3 second render delay
 - [x] User location
   - [x] First visit geolocation request
   - [x] Location search

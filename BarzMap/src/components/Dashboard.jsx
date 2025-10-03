@@ -9,10 +9,12 @@ import DetailedPopup from './map/markers/DetailedPopup';
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
-    const [selectedMarker, setSelectedMarker] = useState();
+    const [selectedMarker, setSelectedMarker] = useState(null);
+
     const onDetailedPopupOpen = useCallback((data) => {
         setSelectedMarker(data);
     }, []);
+
     const onDetailedPopupClose = useCallback(() => {
         setSelectedMarker(null);
     }, []);

@@ -42,8 +42,17 @@ const DetailedPopup = ({
         setActiveIndex(index);
     };
 
+    const onBackdropClick = (e) => {
+        if (e.currentTarget === e.target) {
+            onClose();
+        }
+    };
+
     return (
-        <div className='fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm'>
+        <div
+            onClick={onBackdropClick}
+            className='detailedPopupBackdrop fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm'
+        >
             <div className='relative flex h-[90vh] w-[90vw] max-w-6xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/10'>
                 <button
                     type='button'
@@ -61,9 +70,9 @@ const DetailedPopup = ({
                                     <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
                                         <img
                                             src={activeImage}
-                                            alt={`${title || 'Location'} photo ${
-                                                clampedIndex + 1
-                                            }`}
+                                            alt={`${
+                                                title || 'Location'
+                                            } photo ${clampedIndex + 1}`}
                                             className='h-full w-full object-cover'
                                         />
                                         {images.length > 1 && (
@@ -90,7 +99,8 @@ const DetailedPopup = ({
                                                     <span
                                                         key={index}
                                                         className={`h-1.5 w-8 rounded-full transition ${
-                                                            index === clampedIndex
+                                                            index ===
+                                                            clampedIndex
                                                                 ? 'bg-white'
                                                                 : 'bg-white/40'
                                                         }`}
@@ -105,7 +115,9 @@ const DetailedPopup = ({
                                                 <button
                                                     type='button'
                                                     key={image + index}
-                                                    onClick={() => handleSelect(index)}
+                                                    onClick={() =>
+                                                        handleSelect(index)
+                                                    }
                                                     className={`flex h-20 items-center justify-center overflow-hidden rounded-xl border ${
                                                         index === clampedIndex
                                                             ? 'border-white ring-2 ring-white/80'
@@ -143,7 +155,11 @@ const DetailedPopup = ({
                             )}
                             {(address || distance) && (
                                 <div className='flex flex-col gap-1 text-base text-slate-600'>
-                                    {address && <p className='leading-relaxed'>{address}</p>}
+                                    {address && (
+                                        <p className='leading-relaxed'>
+                                            {address}
+                                        </p>
+                                    )}
                                     {distance && (
                                         <p className='font-medium text-indigo-600'>
                                             {distance}

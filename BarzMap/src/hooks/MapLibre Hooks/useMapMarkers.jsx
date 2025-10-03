@@ -3,16 +3,19 @@ import { useMapLibreContext } from '../../context/MapLibreContext';
 import { createRoot } from 'react-dom/client';
 import maplibregl from 'maplibre-gl';
 import useSampleParkData from '../useSampleParkData';
-import DetailedPopup from '../../components/map/markers/detailedPopup';
+import DetailedPopup from '../../components/map/markers/DetailedPopup';
 
-const useMapMarkers = () => {
+const useMapMarkers = ({ onMarkerOpen }) => {
     const { parks } = useSampleParkData(); // replace this with a hook w/ useEffect that pulls all relevant park data
     const mapMarkers = useRef([]);
     const { mapInstance } = useMapLibreContext();
 
-    const detailedPopupElement = useRef(document.createElement('div')); // detailed popup element
-    const detailedPopupNode = useRef(createRoot(detailedPopupElement.current)); // node used to render popup element into DOM
-    const detailedPopupInstance = useRef(maplibregl.Popup()); // MapLibre popup object instance for rendering popup into the map
+    /* // detailed popup element
+    const detailedPopupElement = useRef(document.createElement('div'));
+    // node used to render popup element into DOM
+    const detailedPopupNode = useRef(createRoot(detailedPopupElement.current));
+    // MapLibre popup object instance for rendering popup into the map
+    const detailedPopupInstance = useRef(new maplibregl.Popup()); */
 
     const setMapMarkers = useCallback(
         (featureCollection) => {
@@ -27,14 +30,16 @@ const useMapMarkers = () => {
                     .addTo(mapInstance.current);
 
                 marker.getElement().addEventListener('click', () => {
-                    onDetailOpen();
+                    onMarkerOpen(feature);
                 });
 
                 return marker;
             });
         },
-        [mapInstance]
+        [mapInstance, onMarkerOpen]
     );
+
+    setMapMarkers(parks);
 
     useEffect(() => {
         // Get map markers from supabase (map features)

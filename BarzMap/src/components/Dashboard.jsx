@@ -1,18 +1,23 @@
 import MapLibreMap from './MapLibre';
 import SearchInput from './SearchInput';
 import useClientAddress from '../hooks/useClientAddress';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMapLibreContext } from '../context/MapLibreContext';
 import useMapMarkers from '../hooks/MapLibre Hooks/useMapMarkers';
+import DetailedPopup from './map/markers/DetailedPopup';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
-    const { setMarkers } = useMapMarkers();
+    const [selectedMarker, setSelectedMarker] = useState();
+    const onDetailedPopupOpen = useCallback((data) => {
+        setSelectedMarker(data);
+    }, []);
+    const onDetailedPopupClose = useCallback(() => {
+        setSelectedMarker(null);
+    }, []);
 
-    const onDetailedPopupOpen = () => {};
-
-    const onDetailedPopupClose = () => {};
+    useMapMarkers({ onMarkerOpen: onDetailedPopupOpen });
 
     useEffect(() => {
         if (!mapInstance.current || !coordinates) {
@@ -40,6 +45,9 @@ const Dashboard = () => {
     return (
         <div className='relative h-screen w-full overflow-hidden bg-slate-100'>
             <SearchInput searchValue={address} onSearch={onNewAddress} />
+            {selectedMarker !== null && (
+                <DetailedPopup onClose={onDetailedPopupClose} />
+            )}
             <MapLibreMap />
         </div>
     );

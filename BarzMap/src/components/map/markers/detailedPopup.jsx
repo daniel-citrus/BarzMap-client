@@ -6,8 +6,7 @@ const DetailedPopup = ({
     address,
     distance,
     equipments = [],
-    description,
-    stats,
+    /* description, */
     onClose,
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -169,7 +168,7 @@ const DetailedPopup = ({
                             )}
                         </div>
 
-                        {description && (
+                        {/* {description && (
                             <div className='mt-6 flex flex-col gap-2'>
                                 <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
                                     About this spot
@@ -178,25 +177,7 @@ const DetailedPopup = ({
                                     {description}
                                 </p>
                             </div>
-                        )}
-
-                        {Array.isArray(stats) && stats.length > 0 && (
-                            <div className='mt-8 grid grid-cols-2 gap-4'>
-                                {stats.map((stat) => (
-                                    <div
-                                        key={stat.label}
-                                        className='rounded-2xl border border-slate-200 p-4'
-                                    >
-                                        <p className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                            {stat.label}
-                                        </p>
-                                        <p className='mt-1 text-lg font-semibold text-slate-900'>
-                                            {stat.value}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        )} */}
 
                         <div className='mt-8 flex flex-col gap-3'>
                             <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>

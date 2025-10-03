@@ -30,7 +30,13 @@ const useMapMarkers = ({ onMarkerOpen }) => {
                     .addTo(mapInstance.current);
 
                 marker.getElement().addEventListener('click', () => {
-                    onMarkerOpen(feature);
+                    const payload = {
+                        name: feature.properties.name,
+                        equipment: feature.properties.equipment,
+                        address: feature.properties.address,
+                        coordinates: feature.geometry.coordinates
+                    }
+                    onMarkerOpen(payload);
                 });
 
                 return marker;

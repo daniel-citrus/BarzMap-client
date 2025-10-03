@@ -66,6 +66,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
   - [ ] Map markers
     - [ ] Hover popups
+    - [ ] Detailed popup address (link to Google Maps directions)
   - [ ] Location search
     - [ ] Address auto-complete
     - [ ] Distance calculator

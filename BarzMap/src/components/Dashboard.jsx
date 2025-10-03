@@ -11,7 +11,7 @@ const Dashboard = () => {
     const { mapInstance } = useMapLibreContext();
     const [selectedMarker, setSelectedMarker] = useState(null);
 
-    const onDetailedPopupOpen = useCallback((data) => {
+    const onDetailedPopupOpen = useCallback(async (data) => {
         setSelectedMarker(data);
     }, []);
 
@@ -48,7 +48,13 @@ const Dashboard = () => {
         <div className='relative h-screen w-full overflow-hidden bg-slate-100'>
             <SearchInput searchValue={address} onSearch={onNewAddress} />
             {selectedMarker !== null && (
-                <DetailedPopup onClose={onDetailedPopupClose} />
+                <DetailedPopup
+                    title={selectedMarker.title}
+                    images={''}
+                    equipments={selectedMarker.equipment}
+                    address={selectedMarker.address}
+                    onClose={onDetailedPopupClose}
+                />
             )}
             <MapLibreMap />
         </div>

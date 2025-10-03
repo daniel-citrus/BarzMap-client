@@ -8,6 +8,7 @@ const SAMPLE_PARKS = Object.freeze({
             properties: {
                 name: 'Eastshore Park',
                 equipment: ['Pull Up Bars', 'Dip Bars'],
+                address: '2930 Grand Ave, Oakland, CA 94610',
             },
             geometry: {
                 type: 'Point',
@@ -18,6 +19,7 @@ const SAMPLE_PARKS = Object.freeze({
             type: 'Feature',
             properties: {
                 name: 'Pittman Green',
+                address: '1524 1st Ave, Oakland, CA 94606',
                 equipment: ['Dip Bars'],
             },
             geometry: {
@@ -29,6 +31,8 @@ const SAMPLE_PARKS = Object.freeze({
             type: 'Feature',
             properties: {
                 name: 'Washington Park',
+                address:
+                    '1333 8th Street, Alameda, California 94501, United States',
                 equipment: [
                     'Dip Bars',
                     'Pull Up Bars',

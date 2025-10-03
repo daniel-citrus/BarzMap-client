@@ -31,6 +31,10 @@ const useClientAddress = () => {
     const [address, setAddress] = useState('Lakeshore Park, Oakland CA');
     const [coordinates, setCoordinates] = useState(null);
 
+    /**
+     * Request client's geolocation
+     * @returns 
+     */
     const resolveAddress = async () => {
         if (!MAPTILER_API_KEY) {
             console.warn(

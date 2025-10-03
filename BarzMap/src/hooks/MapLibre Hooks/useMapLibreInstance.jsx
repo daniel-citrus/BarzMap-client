@@ -1,15 +1,15 @@
 import { useEffect, useRef } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import useMapHelpers from './useMapHelpers';
+import useMapMarkers from './useMapMarkers';
 
-const DEFAULT_ZOOM = 5;
+const DEFAULT_ZOOM = 8;
 const DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
 
 /**
  * Initializes a single MapLibre map and exposes the container + instance refs
  * so other hooks can render layers, overlays, and markers against it.
- *
- * Handles map marker renders on initial load as well as re-renders after map movement.
  * @returns {{
  *   mapContainerRef: import('react').MutableRefObject<HTMLDivElement | null>,
  *   mapInstance: import('react').MutableRefObject<maplibregl.Map | null>
@@ -18,6 +18,7 @@ const DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
 const useMapLibreInstance = () => {
     const mapContainerRef = useRef(null);
     const mapInstance = useRef(null);
+    const { getFeaturesWithinBounds } = useMapHelpers();
 
     useEffect(() => {
         if (!mapContainerRef.current) {
@@ -25,7 +26,8 @@ const useMapLibreInstance = () => {
         }
 
         const instance = new maplibregl.Map({
-            center: [-100.492503, 39.80491],
+            /* center: [-100.492503, 39.80491], */
+            center: [-122.4194, 37.7749],
             container: mapContainerRef.current,
             style: DEFAULT_STYLE_URL,
             zoom: DEFAULT_ZOOM,
@@ -43,6 +45,7 @@ const useMapLibreInstance = () => {
 
     useEffect(() => {
         const map = mapInstance.current;
+
         if (!map) {
             return undefined;
         }
@@ -55,8 +58,10 @@ const useMapLibreInstance = () => {
             }
 
             timeoutId = setTimeout(() => {
-                console.log('hello');
-                // render markers
+                const boundaries = mapInstance.current.getBounds();
+                const [northEast, southWest] = [boundaries._ne, boundaries._sw];
+                const features = getFeaturesWithinBounds(northEast, southWest);
+                
             }, 1000);
         };
 

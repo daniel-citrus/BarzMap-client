@@ -81,24 +81,24 @@ const useClientAddress = () => {
         }
     };
 
-    /** Recalculate coordinates when new address is set */
+    /* Recalculate coordinates when new address is set */
     useEffect(() => {
-        /** Initial page load browser geolocation request */
+        /* Initial page load browser geolocation request */
         if (!address || address.trim() === '') {
             resolveAddress();
             return;
         }
-
+        
         const updateCoords = async () => {
             try {
                 const newCoords = await getCoordinates(address);
-
+                
                 setCoordinates(newCoords);
             } catch (e) {
                 console.error('Unable to resolve coordinates from address:', e);
             }
         };
-
+        
         updateCoords();
     }, [address]);
 

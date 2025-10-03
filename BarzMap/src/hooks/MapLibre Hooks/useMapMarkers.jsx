@@ -47,8 +47,8 @@ const useMapMarkers = ({ onMarkerOpen }) => {
                         title: feature.properties.name,
                         equipment: feature.properties.equipment,
                         address: feature.properties.address,
-                        coordinates: feature.geometry.coordinates
-                    }
+                        coordinates: feature.geometry.coordinates,
+                    };
                     onMarkerOpen(payload);
                 });
 
@@ -57,8 +57,6 @@ const useMapMarkers = ({ onMarkerOpen }) => {
         },
         [mapInstance, onMarkerOpen]
     );
-
-    setMapMarkers(parks);
 
     useEffect(() => {
         // Get map markers from supabase (map features)
@@ -72,7 +70,17 @@ const useMapMarkers = ({ onMarkerOpen }) => {
         };
     }, [parks, setMapMarkers]);
 
-    return { setMapMarkers };
+    
 };
 
 export default useMapMarkers;
+
+/* 
+  A candidate { longitude, latitude } is inside that rectangle if
+
+     const isInside =
+       candidate.longitude >= bounds.minLng &&
+       candidate.longitude <= bounds.maxLng &&
+       candidate.latitude  >= bounds.minLat &&
+       candidate.latitude  <= bounds.maxLat;
+*/

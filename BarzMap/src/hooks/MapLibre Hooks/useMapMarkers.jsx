@@ -5,6 +5,19 @@ import maplibregl from 'maplibre-gl';
 import useSampleParkData from '../useSampleParkData';
 import DetailedPopup from '../../components/map/markers/DetailedPopup';
 
+/**
+ * Synchronizes GeoJSON park features with the active MapLibre instance by
+ * creating marker elements, wiring click handlers, and exposing a setter
+ * so callers can generate markers for arbitrary feature collections.
+ *
+ * @param {{ onMarkerOpen: (payload: {
+ *   title: string,
+ *   equipment: any,
+ *   address: string,
+ *   coordinates: [number, number]
+ * }) => void }} params - Callback invoked when a marker is clicked.
+ * @returns {{ setMapMarkers: (featureCollection: import('geojson').FeatureCollection) => void }}
+ */
 const useMapMarkers = ({ onMarkerOpen }) => {
     const { parks } = useSampleParkData(); // replace this with a hook w/ useEffect that pulls all relevant park data
     const mapMarkers = useRef([]);
@@ -31,7 +44,7 @@ const useMapMarkers = ({ onMarkerOpen }) => {
 
                 marker.getElement().addEventListener('click', () => {
                     const payload = {
-                        name: feature.properties.name,
+                        title: feature.properties.name,
                         equipment: feature.properties.equipment,
                         address: feature.properties.address,
                         coordinates: feature.geometry.coordinates

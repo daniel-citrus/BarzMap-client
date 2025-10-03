@@ -24,16 +24,26 @@ const getCoordinates = async (address) => {
 };
 
 /**
- * Custom hook that requests the client's geolocation (with their consent)
- * so the map can center on their position when the page first renders.
+ * Resolves a client's street address and coordinates via MapTiler geocoding,
+ * caching the address in localStorage and exposing helpers to refresh or
+ * override the location from UI interactions.
+ *
+ * @returns {{
+ *   address: string,
+ *   setAddress: import('react').Dispatch<import('react').SetStateAction<string>>,
+ *   coordinates: { longitude: number, latitude: number } | null,
+ *   setCoordinates: import('react').Dispatch<import('react').SetStateAction<{ longitude: number, latitude: number } | null>>,
+ * }}
  */
 const useClientAddress = () => {
     const [address, setAddress] = useState('Lakeshore Park, Oakland CA');
     const [coordinates, setCoordinates] = useState(null);
 
     /**
-     * Request client's geolocation
-     * @returns 
+     * Requests browser geolocation permission, persists the reverse-geocoded
+     * address, and updates local state values that the hook exposes.
+     *
+     * @returns {Promise<void>}
      */
     const resolveAddress = async () => {
         if (!MAPTILER_API_KEY) {
@@ -92,7 +102,7 @@ const useClientAddress = () => {
         updateCoords();
     }, [address]);
 
-    return { address, setAddress, coordinates, setCoordinates, resolveAddress };
+    return { address, setAddress, coordinates, setCoordinates };
 };
 
 export default useClientAddress;

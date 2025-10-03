@@ -2,6 +2,12 @@ import useAuthentication from '../hooks/useAuthentication';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 
+/**
+ * Validates the authenticated Auth0 user with the backend API whenever
+ * an ID token becomes available in client state.
+ *
+ * @returns {void}
+ */
 const useUserLogin = () => {
     const { userToken } = useAuthentication();
     const { isAuthenticated, user } = useAuth0();

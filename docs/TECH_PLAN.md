@@ -36,7 +36,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [x] Install MapLibre, render the base map with controls, enable geolocation, and ensure the map recenters on the user.
 - [x] Render park markers
   - [x] Onclick detailed popups
-  - [ ] Render based on view
+  - [x] Render based on view
     - [x] 1-2 second render delay
 - [x] User location
   - [x] First visit geolocation request

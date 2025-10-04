@@ -4,6 +4,9 @@ import useSampleParkData from '../useSampleParkData';
 const useMapHelpers = () => {
     const { parks } = useSampleParkData();
 
+    /**
+     * Filters feature collection and returns all features that fall within the provided boundaries
+     */
     const getFeaturesWithinBounds = useCallback(
         (northEast, southWest) => {
             // this will be very different when pulling from the backend, for now, filtering logic will remain here.

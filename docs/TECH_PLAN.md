@@ -1,7 +1,7 @@
 # BarzMap Frontend Tech Plan
 
 ## Scope & Goals
-Deliver a mobile-first responsive web client that helps visitors discover outdoor gyms, submit new locations, and lets admin reviewers manage submissions. Frontend must feel fast, handle Auth0 auth flows, and integrate map-based discovery using internal API and Supabase database tables. 
+Deliver a mobile-first responsive web client that helps visitors discover outdoor gyms, submit new locations, and encourage community engagement. Frontend must feel fast, handle Auth0 auth flows, and integrate map-based discovery using internal API and Supabase database tables.
 
 ## Frontend Stack
 - **React + Vite** for SPA composition and fast local iteration.
@@ -48,12 +48,6 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
     - [ ] Map drag, coordinates, or direct address
 - [ ] Admin dashboard
   - [ ] Approve or reject submissions
-- [ ] Design system polish
-  - [ ] Animations
-  - [ ] Skeleton loaders
-  - [ ] Mobile optimization
-- [ ] Introduce caching strategies, lazy loading, and bundle size checks
-- [ ] Run accessibility, cross-browser, and device QA
 
 ## Integration Plan
 - [ ] Install HTTP client (Axios or native fetch wrappers).
@@ -62,18 +56,31 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [ ] Add Supabase real-time listeners for live park updates.
 
 ## Post Launch
-  - [ ] Integrate Auth0 provider with login/logout buttons and profile display.
-  - [ ] Define reusable component architecture for buttons, inputs, modals, and map wrappers.
-  - [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
-  - [ ] Map markers
-    - [ ] Hover popups
-    - [ ] Detailed popup address (link to Google Maps directions)
-  - [ ] Location search
-    - [ ] Address auto-complete
-    - [ ] Distance calculator
-  - [ ] Park submissions
-    - [ ] Form progress states
-    - [ ] Save progress
-  - [ ] Admin dashboard
-    - [ ] Comment based approvals
-    - [ ] Individual image approval
+- [ ] Integrate Auth0 provider with login/logout buttons and profile display.
+- [ ] Define reusable component architecture for buttons, inputs, modals, and map wrappers.
+- [ ] Design system polish
+  - [ ] Animations
+  - [ ] Skeleton loaders
+  - [ ] Mobile optimization
+- [ ] Introduce caching strategies, lazy loading, and bundle size checks
+- [ ] Run accessibility, cross-browser, and device QA
+- [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
+- [ ] Map markers
+  - [ ] Hover popups
+  - [ ] Detailed popup address (link to Google Maps directions)
+- [ ] Location search
+  - [ ] Address auto-complete
+  - [ ] Distance calculator
+- [ ] Park submissions
+  - [ ] Form progress states
+  - [ ] Save progress
+- [ ] Admin dashboard
+  - [ ] Comment based approvals
+  - [ ] Individual image approval
+
+## Future Features
+- [ ] Donation system to help fund local community projects focused in developing outdoor exercise equipment.
+- [ ] Event board as way to allow organizers to promote events that they are hosting.
+
+## Bugs
+- [ ] Dragging the map then dragging the cursor out of the browser window does not cause the map trigger "mouseend"

@@ -38,10 +38,10 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [x] Install MapLibre, render the base map with controls, and configure fallback center coordinates.
   - [x] Enable browser geolocation, recenter the map, and expose manual address search.
   - [x] Render park markers filtered by viewport and show detailed popups.
-- [ ] New outdoor gym submission
+- [X] New outdoor gym submission form
   - [ ] Gate the submission flow behind Auth0 login and display user context.
-  - [ ] Build the guided form with validation, equipment checklist, and multi-step progress UI.
-  - [ ] Implement photo uploads and media preview handling.
+  - [x] Build the guided form with validation and equipment checklist
+  - [x] Implement photo uploads and media preview handling.
   - [ ] Add a location picker with address autocomplete, map drag, and coordinate override.
 - [ ] Submission moderation
   - [ ] Create an admin review dashboard to approve, reject, or request changes.

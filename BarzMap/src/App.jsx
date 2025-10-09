@@ -1,6 +1,6 @@
 import Dashboard from './components/Dashboard';
 import { MapLibreProvider } from './context/MapLibreContext';
-import ParkSubmissionForm from './components/ParkSubmissionForm';
+import ParkSubmissionForm from './components/parkSubmission/ParkSubmissionForm';
 
 function App() {
     return (

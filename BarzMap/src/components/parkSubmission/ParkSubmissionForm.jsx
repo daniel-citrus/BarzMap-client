@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import ImageUploadBox from './ImageUploadBox';
-
-const EQUIPMENT_OPTIONS = [
-    'Playground',
-    'Picnic Tables',
-    'Restrooms',
-    'Sports Fields',
-    'Parking',
-    'Dog Park',
-    'Walking Trails',
-];
+import AddressSelectorMap from './AddressSelectorMap';
+import EquipmentSelector from './EquipmentSelector';
 
 const ParkSubmissionForm = ({ onSubmit }) => {
     const [selectedImages, setSelectedImages] = useState([]);
@@ -21,7 +13,6 @@ const ParkSubmissionForm = ({ onSubmit }) => {
             return;
         }
 
-        // Loads images all together asynchronously
         const newImages = await Promise.all(
             files.map(
                 (file, index) =>
@@ -162,29 +153,10 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                         </label>
                     </div>
                 </div>
+                <AddressSelectorMap />
             </section>
 
-            <section className='space-y-4'>
-                <h2 className='text-sm font-medium text-slate-700'>
-                    Equipment
-                </h2>
-                <div className='grid gap-3 sm:grid-cols-2'>
-                    {EQUIPMENT_OPTIONS.map((option) => (
-                        <label
-                            key={option}
-                            className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-white'
-                        >
-                            <input
-                                type='checkbox'
-                                name='equipment'
-                                value={option}
-                                className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
-                            />
-                            <span>{option}</span>
-                        </label>
-                    ))}
-                </div>
-            </section>
+            <EquipmentSelector />
 
             <section className='grid gap-2'>
                 <label className='space-y-2'>

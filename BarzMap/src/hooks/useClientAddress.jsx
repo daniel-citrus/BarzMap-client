@@ -36,7 +36,7 @@ const getCoordinates = async (address) => {
  * }}
  */
 const useClientAddress = () => {
-    const [address, setAddress] = useState('Lakeshore Park, Oakland CA');
+    const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState(null);
 
     /**
@@ -88,17 +88,17 @@ const useClientAddress = () => {
             resolveAddress();
             return;
         }
-        
+
         const updateCoords = async () => {
             try {
                 const newCoords = await getCoordinates(address);
-                
+
                 setCoordinates(newCoords);
             } catch (e) {
                 console.error('Unable to resolve coordinates from address:', e);
             }
         };
-        
+
         updateCoords();
     }, [address]);
 

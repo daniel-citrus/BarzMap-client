@@ -63,15 +63,19 @@ const ParkSubmissionForm = ({ onSubmit }) => {
             className='mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10'
             onSubmit={handleSubmit}
         >
+            <p className='text-xs font-medium uppercase tracking-wide text-slate-400'>
+                <span className='text-rose-500'>*</span> Required
+            </p>
             <ImageUploadBox
                 selectedImages={selectedImages}
                 onImageChange={handleImageChange}
                 onRemoveImage={handleRemoveImage}
+                isRequired
             />
             <section className='grid gap-4'>
                 <label className='grid gap-2'>
                     <span className='text-sm font-medium text-slate-700'>
-                        Title
+                        Title <span className='text-rose-500'>*</span>
                     </span>
                     <input
                         type='text'
@@ -90,7 +94,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                 <div className='grid gap-4'>
                     <label className='grid gap-2'>
                         <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                            Street Address
+                            Street Address <span className='text-rose-500'>*</span>
                         </span>
                         <input
                             type='text'
@@ -103,7 +107,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                     <div className='grid gap-4 sm:grid-cols-2'>
                         <label className='grid gap-2'>
                             <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                City
+                                City <span className='text-rose-500'>*</span>
                             </span>
                             <input
                                 type='text'
@@ -115,7 +119,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                         </label>
                         <label className='grid gap-2'>
                             <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                State
+                                State <span className='text-rose-500'>*</span>
                             </span>
                             <input
                                 type='text'
@@ -129,7 +133,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                     <div className='grid gap-4 sm:grid-cols-2'>
                         <label className='grid gap-2'>
                             <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                Country
+                                Country <span className='text-rose-500'>*</span>
                             </span>
                             <input
                                 type='text'
@@ -141,7 +145,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                         </label>
                         <label className='grid gap-2'>
                             <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                Postal Code
+                                Postal Code <span className='text-rose-500'>*</span>
                             </span>
                             <input
                                 type='text'
@@ -156,7 +160,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                 <AddressSelectorMap />
             </section>
 
-            <EquipmentSelector />
+            <EquipmentSelector isRequired />
 
             <section className='grid gap-2'>
                 <label className='space-y-2'>
@@ -168,7 +172,6 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                         placeholder='Share details about the park, amenities, and anything visitors should know.'
                         rows={5}
                         className='w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                        required
                     />
                 </label>
             </section>

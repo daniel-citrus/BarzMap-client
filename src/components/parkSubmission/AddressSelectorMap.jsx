@@ -8,12 +8,11 @@ const DEFAULT_LOCATION = {
 };
 
 const DEFAULT_ZOOM = 13;
-const DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
 
 const AddressSelectorMap = ({
     initialLocation = DEFAULT_LOCATION,
     onLocationChange,
-    height = '18rem',
 }) => {
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
@@ -46,7 +45,10 @@ const AddressSelectorMap = ({
 
         map.on('click', (event) => {
             marker.setLngLat(event.lngLat);
-            onLocationChange?.({ lat: event.lngLat.lat, lng: event.lngLat.lng });
+            onLocationChange?.({
+                lat: event.lngLat.lat,
+                lng: event.lngLat.lng,
+            });
         });
 
         mapRef.current = map;
@@ -74,12 +76,13 @@ const AddressSelectorMap = ({
                 <h3 className='text-sm font-semibold text-slate-700'>
                     Pin the park location
                 </h3>
-                <p className='text-xs text-slate-400'>Drag marker or tap on the map</p>
+                <p className='text-xs text-slate-400'>
+                    Drag marker or tap on the map
+                </p>
             </div>
             <div
                 ref={mapContainerRef}
-                className='w-full overflow-hidden rounded-2xl border border-slate-200 shadow-inner shadow-slate-200'
-                style={{ height }}
+                className='w-full overflow-hidden rounded-2xl border border-slate-200 shadow-inner shadow-slate-200 h-100'
             />
         </div>
     );

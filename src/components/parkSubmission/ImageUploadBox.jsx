@@ -1,8 +1,14 @@
-const ImageUploadBox = ({ selectedImages, onImageChange, onRemoveImage }) => {
+const ImageUploadBox = ({
+    selectedImages,
+    onImageChange,
+    onRemoveImage,
+    isRequired = false,
+}) => {
     return (
         <section className='space-y-4'>
             <h2 className='text-lg font-semibold text-slate-900'>
                 Park Images
+                {isRequired && <span className='text-rose-500'> *</span>}
             </h2>
             <p className='text-sm text-slate-500'>
                 Showcase the park with standout photos. Click or drag and drop
@@ -79,6 +85,7 @@ const ImageUploadBox = ({ selectedImages, onImageChange, onRemoveImage }) => {
                                     accept='image/*'
                                     multiple
                                     className='hidden'
+                                    required={isRequired && !selectedImages.length}
                                     onChange={onImageChange}
                                 />
                             </label>
@@ -131,6 +138,7 @@ const ImageUploadBox = ({ selectedImages, onImageChange, onRemoveImage }) => {
                             accept='image/*'
                             multiple
                             className='absolute inset-0 h-full w-full cursor-pointer opacity-0'
+                            required={isRequired}
                             onChange={onImageChange}
                         />
                     </label>

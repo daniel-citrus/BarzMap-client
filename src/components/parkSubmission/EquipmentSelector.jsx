@@ -8,12 +8,15 @@ const EQUIPMENT_OPTIONS = [
     'Walking Trails',
 ];
 
-const EquipmentSelector = () => {
+const EquipmentSelector = ({ isRequired = false }) => {
     return (
         <section className='space-y-4'>
-            <h2 className='text-sm font-medium text-slate-700'>Equipment</h2>
+            <h2 className='text-sm font-medium text-slate-700'>
+                Equipment
+                {isRequired && <span className='text-rose-500'> *</span>}
+            </h2>
             <div className='grid gap-3 sm:grid-cols-2'>
-                {EQUIPMENT_OPTIONS.map((option) => (
+                {EQUIPMENT_OPTIONS.map((option, index) => (
                     <label
                         key={option}
                         className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-white'
@@ -23,6 +26,7 @@ const EquipmentSelector = () => {
                             name='equipment'
                             value={option}
                             className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
+                            required={isRequired && index === 0}
                         />
                         <span>{option}</span>
                     </label>

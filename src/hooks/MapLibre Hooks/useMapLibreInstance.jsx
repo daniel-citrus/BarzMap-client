@@ -25,7 +25,6 @@ const useMapLibreInstance = () => {
         }
 
         const instance = new maplibregl.Map({
-            /* center: [-100.492503, 39.80491], */
             center: [-122.4194, 37.7749],
             container: mapContainerRef.current,
             style: DEFAULT_STYLE_URL,

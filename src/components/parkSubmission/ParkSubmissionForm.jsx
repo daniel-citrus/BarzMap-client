@@ -72,7 +72,10 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                 onRemoveImage={handleRemoveImage}
                 isRequired
             />
-            <section className='grid gap-4'>
+            <section className='space-y-4'>
+                <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                    Park Details
+                </h2>
                 <label className='grid gap-2'>
                     <span className='text-sm font-medium text-slate-700'>
                         Title <span className='text-rose-500'>*</span>
@@ -88,84 +91,33 @@ const ParkSubmissionForm = ({ onSubmit }) => {
             </section>
 
             <section className='space-y-4'>
-                <div className='text-sm font-medium text-slate-700'>
-                    Address
-                </div>
-                <div className='grid gap-4'>
-                    <label className='grid gap-2'>
-                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                            Street Address <span className='text-rose-500'>*</span>
-                        </span>
-                        <input
-                            type='text'
-                            name='address'
-                            placeholder='123 Park Ave'
-                            className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                            required
-                        />
-                    </label>
-                    <div className='grid gap-4 sm:grid-cols-2'>
-                        <label className='grid gap-2'>
-                            <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                City <span className='text-rose-500'>*</span>
-                            </span>
-                            <input
-                                type='text'
-                                name='city'
-                                placeholder='City'
-                                className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                                required
-                            />
-                        </label>
-                        <label className='grid gap-2'>
-                            <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                State <span className='text-rose-500'>*</span>
-                            </span>
-                            <input
-                                type='text'
-                                name='state'
-                                placeholder='State / Province'
-                                className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                                required
-                            />
-                        </label>
-                    </div>
-                    <div className='grid gap-4 sm:grid-cols-2'>
-                        <label className='grid gap-2'>
-                            <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                Country <span className='text-rose-500'>*</span>
-                            </span>
-                            <input
-                                type='text'
-                                name='country'
-                                placeholder='Country'
-                                className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                                required
-                            />
-                        </label>
-                        <label className='grid gap-2'>
-                            <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                                Postal Code <span className='text-rose-500'>*</span>
-                            </span>
-                            <input
-                                type='text'
-                                name='postalCode'
-                                placeholder='Postal Code'
-                                className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                                required
-                            />
-                        </label>
-                    </div>
-                </div>
+                <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                    Location
+                </h2>
+                <label className='grid gap-2'>
+                    <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                        Address <span className='text-rose-500'>*</span>
+                    </span>
+                    <input
+                        type='text'
+                        name='address'
+                        placeholder='123 Park Ave, Springfield, CA 94110'
+                        className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
+                        required
+                    />
+                </label>
                 <AddressSelectorMap />
             </section>
 
             <EquipmentSelector isRequired />
 
-            <section className='grid gap-2'>
+            <section className='space-y-2'>
+                <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                    Description
+                </h2>
                 <label className='space-y-2'>
                     <span className='text-sm font-medium text-slate-700'>
-                        Description
+                        Park Overview
                     </span>
                     <textarea
                         name='description'

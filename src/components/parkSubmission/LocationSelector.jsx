@@ -1,22 +1,42 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { getAddress, getCoordinates } from '../helpers/geocoding';
 
 const DEFAULT_ZOOM = 13;
 const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
 const DEFAULT_COORDINATES = { lat: 37.7749, lng: -122.4194 };
 
-const LocationSelector = ({
-    initialCoords = DEFAULT_COORDINATES,
-    onLocationChange,
-}) => {
+const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
+    // on coordinate update, update address, and recenter map
+    // on address selection, update coordinates and recenter map
+    // on marker drop, update address and coordinates
+
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
     const markerRef = useRef(null);
+    const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState({
         lat: 37.7749,
         lng: -122.4194,
     });
+
+    const [addressLoading, setAddressLoading] = useState(false);
+
+    useEffect(() => {
+        async function updateAddress() {
+            setAddressLoading(true);
+            const newAddress = await getAddress(
+                coordinates.lng,
+                coordinates.lat
+            );
+            setAddressLoading(false);
+
+            setAddress(newAddress);
+        }
+
+        updateAddress();
+    }, [coordinates]);
 
     useEffect(() => {
         const container = mapContainerRef.current;
@@ -42,7 +62,6 @@ const LocationSelector = ({
         marker.on('dragend', () => {
             const lngLat = marker.getLngLat();
 
-            onLocationChange?.({ lat: lngLat.lat, lng: lngLat.lng });
             setCoordinates({
                 lat: lngLat.lat,
                 lng: lngLat.lng,
@@ -55,11 +74,6 @@ const LocationSelector = ({
                 lng: event.lngLat.lng,
                 lat: event.lngLat.lat,
             });
-
-            onLocationChange?.({
-                lat: event.lngLat.lat,
-                lng: event.lngLat.lng,
-            });
         });
 
         mapRef.current = map;
@@ -70,7 +84,7 @@ const LocationSelector = ({
             markerRef.current = null;
             mapRef.current = null;
         };
-    }, [initialCoords, onLocationChange]);
+    }, [initialCoords]);
 
     useEffect(() => {
         if (!mapRef.current || !markerRef.current) {
@@ -78,7 +92,6 @@ const LocationSelector = ({
         }
 
         markerRef.current.setLngLat([coordinates.lng, coordinates.lat]);
-        /* mapRef.current.setCenter([coordinates.lng, coordinates.lat]); */
     }, [coordinates]);
 
     const onChangeLng = (e) => {
@@ -123,6 +136,16 @@ const LocationSelector = ({
         markerRef.current?.setLngLat([lng, lat]);
     };
 
+    const addressFieldClasses = useMemo(
+        () =>
+            `w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-[border-color,box-shadow] duration-200 ${
+                addressLoading
+                    ? 'border-indigo-200 ring-2 ring-indigo-100 pl-10'
+                    : 'border-slate-200'
+            }`,
+        [addressLoading]
+    );
+
     return (
         <section className='space-y-4'>
             <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
@@ -132,13 +155,43 @@ const LocationSelector = ({
                 <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
                     Address <span className='text-rose-500'>*</span>
                 </span>
-                <input
-                    type='text'
-                    name='address'
-                    placeholder='123 Park Ave, Springfield, CA 94110'
-                    className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                    required
-                />
+                <div className='relative'>
+                    <input
+                        type='text'
+                        name='address'
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder='123 Park Ave, Springfield, CA 94110'
+                        className={addressFieldClasses}
+                        required
+                    />
+                    {addressLoading && (
+                        <span className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+                            <svg
+                                className='h-4 w-4 animate-spin text-indigo-500'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                xmlns='http://www.w3.org/2000/svg'
+                            >
+                                <circle
+                                    className='opacity-25'
+                                    cx='12'
+                                    cy='12'
+                                    r='10'
+                                    stroke='currentColor'
+                                    strokeWidth='4'
+                                />
+                                <path
+                                    className='opacity-75'
+                                    d='M4 12a8 8 0 0 1 8-8'
+                                    stroke='currentColor'
+                                    strokeWidth='4'
+                                    strokeLinecap='round'
+                                />
+                            </svg>
+                        </span>
+                    )}
+                </div>
             </label>
 
             <div className='space-y-3'>

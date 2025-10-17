@@ -8,8 +8,8 @@ const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
 const DEFAULT_COORDINATES = { lat: 37.7749, lng: -122.4194 };
 
 const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
-    // on coordinate update, update address, and recenter map
-    // on address selection, update coordinates and recenter map
+    // on coordinate update, update address
+    // on address selection, update coordinates
     // on marker drop, update address and coordinates
 
     const mapContainerRef = useRef(null);
@@ -37,6 +37,10 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
         updateAddress();
     }, [coordinates]);
+
+    const onAddressChange = async (e) => {
+        
+    };
 
     useEffect(() => {
         const container = mapContainerRef.current;
@@ -151,52 +155,59 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
                 Location
             </h2>
-            <label className='grid gap-2'>
+            <label className='grid gap-2' htmlFor='address'>
                 <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
                     Address <span className='text-rose-500'>*</span>
                 </span>
-                <div className='relative'>
-                    <input
-                        type='text'
-                        name='address'
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder='123 Park Ave, Springfield, CA 94110'
-                        className={addressFieldClasses}
-                        required
-                    />
-                    {addressLoading && (
-                        <span className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
-                            <svg
-                                className='h-4 w-4 animate-spin text-indigo-500'
-                                viewBox='0 0 24 24'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                            >
-                                <circle
-                                    className='opacity-25'
-                                    cx='12'
-                                    cy='12'
-                                    r='10'
-                                    stroke='currentColor'
-                                    strokeWidth='4'
-                                />
-                                <path
-                                    className='opacity-75'
-                                    d='M4 12a8 8 0 0 1 8-8'
-                                    stroke='currentColor'
-                                    strokeWidth='4'
-                                    strokeLinecap='round'
-                                />
-                            </svg>
-                        </span>
-                    )}
+                <div className='relative flex flex-col gap-2 sm:flex-row sm:items-center'>
+                    <div className='relative flex-1'>
+                        <input
+                            type='text'
+                            name='address'
+                            id='address'
+                            placeholder='123 Park Ave, Springfield, CA 94110'
+                            className={addressFieldClasses}
+                            required
+                        />
+                        {addressLoading && (
+                            <span className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+                                <svg
+                                    className='h-4 w-4 animate-spin text-indigo-500'
+                                    viewBox='0 0 24 24'
+                                    fill='none'
+                                    xmlns='http://www.w3.org/2000/svg'
+                                >
+                                    <circle
+                                        className='opacity-25'
+                                        cx='12'
+                                        cy='12'
+                                        r='10'
+                                        stroke='currentColor'
+                                        strokeWidth='4'
+                                    />
+                                    <path
+                                        className='opacity-75'
+                                        d='M4 12a8 8 0 0 1 8-8'
+                                        stroke='currentColor'
+                                        strokeWidth='4'
+                                        strokeLinecap='round'
+                                    />
+                                </svg>
+                            </span>
+                        )}
+                    </div>
+                    <button
+                        type='button'
+                        className='inline-flex w-full items-center justify-center rounded-lg bg-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-sm transition hover:bg-slate-300 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-[40px] sm:w-auto'
+                    >
+                        Find
+                    </button>
                 </div>
             </label>
 
             <div className='space-y-3'>
                 <div className='grid gap-3 sm:grid-cols-2'>
-                    <label className='grid gap-2'>
+                    <label className='grid gap-2' htmlFor='coordLng'>
                         <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
                             Longitude
                         </span>
@@ -210,7 +221,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             value={coordinates.lng}
                         />
                     </label>
-                    <label className='grid gap-2'>
+                    <label className='grid gap-2' htmlFor='coordLat'>
                         <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
                             Latitude
                         </span>

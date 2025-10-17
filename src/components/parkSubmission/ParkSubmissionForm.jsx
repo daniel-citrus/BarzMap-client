@@ -5,6 +5,7 @@ import EquipmentSelector from './EquipmentSelector';
 
 const ParkSubmissionForm = ({ onSubmit }) => {
     const [selectedImages, setSelectedImages] = useState([]);
+    const [address, setAddress] = useState();
 
     const handleImageChange = async (event) => {
         const files = Array.from(event.target.files ?? []);

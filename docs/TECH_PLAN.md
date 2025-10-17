@@ -42,7 +42,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [ ] Gate the submission flow behind Auth0 login and display user context.
   - [x] Build the guided form with validation and equipment checklist
   - [x] Implement photo uploads and media preview handling.
-  - [ ] Add a location picker with address autocomplete, map drag, and coordinate override.
+  - [ ] Add a location picker with map drag and coordinate inputs.
 - [ ] Submission moderation
   - [ ] Create an admin review dashboard to approve, reject, or request changes.
   - [ ] Surface feedback history and status updates back to submitters.

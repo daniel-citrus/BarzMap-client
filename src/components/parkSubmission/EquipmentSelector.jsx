@@ -75,14 +75,18 @@ const EQUIPMENT = [
 
 const EquipmentGroup = ({
     group,
-    isOpen,
-    onToggle,
     isRequired,
     firstOption,
+    defaultOpen = false,
 }) => {
     const contentRef = useRef(null);
     const [maxHeight, setMaxHeight] = useState('0px');
     const [selectedCount, setSelectedCount] = useState(0);
+    const [isOpen, setIsOpen] = useState(defaultOpen);
+
+    useEffect(() => {
+        setIsOpen(defaultOpen);
+    }, [defaultOpen]);
 
     useEffect(() => {
         const contentEl = contentRef.current;
@@ -122,8 +126,8 @@ const EquipmentGroup = ({
         <div className='rounded-xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5'>
             <button
                 type='button'
-                onClick={onToggle}
-                className='flex w-full items-center justify-between text-left text-sm font-semibold text-slate-700'
+                onClick={() => setIsOpen((prev) => !prev)}
+                className='relative -mx-3 -my-2 flex w-full items-center justify-between rounded-lg pl-3 pr-0 py-2 text-left text-sm font-semibold text-slate-700'
                 aria-expanded={isOpen}
                 aria-controls={`${group.focus}-equipment`}
             >
@@ -136,7 +140,7 @@ const EquipmentGroup = ({
                     )}
                 </span>
                 <span
-                    className={`ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 transition-transform duration-300 ${
+                    className={`-mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 transition-transform duration-300 ${
                         isOpen ? 'rotate-180' : 'rotate-0'
                     }`}
                 >
@@ -191,21 +195,6 @@ const EquipmentGroup = ({
 
 const EquipmentSelector = ({ isRequired = false }) => {
     const firstOption = EQUIPMENT[0]?.equipment[0];
-    const [openSections, setOpenSections] = useState(() =>
-        EQUIPMENT.length ? new Set([EQUIPMENT[0].focus]) : new Set()
-    );
-
-    const handleToggle = (focus) => {
-        setOpenSections((prev) => {
-            const next = new Set(prev);
-            if (next.has(focus)) {
-                next.delete(focus);
-            } else {
-                next.add(focus);
-            }
-            return next;
-        });
-    };
 
     return (
         <section className='space-y-5'>
@@ -214,14 +203,13 @@ const EquipmentSelector = ({ isRequired = false }) => {
                 {isRequired && <span className='text-rose-500'> *</span>}
             </h2>
             <div className='space-y-4'>
-                {EQUIPMENT.map((group) => (
+                {EQUIPMENT.map((group, index) => (
                     <EquipmentGroup
                         key={group.focus}
                         group={group}
                         firstOption={firstOption}
                         isRequired={isRequired}
-                        isOpen={openSections.has(group.focus)}
-                        onToggle={() => handleToggle(group.focus)}
+                        defaultOpen={index === 0}
                     />
                 ))}
             </div>

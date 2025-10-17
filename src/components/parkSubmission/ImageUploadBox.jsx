@@ -1,9 +1,46 @@
 const ImageUploadBox = ({
-    selectedImages,
-    onImageChange,
-    onRemoveImage,
     isRequired = false,
+    onImagesChange,
+    selectedImages,
 }) => {
+    const handleImageChange = async (event) => {
+        const files = Array.from(event.target.files ?? []);
+        if (!files.length) {
+            event.target.value = '';
+            return;
+        }
+
+        const newImages = await Promise.all(
+            files.map(
+                (file, index) =>
+                    new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            resolve({
+                                id: `${file.name}-${
+                                    file.lastModified
+                                }-${Date.now()}-${index}`,
+                                preview: e.target?.result ?? '',
+                                file,
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    })
+            )
+        );
+
+        onImagesChange((prev) => [
+            ...prev,
+            ...newImages.filter((image) => image.preview),
+        ]);
+
+        event.target.value = '';
+    };
+
+    const handleRemoveImage = (id) => {
+        onImagesChange((prev) => prev.filter((image) => image.id !== id));
+    };
+
     return (
         <section className='space-y-4'>
             <h2 className='text-lg font-semibold text-slate-900'>
@@ -31,7 +68,9 @@ const ImageUploadBox = ({
                                     <button
                                         type='button'
                                         className='absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/80 text-white shadow-lg transition hover:bg-indigo-600'
-                                        onClick={() => onRemoveImage(image.id)}
+                                        onClick={() =>
+                                            handleRemoveImage(image.id)
+                                        }
                                         aria-label={`Remove park preview ${
                                             index + 1
                                         }`}
@@ -85,8 +124,10 @@ const ImageUploadBox = ({
                                     accept='image/*'
                                     multiple
                                     className='hidden'
-                                    required={isRequired && !selectedImages.length}
-                                    onChange={onImageChange}
+                                    required={
+                                        isRequired && !selectedImages.length
+                                    }
+                                    onChange={handleImageChange}
                                 />
                             </label>
                         </div>
@@ -139,7 +180,7 @@ const ImageUploadBox = ({
                             multiple
                             className='absolute inset-0 h-full w-full cursor-pointer opacity-0'
                             required={isRequired}
-                            onChange={onImageChange}
+                            onChange={handleImageChange}
                         />
                     </label>
                 )}

@@ -1,49 +1,10 @@
 import { useState } from 'react';
 import ImageUploadBox from './ImageUploadBox';
-import AddressSelectorMap from './AddressSelectorMap';
+import LocationSelector from './LocationSelector';
 import EquipmentSelector from './EquipmentSelector';
 
 const ParkSubmissionForm = ({ onSubmit }) => {
     const [selectedImages, setSelectedImages] = useState([]);
-    const [address, setAddress] = useState();
-
-    const handleImageChange = async (event) => {
-        const files = Array.from(event.target.files ?? []);
-        if (!files.length) {
-            event.target.value = '';
-            return;
-        }
-
-        const newImages = await Promise.all(
-            files.map(
-                (file, index) =>
-                    new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            resolve({
-                                id: `${file.name}-${
-                                    file.lastModified
-                                }-${Date.now()}-${index}`,
-                                preview: e.target?.result ?? '',
-                                file,
-                            });
-                        };
-                        reader.readAsDataURL(file);
-                    })
-            )
-        );
-
-        setSelectedImages((prev) => [
-            ...prev,
-            ...newImages.filter((image) => image.preview),
-        ]);
-
-        event.target.value = '';
-    };
-
-    const handleRemoveImage = (id) => {
-        setSelectedImages((prev) => prev.filter((image) => image.id !== id));
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -68,10 +29,9 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                 <span className='text-rose-500'>*</span> Required
             </p>
             <ImageUploadBox
-                selectedImages={selectedImages}
-                onImageChange={handleImageChange}
-                onRemoveImage={handleRemoveImage}
                 isRequired
+                onImagesChange={setSelectedImages}
+                selectedImages={selectedImages}
             />
             <section className='space-y-4'>
                 <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
@@ -91,24 +51,7 @@ const ParkSubmissionForm = ({ onSubmit }) => {
                 </label>
             </section>
 
-            <section className='space-y-4'>
-                <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
-                    Location
-                </h2>
-                <label className='grid gap-2'>
-                    <span className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                        Address <span className='text-rose-500'>*</span>
-                    </span>
-                    <input
-                        type='text'
-                        name='address'
-                        placeholder='123 Park Ave, Springfield, CA 94110'
-                        className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                        required
-                    />
-                </label>
-                <AddressSelectorMap />
-            </section>
+            <LocationSelector />
 
             <EquipmentSelector isRequired />
 

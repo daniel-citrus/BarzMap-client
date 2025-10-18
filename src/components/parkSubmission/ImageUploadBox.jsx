@@ -67,7 +67,7 @@ const ImageUploadBox = ({
                                     />
                                     <button
                                         type='button'
-                                        className='absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/80 text-white shadow-lg transition hover:bg-indigo-600'
+                                        className='absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/80 text-white shadow-lg transition hover:bg-indigo-600 cursor-pointer'
                                         onClick={() =>
                                             handleRemoveImage(image.id)
                                         }

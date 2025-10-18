@@ -144,7 +144,6 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     };
 
     const centerMapOnCoordinates = ({ lat, lng }) => {
-        console.log(lat, lng);
         if (!mapRef.current) {
             return;
         }
@@ -172,7 +171,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         () =>
             `w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-[border-color,box-shadow] duration-200 ${
                 addressLoading
-                    ? 'border-indigo-200 ring-2 ring-indigo-100 pl-10'
+                    ? 'border-indigo-200 ring-2 ring-indigo-100 pr-10'
                     : 'border-slate-200'
             }`,
         [addressLoading]
@@ -199,7 +198,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             required
                         />
                         {addressLoading && (
-                            <span className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+                            <span className='pointer-events-none absolute inset-y-0 right-3 flex items-center'>
                                 <svg
                                     className='h-4 w-4 animate-spin text-indigo-500'
                                     viewBox='0 0 24 24'
@@ -216,7 +215,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                                     />
                                     <path
                                         className='opacity-75'
-                                        d='M4 12a8 8 0 0 1 8-8'
+                                        d='M4 12a 8 8 0 0 1 8-8'
                                         stroke='currentColor'
                                         strokeWidth='4'
                                         strokeLinecap='round'
@@ -227,7 +226,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                     </div>
                     <button
                         type='button'
-                        className='inline-flex w-full items-center justify-center rounded-lg bg-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-sm transition hover:bg-slate-300 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-[40px] sm:w-auto'
+                        className='inline-flex w-full items-center justify-center rounded-lg bg-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-sm transition hover:bg-slate-300 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-[40px] sm:w-auto cursor-pointer'
                         onClick={onFindAddress}
                     >
                         Find
@@ -284,7 +283,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                         onClick={() => {
                             centerMapOnCoordinates(coordinates);
                         }}
-                        className='absolute right-4 top-4 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold text-indigo-600 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition hover:bg-white'
+                        className='absolute right-4 top-4 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold text-indigo-600 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition hover:bg-white hover:shadow-xl focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200 cursor-pointer'
                     >
                         Recenter
                     </button>

@@ -73,15 +73,15 @@ const ParkSubmissionForm = ({ onSubmit }) => {
             </section>
 
             <div className='flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-5'>
-                <button
+                {/* <button
                     type='button'
                     className='inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-300 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:w-auto'
                 >
                     Save & Exit
-                </button>
+                </button> */}
                 <button
                     type='submit'
-                    className='inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:w-auto'
+                    className='inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:w-auto cursor-pointer'
                 >
                     Submit Park
                 </button>

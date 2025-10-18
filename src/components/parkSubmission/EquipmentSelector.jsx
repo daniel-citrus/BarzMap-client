@@ -119,7 +119,9 @@ const EquipmentGroup = ({
     const onToggleEquipment = (event) => {
         const { checked } = event.target;
 
-        setSelectedCount((prev) => (checked ? prev + 1 : Math.max(prev - 1, 0)));
+        setSelectedCount((prev) =>
+            checked ? prev + 1 : Math.max(prev - 1, 0)
+        );
     };
 
     return (
@@ -127,7 +129,7 @@ const EquipmentGroup = ({
             <button
                 type='button'
                 onClick={() => setIsOpen((prev) => !prev)}
-                className='relative -mx-3 -my-2 flex w-full items-center justify-between rounded-lg pl-3 pr-0 py-2 text-left text-sm font-semibold text-slate-700'
+                className='relative -mx-3 -my-2 flex w-full items-center justify-between rounded-lg pl-3 pr-0 py-2 text-left text-sm font-semibold text-slate-700 cursor-pointer'
                 aria-expanded={isOpen}
                 aria-controls={`${group.focus}-equipment`}
             >

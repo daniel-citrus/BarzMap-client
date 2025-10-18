@@ -15,6 +15,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
     const markerRef = useRef(null);
+    const addressInputRef = useRef(null);
     const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState({
         lat: 37.7749,
@@ -32,14 +33,40 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             );
             setAddressLoading(false);
 
+            if (addressInputRef.current) {
+                addressInputRef.current.value = newAddress;
+            }
+
             setAddress(newAddress);
         }
 
         updateAddress();
     }, [coordinates]);
 
-    const onAddressChange = async (e) => {
-        
+    const onFindAddress = async () => {
+        const newAddress = addressInputRef.current?.value?.trim();
+        if (!newAddress) {
+            return;
+        }
+
+        setAddressLoading(true);
+        try {
+            const coords = await getCoordinates(newAddress);
+            if (!coords) {
+                return;
+            }
+
+            const nextCoords = {
+                lng: coords.longitude,
+                lat: coords.latitude,
+            };
+
+            setCoordinates(nextCoords);
+            setAddress(newAddress);
+            centerMapOnCoordinates(nextCoords);
+        } finally {
+            setAddressLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -116,28 +143,29 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         });
     };
 
-    const centerMapOnCoordinates = () => {
+    const centerMapOnCoordinates = ({ lat, lng }) => {
+        console.log(lat, lng);
         if (!mapRef.current) {
             return;
         }
 
-        if (coordinates.lng === '' || coordinates.lat === '') {
+        if (lng === '' || lat === '') {
             return;
         }
 
-        const lng = Number(coordinates.lng);
-        const lat = Number(coordinates.lat);
-        if (Number.isNaN(lng) || Number.isNaN(lat)) {
+        const lngNumber = Number(lng);
+        const latNumber = Number(lat);
+        if (Number.isNaN(lngNumber) || Number.isNaN(latNumber)) {
             return;
         }
 
         mapRef.current.easeTo({
-            center: [lng, lat],
-            zoom: DEFAULT_ZOOM + 2,
+            center: [lngNumber, latNumber],
+            zoom: DEFAULT_ZOOM + 4,
             bearing: 0,
             pitch: 0,
         });
-        markerRef.current?.setLngLat([lng, lat]);
+        markerRef.current?.setLngLat([lngNumber, latNumber]);
     };
 
     const addressFieldClasses = useMemo(
@@ -162,6 +190,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                 <div className='relative flex flex-col gap-2 sm:flex-row sm:items-center'>
                     <div className='relative flex-1'>
                         <input
+                            ref={addressInputRef}
                             type='text'
                             name='address'
                             id='address'
@@ -199,6 +228,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                     <button
                         type='button'
                         className='inline-flex w-full items-center justify-center rounded-lg bg-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-sm transition hover:bg-slate-300 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-[40px] sm:w-auto'
+                        onClick={onFindAddress}
                     >
                         Find
                     </button>
@@ -251,7 +281,9 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                     />
                     <button
                         type='button'
-                        onClick={centerMapOnCoordinates}
+                        onClick={() => {
+                            centerMapOnCoordinates(coordinates);
+                        }}
                         className='absolute right-4 top-4 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold text-indigo-600 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition hover:bg-white'
                     >
                         Recenter

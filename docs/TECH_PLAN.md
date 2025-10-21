@@ -42,9 +42,10 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [ ] Gate the submission flow behind Auth0 login and display user context.
   - [x] Build the guided form with validation and equipment checklist
   - [x] Implement photo uploads and media preview handling.
-  - [x] Add a location picker with map drag and coordinate inputs.
+  - [ ] Add a location picker with map drag, coordinate inputs, and current location finder
 - [ ] Submission moderation
   - [ ] Create an admin review dashboard to approve, reject, or request changes.
+    - [ ] Each section should have an approve, reject, or request change option to indiciate the status of each section
   - [ ] Surface feedback history and status updates back to submitters.
 - [ ] Events & programming
   - [ ] Define frontend data models and API hooks for events tied to parks.

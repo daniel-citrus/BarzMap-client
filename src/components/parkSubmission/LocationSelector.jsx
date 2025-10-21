@@ -197,32 +197,66 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             className={addressFieldClasses}
                             required
                         />
-                        {addressLoading && (
-                            <span className='pointer-events-none absolute inset-y-0 right-3 flex items-center'>
+                        <div className='pointer-events-none absolute inset-y-0 right-3 flex items-center gap-3'>
+                            {addressLoading && (
+                                <span className='inline-flex items-center'>
+                                    <svg
+                                        className='h-4 w-4 animate-spin text-indigo-500'
+                                        viewBox='0 0 24 24'
+                                        fill='none'
+                                        xmlns='http://www.w3.org/2000/svg'
+                                    >
+                                        <circle
+                                            className='opacity-25'
+                                            cx='12'
+                                            cy='12'
+                                            r='10'
+                                            stroke='currentColor'
+                                            strokeWidth='4'
+                                        />
+                                        <path
+                                            className='opacity-75'
+                                            d='M4 12a 8 8 0 0 1 8-8'
+                                            stroke='currentColor'
+                                            strokeWidth='4'
+                                            strokeLinecap='round'
+                                        />
+                                    </svg>
+                                </span>
+                            )}
+                            <button
+                                type='button'
+                                className='pointer-events-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-indigo-500 shadow-sm transition hover:bg-indigo-50 hover:text-indigo-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200'
+                                aria-label='Use my current location'
+                            >
                                 <svg
-                                    className='h-4 w-4 animate-spin text-indigo-500'
                                     viewBox='0 0 24 24'
                                     fill='none'
                                     xmlns='http://www.w3.org/2000/svg'
+                                    className='h-4 w-4'
                                 >
                                     <circle
-                                        className='opacity-25'
                                         cx='12'
                                         cy='12'
-                                        r='10'
+                                        r='3'
+                                        fill='currentColor'
+                                    />
+                                    <circle
+                                        cx='12'
+                                        cy='12'
+                                        r='6'
                                         stroke='currentColor'
-                                        strokeWidth='4'
+                                        strokeWidth='1.4'
                                     />
                                     <path
-                                        className='opacity-75'
-                                        d='M4 12a 8 8 0 0 1 8-8'
+                                        d='M12 4v2m0 12v2m8-8h-2M6 12H4'
                                         stroke='currentColor'
-                                        strokeWidth='4'
+                                        strokeWidth='1.4'
                                         strokeLinecap='round'
                                     />
                                 </svg>
-                            </span>
-                        )}
+                            </button>
+                        </div>
                     </div>
                     <button
                         type='button'

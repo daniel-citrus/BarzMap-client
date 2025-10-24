@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { getAddress, getCoordinates } from '../helpers/geocoding';
+import {
+    getAddress,
+    getCoordinates,
+    resolveAddress,
+} from '../helpers/geocoding';
 
 const DEFAULT_ZOOM = 13;
 const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
@@ -62,6 +66,16 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             centerMapOnCoordinates(nextCoords);
         } finally {
             setAddressLoading(false);
+        }
+    };
+
+    const onFindCurrentLocation = async () => {
+        try {
+            const currentAddress = await resolveAddress();
+            addressInputRef.current.value = currentAddress;
+            onFindAddress();
+        } catch (e) {
+            console.error(`Could not resolve current location: ${e}`);
         }
     };
 
@@ -224,7 +238,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                                 type='button'
                                 className='pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full text-indigo-500 transition hover:text-indigo-600 hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200 cursor-pointer'
                                 aria-label='Use my current location'
-                                
+                                onClick={onFindCurrentLocation}
                             >
                                 <svg
                                     viewBox='0 0 24 24'

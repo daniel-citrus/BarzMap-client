@@ -25,10 +25,46 @@ const getCoordinates = async (address) => {
         console.warn('Missing MapTiler API key; unable to request address.');
         return;
     }
+
     const result = await geocoding.forward(address);
     const center = result?.features?.[0].center;
     const [longitude, latitude] = center;
     return { longitude, latitude };
 };
 
-export { getAddress, getCoordinates };
+/**
+ * Requests browser geolocation permission, persists the reverse-geocoded
+ * address, and updates local state values that the hook exposes.
+ *
+ * @returns {Promise<void>}
+ */
+const resolveAddress = async () => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+        console.error('Geolocation not supported in this environment.');
+        return;
+    }
+
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10_000,
+                maximumAge: 0,
+            });
+        });
+
+        const { longitude, latitude } = position.coords;
+        const newAddress = await getAddress(longitude, latitude);
+        const currentAddress = window.localStorage.getItem('storedAddress');
+
+        if (currentAddress !== newAddress) {
+            window.localStorage.setItem('storedAddress', newAddress);
+        }
+
+        return newAddress;
+    } catch (error) {
+        console.error('Unable to determine user address:', error);
+    }
+};
+
+export { getAddress, getCoordinates, resolveAddress };

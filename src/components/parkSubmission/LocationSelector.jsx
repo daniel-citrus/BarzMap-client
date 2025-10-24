@@ -226,14 +226,15 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             )}
                             <button
                                 type='button'
-                                className='pointer-events-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-indigo-500 shadow-sm transition hover:bg-indigo-50 hover:text-indigo-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200'
+                                className='pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full text-indigo-500 transition hover:text-indigo-600 hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200 cursor-pointer'
                                 aria-label='Use my current location'
+                                
                             >
                                 <svg
                                     viewBox='0 0 24 24'
                                     fill='none'
                                     xmlns='http://www.w3.org/2000/svg'
-                                    className='h-4 w-4'
+                                    className='h-5 w-5'
                                 >
                                     <circle
                                         cx='12'

@@ -21,6 +21,7 @@ const Dashboard = () => {
 
     useMapMarkers({ onMarkerOpen: onDetailedPopupOpen });
 
+    // Recenter map when coordinates are updated
     useEffect(() => {
         if (!mapInstance.current || !coordinates) {
             return;
@@ -37,11 +38,6 @@ const Dashboard = () => {
         if (!mapInstance.current || !coordinates) {
             return;
         }
-
-        mapInstance.current.flyTo({
-            center: [coordinates.longitude, coordinates.latitude],
-            zoom: 14,
-        });
     };
 
     return (

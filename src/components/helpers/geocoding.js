@@ -3,7 +3,14 @@ import { config, geocoding } from '@maptiler/client';
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_CLOUD_API;
 config.apiKey = MAPTILER_API_KEY;
 
-// Convert coordinates to a physical address
+/**
+ * Reverse-geocodes a longitude/latitude pair into a human-readable address
+ * using MapTiler's geocoding API.
+ *
+ * @param {number} longitude
+ * @param {number} latitude
+ * @returns {Promise<string | undefined>} formatted address or undefined when unavailable
+ */
 const getAddress = async (longitude, latitude) => {
     if (!MAPTILER_API_KEY) {
         console.warn('Missing MapTiler API key; unable to request address.');
@@ -20,6 +27,13 @@ const getAddress = async (longitude, latitude) => {
     return primaryFeature.place_name;
 };
 
+/**
+ * Forward-geocodes a textual address into longitude/latitude coordinates via
+ * MapTiler's geocoding API.
+ *
+ * @param {string} address
+ * @returns {Promise<{ longitude: number, latitude: number } | undefined>} resolved coordinates or undefined when unavailable
+ */
 const getCoordinates = async (address) => {
     if (!MAPTILER_API_KEY) {
         console.warn('Missing MapTiler API key; unable to request address.');
@@ -33,10 +47,10 @@ const getCoordinates = async (address) => {
 };
 
 /**
- * Requests browser geolocation permission, persists the reverse-geocoded
- * address, and updates local state values that the hook exposes.
+ * Requests browser geolocation, reverse-geocodes the coordinates, and caches
+ * the resulting address in localStorage.
  *
- * @returns {Promise<void>}
+ * @returns {Promise<string | undefined>} resolved address or undefined on failure
  */
 const resolveAddress = async () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {

@@ -8,10 +8,6 @@ const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
 const DEFAULT_COORDINATES = { lat: 37.7749, lng: -122.4194 };
 
 const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
-    // on coordinate update, update address
-    // on address selection, update coordinates
-    // on marker drop, update address and coordinates
-
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
     const markerRef = useRef(null);

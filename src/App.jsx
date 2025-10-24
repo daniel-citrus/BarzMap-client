@@ -5,10 +5,10 @@ import ParkSubmissionForm from './components/parkSubmission/ParkSubmissionForm';
 function App() {
     return (
         <MapLibreProvider>
-            <div className='flex min-h-screen w-full flex-col'>
+            {/* <div className='flex min-h-screen w-full flex-col'>
                 <Dashboard />
-            </div>
-            {/* <ParkSubmissionForm /> */}
+            </div> */}
+            <ParkSubmissionForm />
         </MapLibreProvider>
     );
 }

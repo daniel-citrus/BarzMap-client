@@ -1,15 +1,17 @@
-import Dashboard from './components/Dashboard';
+import Dashboard from './features/dashboard/Dashboard';
 import { MapLibreProvider } from './context/MapLibreContext';
-import ParkSubmissionForm from './components/parkSubmission/ParkSubmissionForm';
+import ParkSubmissionForm from './features/parkSubmission/components/ParkSubmissionForm';
+import ParkSubmissionDashboard from './features/parkSubmission/ParkSubmissionDashboard';
 
 function App() {
     return (
-        <MapLibreProvider>
-            {/* <div className='flex min-h-screen w-full flex-col'>
+        <div className='flex min-h-screen w-full flex-col'>
+            {/* <MapLibreProvider>
                 <Dashboard />
-            </div> */}
-            <ParkSubmissionForm />
-        </MapLibreProvider>
+            </MapLibreProvider> */}
+            {/* <ParkSubmissionForm /> */}
+            <ParkSubmissionDashboard />
+        </div>
     );
 }
 

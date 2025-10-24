@@ -1,4 +1,4 @@
-import { useMapLibreContext } from '../context/MapLibreContext';
+import { useMapLibreContext } from '../../../context/MapLibreContext';
 
 const MapLibreMap = () => {
     const { mapContainerRef } = useMapLibreContext();

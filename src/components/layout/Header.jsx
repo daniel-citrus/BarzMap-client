@@ -1,5 +1,5 @@
-import LoginButton from './Login';
-import LogoutButton from './Logout';
+import LoginButton from '../../features/auth/Login';
+import LogoutButton from '../../features/auth/Logout';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const Header = () => {

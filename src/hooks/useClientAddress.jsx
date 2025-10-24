@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    resolveAddress,
-    getCoordinates,
-} from '../components/helpers/geocoding';
+import { resolveAddress, getCoordinates } from '../lib/geocoding';
 
 /**
  * Resolves a client's street address and coordinates via MapTiler geocoding,
@@ -31,6 +28,10 @@ const useClientAddress = () => {
 
         const updateCoords = async () => {
             try {
+                if (!address || address.trim() === '') {
+                    return;
+                }
+
                 const newCoords = await getCoordinates(address);
                 setCoordinates(newCoords);
             } catch (e) {

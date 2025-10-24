@@ -1,10 +1,10 @@
-import MapLibreMap from './MapLibre';
-import SearchInput from './SearchInput';
-import useClientAddress from '../hooks/useClientAddress';
+import MapLibreMap from './components/MapLibreMap';
+import SearchInput from './components/SearchInput';
+import useClientAddress from '../../hooks/useClientAddress';
 import { useCallback, useEffect, useState } from 'react';
-import { useMapLibreContext } from '../context/MapLibreContext';
-import useMapMarkers from '../hooks/MapLibre Hooks/useMapMarkers';
-import DetailedPopup from './map/markers/DetailedPopup';
+import { useMapLibreContext } from '../../context/MapLibreContext';
+import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
+import DetailedPopup from './components/markers/DetailedPopup';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -35,9 +35,15 @@ const Dashboard = () => {
 
     const onNewAddress = (address) => {
         setAddress(address);
+
         if (!mapInstance.current || !coordinates) {
             return;
         }
+
+        mapInstance.current.flyTo({
+            center: [coordinates.longitude, coordinates.latitude],
+            zoom: 14,
+        });
     };
 
     return (

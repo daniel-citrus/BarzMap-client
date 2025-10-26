@@ -8,6 +8,7 @@ const SUBMISSIONS = [
         parkName: 'Bayview Fitness Parc',
         parkAddress: '842 Marina Vista, San Francisco, CA 94109',
         equipment: 5,
+        status: 'pending',
     },
     {
         id: 'SUB-10411',
@@ -16,6 +17,7 @@ const SUBMISSIONS = [
         parkName: 'Riverbend Street Workout',
         parkAddress: '2120 Riverside Dr, Sacramento, CA 95818',
         equipment: 7,
+        status: 'approved',
     },
     {
         id: 'SUB-10467',
@@ -24,6 +26,7 @@ const SUBMISSIONS = [
         parkName: 'Prairie Muscle Court',
         parkAddress: '4112 Prairie Ave, Dallas, TX 75204',
         equipment: 4,
+        status: 'denied',
     },
     {
         id: 'SUB-10503',
@@ -32,6 +35,7 @@ const SUBMISSIONS = [
         parkName: 'Cascades Calisthenics Cove',
         parkAddress: '965 Cascade Ln, Portland, OR 97205',
         equipment: 9,
+        status: 'pending',
     },
     {
         id: 'SUB-10552',
@@ -40,6 +44,7 @@ const SUBMISSIONS = [
         parkName: 'Summit Strength Plaza',
         parkAddress: '1501 Summit Blvd, Denver, CO 80202',
         equipment: 6,
+        status: 'pending',
     },
     {
         id: 'SUB-10588',
@@ -48,6 +53,7 @@ const SUBMISSIONS = [
         parkName: 'Meadow Core Station',
         parkAddress: '88 Meadow Ln, Madison, WI 53703',
         equipment: 3,
+        status: 'approved',
     },
     {
         id: 'SUB-10621',
@@ -56,6 +62,7 @@ const SUBMISSIONS = [
         parkName: 'Sunrise Street Gym',
         parkAddress: '441 Sunrise Ave, Miami, FL 33132',
         equipment: 8,
+        status: 'pending',
     },
     {
         id: 'SUB-10654',
@@ -64,10 +71,26 @@ const SUBMISSIONS = [
         parkName: 'Lakeshore Movement Hub',
         parkAddress: '127 Lakeshore Dr, Chicago, IL 60611',
         equipment: 5,
+        status: 'pending',
     },
 ];
 
 const ACTIONS = ['View', 'Approve', 'Deny', 'Delete'];
+
+const STATUS_META = {
+    pending: {
+        label: 'Pending',
+        className: 'bg-amber-100 text-amber-700',
+    },
+    approved: {
+        label: 'Approved',
+        className: 'bg-emerald-100 text-emerald-700',
+    },
+    denied: {
+        label: 'Denied',
+        className: 'bg-rose-100 text-rose-700',
+    },
+};
 
 const formatDate = (value) =>
     new Intl.DateTimeFormat('en-US', {
@@ -78,7 +101,18 @@ const formatDate = (value) =>
     }).format(new Date(value));
 
 const ParkSubmissionDashboard = () => {
+    const [submissions, setSubmissions] = useState(SUBMISSIONS);
     const [openMenuId, setOpenMenuId] = useState(null);
+
+    const setStatus = (id, nextStatus) => {
+        setSubmissions((prev) =>
+            prev.map((submission) =>
+                submission.id === id
+                    ? { ...submission, status: nextStatus }
+                    : submission
+            )
+        );
+    };
 
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -87,6 +121,23 @@ const ParkSubmissionDashboard = () => {
     const handleAction = (id, action) => {
         // TODO: integrate admin action handlers
         setOpenMenuId(null);
+
+        switch (action) {
+            case 'Approve':
+                setStatus(id, 'approved');
+                break;
+            case 'Deny':
+                setStatus(id, 'denied');
+                break;
+            case 'Delete':
+                setSubmissions((prev) =>
+                    prev.filter((submission) => submission.id !== id)
+                );
+                break;
+            default:
+                break;
+        }
+
         console.log(`Action "${action}" selected for ${id}`);
     };
 
@@ -103,17 +154,18 @@ const ParkSubmissionDashboard = () => {
             </header>
 
             <div className='rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-sm text-slate-600 sm:p-8'>
-                <div className='hidden grid-cols-[1fr_0.9fr_1.6fr_1.6fr_0.6fr_0.4fr] gap-3 text-xs font-semibold uppercase tracking-wide text-slate-400 sm:grid sm:text-[0.7rem]'>
+                <div className='hidden grid-cols-[1fr_0.9fr_1.6fr_1.6fr_0.8fr_0.6fr_0.4fr] gap-3 text-xs font-semibold uppercase tracking-wide text-slate-400 sm:grid sm:text-[0.7rem]'>
                     <span>Date</span>
                     <span>Submitted By</span>
                     <span>Park Name</span>
                     <span>Park Address</span>
+                    <span className='text-right'>Status</span>
                     <span className='text-right'>Equipment</span>
                     <span className='text-right'>Actions</span>
                 </div>
 
                 <ul className='mt-3 space-y-4'>
-                    {SUBMISSIONS.map(
+                    {submissions.map(
                         ({
                             id,
                             date,
@@ -121,10 +173,11 @@ const ParkSubmissionDashboard = () => {
                             parkName,
                             parkAddress,
                             equipment,
+                            status,
                         }) => (
                             <li
                                 key={id}
-                                className='grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm shadow-slate-900/5 sm:grid-cols-[1fr_0.9fr_1.6fr_1.6fr_0.6fr_0.4fr] sm:gap-3 sm:items-center'
+                                className='grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm shadow-slate-900/5 sm:grid-cols-[1fr_0.9fr_1.6fr_1.6fr_0.8fr_0.6fr_0.4fr] sm:gap-3 sm:items-center'
                             >
                                 <div className='flex items-baseline justify-between sm:hidden'>
                                     <span className='text-xs font-semibold text-slate-500'>
@@ -146,8 +199,30 @@ const ParkSubmissionDashboard = () => {
                                 <span className='text-sm text-slate-500'>
                                     {parkAddress}
                                 </span>
+                                <span className='hidden justify-end sm:flex'>
+                                    <span
+                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                                            STATUS_META[status]?.className ??
+                                            STATUS_META.pending.className
+                                        }`}
+                                    >
+                                        {STATUS_META[status]?.label ??
+                                            STATUS_META.pending.label}
+                                    </span>
+                                </span>
                                 <span className='hidden text-right text-xs font-medium text-slate-400 sm:block sm:text-sm'>
                                     {equipment}
+                                </span>
+                                <span className='sm:hidden'>
+                                    <span
+                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                                            STATUS_META[status]?.className ??
+                                            STATUS_META.pending.className
+                                        }`}
+                                    >
+                                        {STATUS_META[status]?.label ??
+                                            STATUS_META.pending.label}
+                                    </span>
                                 </span>
                                 <div className='relative flex justify-start sm:justify-end'>
                                     <button

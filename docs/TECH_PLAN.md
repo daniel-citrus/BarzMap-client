@@ -44,7 +44,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [x] Implement photo uploads and media preview handling.
   - [x] Add a location picker with map drag, coordinate inputs, and current location finder
 - [ ] Submission moderation
-  - [ ] Create an admin review dashboard to approve, reject, or request changes.
+  - [x] Create an admin review dashboard to approve, reject, or request changes.
     - [ ] Each section should have an approve, reject, or request change option to indiciate the status of each section
   - [ ] Surface feedback history and status updates back to submitters.
 - [ ] Events & programming

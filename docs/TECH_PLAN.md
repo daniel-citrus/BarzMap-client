@@ -45,8 +45,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [x] Add a location picker with map drag, coordinate inputs, and current location finder
 - [ ] Submission moderation
   - [x] Create an admin review dashboard to approve, reject, or request changes.
-    - [ ] Each section should have an approve, reject, or request change option to indiciate the status of each section
-  - [ ] Surface feedback history and status updates back to submitters.
+    - [x] Each section should have an approve, reject, or request change option to indiciate the status of each section
 - [ ] Events & programming
   - [ ] Define frontend data models and API hooks for events tied to parks.
   - [ ] Surface upcoming events in park popups and a list/calendar view with filters.

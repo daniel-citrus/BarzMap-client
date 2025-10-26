@@ -19,16 +19,17 @@ const ParkSubmissionViewer = ({
     onClose,
     onApprove,
     onDeny,
+    onPending,
     onCommentChange,
 }) => {
     const {
-        title,
+        parkName,
         description,
-        address,
+        parkAddress,
         equipment = [],
         images = [],
-        submittedAt,
-        submitter,
+        date,
+        user,
         moderationComment,
     } = submission ?? {};
 
@@ -97,7 +98,7 @@ const ParkSubmissionViewer = ({
                                 <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
                                     <img
                                         src={activeImage}
-                                        alt={`${title || 'Park submission'} photo ${
+                                        alt={`${parkName || 'Park submission'} photo ${
                                             clampedIndex + 1
                                         }`}
                                         className='h-full w-full object-cover'
@@ -158,7 +159,7 @@ const ParkSubmissionViewer = ({
                                         >
                                             <img
                                                 src={image}
-                                                alt={`${title || 'Park submission'} thumbnail ${
+                                                alt={`${parkName || 'Park submission'} thumbnail ${
                                                     index + 1
                                                 }`}
                                                 className='h-full w-full object-cover'
@@ -173,13 +174,11 @@ const ParkSubmissionViewer = ({
                     <div className='flex flex-col overflow-y-auto bg-white px-8 pb-8 pt-8 md:pt-20'>
                         <div className='flex flex-col gap-3 border-b border-slate-200 pb-6'>
                             <h2 className='text-2xl font-semibold text-slate-900'>
-                                {title || 'Untitled Submission'}
+                                {parkName || 'Untitled Submission'}
                             </h2>
                             <div className='flex flex-col gap-1 text-sm uppercase tracking-wide text-slate-400 sm:flex-row sm:items-center sm:gap-3'>
-                                {submittedAt && (
-                                    <span>{formatDateTime(submittedAt)}</span>
-                                )}
-                                {submitter && <span>Submitted by {submitter}</span>}
+                                {date && <span>{formatDateTime(date)}</span>}
+                                {user && <span>Submitted by {user}</span>}
                             </div>
                         </div>
 
@@ -193,12 +192,12 @@ const ParkSubmissionViewer = ({
                                 </p>
                             </div>
 
-                            {address && (
+                            {parkAddress && (
                                 <div className='space-y-2'>
                                     <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
                                         Address
                                     </h3>
-                                    <p className='text-sm text-slate-600'>{address}</p>
+                                    <p className='text-sm text-slate-600'>{parkAddress}</p>
                                 </div>
                             )}
 
@@ -227,6 +226,7 @@ const ParkSubmissionViewer = ({
                             <ParkSubmissionModeration
                                 onApprove={onApprove}
                                 onDeny={onDeny}
+                                onPending={onPending}
                                 onCommentChange={onCommentChange}
                                 initialComment={moderationComment}
                             />

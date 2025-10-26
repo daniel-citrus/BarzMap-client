@@ -7,7 +7,13 @@ const SUBMISSIONS = [
         user: 'dcitrus4',
         parkName: 'Bayview Fitness Parc',
         parkAddress: '842 Marina Vista, San Francisco, CA 94109',
-        equipment: 5,
+        equipment: [
+            'Pull-up Bars',
+            'Dip Bars',
+            'Push-up Bars',
+            'Sit-up Bench',
+            'Plyo Boxes',
+        ],
         status: 'pending',
     },
     {
@@ -16,7 +22,15 @@ const SUBMISSIONS = [
         user: 'sophia.h',
         parkName: 'Riverbend Street Workout',
         parkAddress: '2120 Riverside Dr, Sacramento, CA 95818',
-        equipment: 7,
+        equipment: [
+            'Monkey Bars',
+            'Rings',
+            'Leg Raise Station',
+            'Row Machine',
+            'Stepper',
+            'Dip Bars',
+            'Precision Rails',
+        ],
         status: 'approved',
     },
     {
@@ -25,7 +39,12 @@ const SUBMISSIONS = [
         user: 'trailmix92',
         parkName: 'Prairie Muscle Court',
         parkAddress: '4112 Prairie Ave, Dallas, TX 75204',
-        equipment: 4,
+        equipment: [
+            'Parallettes',
+            'Balance Beam',
+            'Lunge Bench',
+            'Squat Stand',
+        ],
         status: 'denied',
     },
     {
@@ -34,7 +53,17 @@ const SUBMISSIONS = [
         user: 'maraudersclub',
         parkName: 'Cascades Calisthenics Cove',
         parkAddress: '965 Cascade Ln, Portland, OR 97205',
-        equipment: 9,
+        equipment: [
+            'Pull-up Bars',
+            'Climbing Rope',
+            'Peg Board',
+            'Parkour Wall',
+            'Precision Rails',
+            'Ninja Grips',
+            'Lache Bars',
+            'Salmon Ladder',
+            'Rings',
+        ],
         status: 'pending',
     },
     {
@@ -43,7 +72,14 @@ const SUBMISSIONS = [
         user: 'keith.n',
         parkName: 'Summit Strength Plaza',
         parkAddress: '1501 Summit Blvd, Denver, CO 80202',
-        equipment: 6,
+        equipment: [
+            'Stretch Bars',
+            'Foam Roller Station',
+            'Balance Beam',
+            'Incline Board',
+            'Sit-up Bench',
+            'Roman Chair',
+        ],
         status: 'pending',
     },
     {
@@ -52,7 +88,7 @@ const SUBMISSIONS = [
         user: 'fitmomsquad',
         parkName: 'Meadow Core Station',
         parkAddress: '88 Meadow Ln, Madison, WI 53703',
-        equipment: 3,
+        equipment: ['Sit-up Bench', 'Roman Chair', 'Leg Raise Station'],
         status: 'approved',
     },
     {
@@ -61,7 +97,16 @@ const SUBMISSIONS = [
         user: 'alex.ro',
         parkName: 'Sunrise Street Gym',
         parkAddress: '441 Sunrise Ave, Miami, FL 33132',
-        equipment: 8,
+        equipment: [
+            'Plyo Boxes',
+            'Sprint Track',
+            'Air Walker',
+            'Row Machine',
+            'Elliptical',
+            'Bike Trainer',
+            'Hurdles',
+            'Calf Block',
+        ],
         status: 'pending',
     },
     {
@@ -70,12 +115,49 @@ const SUBMISSIONS = [
         user: 'jensenV',
         parkName: 'Lakeshore Movement Hub',
         parkAddress: '127 Lakeshore Dr, Chicago, IL 60611',
-        equipment: 5,
+        equipment: [
+            'Ninja Grips',
+            'Rings',
+            'Salmon Ladder',
+            'Lache Bars',
+            'Peg Board',
+        ],
         status: 'pending',
     },
 ];
 
-const ACTIONS = ['View', 'Approve', 'Deny', 'Delete'];
+const ACTIONS = [
+    {
+        title: 'View',
+        action: (id) => {
+            console.log(`Viewing: ${id}`);
+        },
+    },
+    {
+        title: 'Approve',
+        action: (id) => {
+            console.log(`Approved: ${id}`);
+        },
+    },
+    {
+        title: 'Deny',
+        action: (id) => {
+            console.log(`Denied: ${id}`);
+        },
+    },
+    {
+        title: 'Pending',
+        action: (id) => {
+            console.log(`Pending: ${id}`);
+        },
+    },
+    {
+        title: 'Delete',
+        action: (id) => {
+            console.log(`Delete: ${id}`);
+        },
+    },
+];
 
 const STATUS_META = {
     pending: {
@@ -104,41 +186,8 @@ const ParkSubmissionDashboard = () => {
     const [submissions, setSubmissions] = useState(SUBMISSIONS);
     const [openMenuId, setOpenMenuId] = useState(null);
 
-    const setStatus = (id, nextStatus) => {
-        setSubmissions((prev) =>
-            prev.map((submission) =>
-                submission.id === id
-                    ? { ...submission, status: nextStatus }
-                    : submission
-            )
-        );
-    };
-
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
-    };
-
-    const handleAction = (id, action) => {
-        // TODO: integrate admin action handlers
-        setOpenMenuId(null);
-
-        switch (action) {
-            case 'Approve':
-                setStatus(id, 'approved');
-                break;
-            case 'Deny':
-                setStatus(id, 'denied');
-                break;
-            case 'Delete':
-                setSubmissions((prev) =>
-                    prev.filter((submission) => submission.id !== id)
-                );
-                break;
-            default:
-                break;
-        }
-
-        console.log(`Action "${action}" selected for ${id}`);
     };
 
     return (
@@ -165,16 +214,25 @@ const ParkSubmissionDashboard = () => {
                 </div>
 
                 <ul className='mt-3 space-y-4'>
-                    {submissions.map(
-                        ({
+                    {submissions.map((submission) => {
+                        const {
                             id,
                             date,
                             user,
                             parkName,
                             parkAddress,
-                            equipment,
+                            equipment = [],
                             status,
-                        }) => (
+                        } = submission;
+
+                        const statusClass =
+                            STATUS_META[status]?.className ??
+                            STATUS_META.pending.className;
+                        const statusLabel =
+                            STATUS_META[status]?.label ??
+                            STATUS_META.pending.label;
+
+                        return (
                             <li
                                 key={id}
                                 className='grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm shadow-slate-900/5 sm:grid-cols-[1fr_0.9fr_1.6fr_1.6fr_0.8fr_0.6fr_0.4fr] sm:gap-3 sm:items-center'
@@ -184,7 +242,7 @@ const ParkSubmissionDashboard = () => {
                                         {formatDate(date)}
                                     </span>
                                     <span className='text-xs font-medium text-slate-400'>
-                                        {equipment} eq.
+                                        {equipment.length} items
                                     </span>
                                 </div>
                                 <span className='hidden text-xs font-semibold text-slate-500 sm:block sm:text-sm'>
@@ -201,29 +259,18 @@ const ParkSubmissionDashboard = () => {
                                 </span>
                                 <span className='hidden justify-end sm:flex'>
                                     <span
-                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-                                            STATUS_META[status]?.className ??
-                                            STATUS_META.pending.className
-                                        }`}
+                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClass}`}
                                     >
-                                        {STATUS_META[status]?.label ??
-                                            STATUS_META.pending.label}
+                                        {statusLabel}
                                     </span>
                                 </span>
-                                <span className='hidden text-right text-xs font-medium text-slate-400 sm:block sm:text-sm'>
-                                    {equipment}
-                                </span>
-                                <span className='sm:hidden'>
-                                    <span
-                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-                                            STATUS_META[status]?.className ??
-                                            STATUS_META.pending.className
-                                        }`}
-                                    >
-                                        {STATUS_META[status]?.label ??
-                                            STATUS_META.pending.label}
-                                    </span>
-                                </span>
+                                <div className='hidden justify-end sm:flex'>
+                                    {
+                                        <div className='flex flex-wrap justify-end gap-2'>
+                                            {equipment.length}
+                                        </div>
+                                    }
+                                </div>
                                 <div className='relative flex justify-start sm:justify-end'>
                                     <button
                                         type='button'
@@ -246,32 +293,31 @@ const ParkSubmissionDashboard = () => {
                                     </button>
                                     {openMenuId === id && (
                                         <ul
-                                            className='absolute right-0 top-11 z-10 w-32 overflow-hidden rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-600 shadow-lg shadow-slate-900/10'
+                                            className='absolute right-0 top-11 z-10 w-36 overflow-hidden rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-600 shadow-lg shadow-slate-900/10'
                                             role='menu'
                                         >
-                                            {ACTIONS.map((action) => (
-                                                <li key={action}>
-                                                    <button
-                                                        type='button'
-                                                        onClick={() =>
-                                                            handleAction(
-                                                                id,
-                                                                action
-                                                            )
-                                                        }
-                                                        className='flex w-full items-center justify-start px-3 py-2 text-left transition hover:bg-slate-100'
-                                                        role='menuitem'
-                                                    >
-                                                        {action}
-                                                    </button>
-                                                </li>
-                                            ))}
+                                            {ACTIONS.map(
+                                                ({ title, action }) => (
+                                                    <li key={title}>
+                                                        <button
+                                                            type='button'
+                                                            onClick={() =>
+                                                                action(id)
+                                                            }
+                                                            className='flex w-full items-center justify-start px-3 py-2 text-left transition hover:bg-slate-100'
+                                                            role='menuitem'
+                                                        >
+                                                            {title}
+                                                        </button>
+                                                    </li>
+                                                )
+                                            )}
                                         </ul>
                                     )}
                                 </div>
                             </li>
-                        )
-                    )}
+                        );
+                    })}
                 </ul>
             </div>
         </section>

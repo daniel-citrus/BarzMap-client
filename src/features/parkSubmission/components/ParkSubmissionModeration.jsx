@@ -3,10 +3,12 @@ import { useState } from 'react';
 const ParkSubmissionModeration = ({
     onApprove,
     onDeny,
+    onPending,
     onCommentChange,
     initialComment = '',
     approveLabel = 'Approve',
     denyLabel = 'Deny',
+    pendingLabel = 'Pending',
     commentPlaceholder = 'Add an optional note for the submitter...',
 }) => {
     const [comment, setComment] = useState(initialComment);
@@ -23,6 +25,10 @@ const ParkSubmissionModeration = ({
 
     const handleDeny = () => {
         onDeny?.(comment.trim());
+    };
+
+    const handlePending = () => {
+        onPending?.(comment.trim());
     };
 
     return (
@@ -51,6 +57,13 @@ const ParkSubmissionModeration = ({
                     className='inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2'
                 >
                     {approveLabel}
+                </button>
+                <button
+                    type='button'
+                    onClick={handlePending}
+                    className='inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2'
+                >
+                    {pendingLabel}
                 </button>
                 <button
                     type='button'

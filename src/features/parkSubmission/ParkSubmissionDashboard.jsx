@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import ParkSubmissionViewer from './components/ParkSubmissionViewer';
 
 const SUBMISSIONS = [
     {
         id: 'SUB-10342',
-        date: '2024-08-24T15:36:00Z',
-        user: 'dcitrus4',
-        parkName: 'Bayview Fitness Parc',
-        parkAddress: '842 Marina Vista, San Francisco, CA 94109',
+        title: 'Bayview Fitness Parc',
+        description:
+            'Waterfront calisthenics spot featuring multiple rigs and sunrise views over the bay.',
+        address: '842 Marina Vista, San Francisco, CA 94109',
         equipment: [
             'Pull-up Bars',
             'Dip Bars',
@@ -14,14 +15,22 @@ const SUBMISSIONS = [
             'Sit-up Bench',
             'Plyo Boxes',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1526405796084-b11c2f1e01d2?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1621086893820-1a9e3d408c16?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-08-24T15:36:00Z',
+        submitter: 'dcitrus4',
+        moderationComment: '',
         status: 'pending',
     },
     {
         id: 'SUB-10411',
-        date: '2024-08-18T11:12:00Z',
-        user: 'sophia.h',
-        parkName: 'Riverbend Street Workout',
-        parkAddress: '2120 Riverside Dr, Sacramento, CA 95818',
+        title: 'Riverbend Street Workout',
+        description:
+            'Riverfront plaza with multi-height bars and functional fitness circuit equipment.',
+        address: '2120 Riverside Dr, Sacramento, CA 95818',
         equipment: [
             'Monkey Bars',
             'Rings',
@@ -31,28 +40,41 @@ const SUBMISSIONS = [
             'Dip Bars',
             'Precision Rails',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1583459073860-22d2ac790227?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-08-18T11:12:00Z',
+        submitter: 'sophia.h',
+        moderationComment: 'Looks ready—double-check lighting schedule.',
         status: 'approved',
     },
     {
         id: 'SUB-10467',
-        date: '2024-08-05T20:45:00Z',
-        user: 'trailmix92',
-        parkName: 'Prairie Muscle Court',
-        parkAddress: '4112 Prairie Ave, Dallas, TX 75204',
+        title: 'Prairie Muscle Court',
+        description:
+            'Neighborhood training corner with shaded parallel bars and lower-body conditioning stations.',
+        address: '4112 Prairie Ave, Dallas, TX 75204',
         equipment: [
             'Parallettes',
             'Balance Beam',
             'Lunge Bench',
             'Squat Stand',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1526401485004-46910ecc8e51?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-08-05T20:45:00Z',
+        submitter: 'trailmix92',
+        moderationComment: 'Needs updated safety inspection paperwork.',
         status: 'denied',
     },
     {
         id: 'SUB-10503',
-        date: '2024-07-29T08:18:00Z',
-        user: 'maraudersclub',
-        parkName: 'Cascades Calisthenics Cove',
-        parkAddress: '965 Cascade Ln, Portland, OR 97205',
+        title: 'Cascades Calisthenics Cove',
+        description:
+            'Forest-lined hillside course stacked with advanced obstacles and ninja-style rigs.',
+        address: '965 Cascade Ln, Portland, OR 97205',
         equipment: [
             'Pull-up Bars',
             'Climbing Rope',
@@ -64,14 +86,21 @@ const SUBMISSIONS = [
             'Salmon Ladder',
             'Rings',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-07-29T08:18:00Z',
+        submitter: 'maraudersclub',
+        moderationComment: '',
         status: 'pending',
     },
     {
         id: 'SUB-10552',
-        date: '2024-07-21T17:22:00Z',
-        user: 'keith.n',
-        parkName: 'Summit Strength Plaza',
-        parkAddress: '1501 Summit Blvd, Denver, CO 80202',
+        title: 'Summit Strength Plaza',
+        description:
+            'Downtown plaza featuring recovery-focused mobility stations and bodyweight rigs.',
+        address: '1501 Summit Blvd, Denver, CO 80202',
         equipment: [
             'Stretch Bars',
             'Foam Roller Station',
@@ -80,23 +109,35 @@ const SUBMISSIONS = [
             'Sit-up Bench',
             'Roman Chair',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1508595099044-65f30007d4f3?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-07-21T17:22:00Z',
+        submitter: 'keith.n',
+        moderationComment: '',
         status: 'pending',
     },
     {
         id: 'SUB-10588',
-        date: '2024-07-09T13:57:00Z',
-        user: 'fitmomsquad',
-        parkName: 'Meadow Core Station',
-        parkAddress: '88 Meadow Ln, Madison, WI 53703',
+        title: 'Meadow Core Station',
+        description:
+            'Family-friendly park core circuit with shaded benches and nearby playground access.',
+        address: '88 Meadow Ln, Madison, WI 53703',
         equipment: ['Sit-up Bench', 'Roman Chair', 'Leg Raise Station'],
+        images: [
+            'https://images.unsplash.com/photo-1534723452862-4c874018d66d?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-07-09T13:57:00Z',
+        submitter: 'fitmomsquad',
+        moderationComment: 'Approved—notify parks crew about signage swap.',
         status: 'approved',
     },
     {
         id: 'SUB-10621',
-        date: '2024-06-30T09:41:00Z',
-        user: 'alex.ro',
-        parkName: 'Sunrise Street Gym',
-        parkAddress: '441 Sunrise Ave, Miami, FL 33132',
+        title: 'Sunrise Street Gym',
+        description:
+            'Waterfront cardio deck with conditioning machines and sprint track loops.',
+        address: '441 Sunrise Ave, Miami, FL 33132',
         equipment: [
             'Plyo Boxes',
             'Sprint Track',
@@ -107,14 +148,21 @@ const SUBMISSIONS = [
             'Hurdles',
             'Calf Block',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1528668163409-9cbf5cb9fe8c?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-06-30T09:41:00Z',
+        submitter: 'alex.ro',
+        moderationComment: '',
         status: 'pending',
     },
     {
         id: 'SUB-10654',
-        date: '2024-06-22T22:03:00Z',
-        user: 'jensenV',
-        parkName: 'Lakeshore Movement Hub',
-        parkAddress: '127 Lakeshore Dr, Chicago, IL 60611',
+        title: 'Lakeshore Movement Hub',
+        description:
+            'Lakefront station stacked with rings, salmon ladder, and other grip-intensive elements.',
+        address: '127 Lakeshore Dr, Chicago, IL 60611',
         equipment: [
             'Ninja Grips',
             'Rings',
@@ -122,40 +170,13 @@ const SUBMISSIONS = [
             'Lache Bars',
             'Peg Board',
         ],
+        images: [
+            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80',
+        ],
+        submittedAt: '2024-06-22T22:03:00Z',
+        submitter: 'jensenV',
+        moderationComment: '',
         status: 'pending',
-    },
-];
-
-const ACTIONS = [
-    {
-        title: 'View',
-        action: (id) => {
-            console.log(`Viewing: ${id}`);
-        },
-    },
-    {
-        title: 'Approve',
-        action: (id) => {
-            console.log(`Approved: ${id}`);
-        },
-    },
-    {
-        title: 'Deny',
-        action: (id) => {
-            console.log(`Denied: ${id}`);
-        },
-    },
-    {
-        title: 'Pending',
-        action: (id) => {
-            console.log(`Pending: ${id}`);
-        },
-    },
-    {
-        title: 'Delete',
-        action: (id) => {
-            console.log(`Delete: ${id}`);
-        },
     },
 ];
 
@@ -185,9 +206,21 @@ const formatDate = (value) =>
 const ParkSubmissionDashboard = () => {
     const [submissions, setSubmissions] = useState(SUBMISSIONS);
     const [openMenuId, setOpenMenuId] = useState(null);
-
+    const [viewSubmission, setViewSubmission] = useState(null);
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
+    };
+
+    const ACTIONS = [
+        { title: 'View', action: (id) => setViewSubmission(id) },
+        { title: 'Approve', action: (id) => console.log('jhello') },
+        { title: 'Deny', action: (id) => console.log('jhello') },
+        { title: 'Mark Pending', action: (id) => console.log('jhello') },
+        { title: 'Delete', action: (id) => console.log('jhello') },
+    ];
+
+    const onCloseSubmissionViewer = () => {
+        setViewSubmission(null);
     };
 
     return (
@@ -217,14 +250,13 @@ const ParkSubmissionDashboard = () => {
                     {submissions.map((submission) => {
                         const {
                             id,
-                            date,
-                            user,
-                            parkName,
-                            parkAddress,
+                            submittedAt,
+                            submitter,
+                            title,
+                            address,
                             equipment = [],
                             status,
                         } = submission;
-
                         const statusClass =
                             STATUS_META[status]?.className ??
                             STATUS_META.pending.className;
@@ -239,23 +271,23 @@ const ParkSubmissionDashboard = () => {
                             >
                                 <div className='flex items-baseline justify-between sm:hidden'>
                                     <span className='text-xs font-semibold text-slate-500'>
-                                        {formatDate(date)}
+                                        {formatDate(submittedAt)}
                                     </span>
                                     <span className='text-xs font-medium text-slate-400'>
                                         {equipment.length} items
                                     </span>
                                 </div>
                                 <span className='hidden text-xs font-semibold text-slate-500 sm:block sm:text-sm'>
-                                    {formatDate(date)}
+                                    {formatDate(submittedAt)}
                                 </span>
                                 <span className='text-sm font-medium text-slate-700'>
-                                    {user}
+                                    {submitter}
                                 </span>
                                 <span className='text-base font-semibold text-slate-900 sm:text-sm'>
-                                    {parkName}
+                                    {title}
                                 </span>
                                 <span className='text-sm text-slate-500'>
-                                    {parkAddress}
+                                    {address}
                                 </span>
                                 <span className='hidden justify-end sm:flex'>
                                     <span
@@ -264,13 +296,7 @@ const ParkSubmissionDashboard = () => {
                                         {statusLabel}
                                     </span>
                                 </span>
-                                <div className='hidden justify-end sm:flex'>
-                                    {
-                                        <div className='flex flex-wrap justify-end gap-2'>
-                                            {equipment.length}
-                                        </div>
-                                    }
-                                </div>
+
                                 <div className='relative flex justify-start sm:justify-end'>
                                     <button
                                         type='button'
@@ -301,9 +327,9 @@ const ParkSubmissionDashboard = () => {
                                                     <li key={title}>
                                                         <button
                                                             type='button'
-                                                            onClick={() =>
-                                                                action(id)
-                                                            }
+                                                            onClick={(id) => {
+                                                                action(id);
+                                                            }}
                                                             className='flex w-full items-center justify-start px-3 py-2 text-left transition hover:bg-slate-100'
                                                             role='menuitem'
                                                         >
@@ -320,6 +346,16 @@ const ParkSubmissionDashboard = () => {
                     })}
                 </ul>
             </div>
+            {viewSubmission && (
+                <ParkSubmissionViewer
+                    submission={() => {
+                        submissions.find((submission) => {
+                            return submission.id === viewSubmission.id;
+                        });
+                    }}
+                    onClose={onCloseSubmissionViewer}
+                />
+            )}
         </section>
     );
 };

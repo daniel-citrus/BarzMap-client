@@ -55,7 +55,9 @@ const ParkSubmissionViewer = ({
             return;
         }
 
-        setActiveIndex((index) => (index === 0 ? images.length - 1 : index - 1));
+        setActiveIndex((index) =>
+            index === 0 ? images.length - 1 : index - 1
+        );
     };
 
     const handleNext = () => {
@@ -98,9 +100,9 @@ const ParkSubmissionViewer = ({
                                 <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
                                     <img
                                         src={activeImage}
-                                        alt={`${parkName || 'Park submission'} photo ${
-                                            clampedIndex + 1
-                                        }`}
+                                        alt={`${
+                                            parkName || 'Park submission'
+                                        } photo ${clampedIndex + 1}`}
                                         className='h-full w-full object-cover'
                                     />
                                     {images.length > 1 && (
@@ -159,9 +161,10 @@ const ParkSubmissionViewer = ({
                                         >
                                             <img
                                                 src={image}
-                                                alt={`${parkName || 'Park submission'} thumbnail ${
-                                                    index + 1
-                                                }`}
+                                                alt={`${
+                                                    parkName ||
+                                                    'Park submission'
+                                                } thumbnail ${index + 1}`}
                                                 className='h-full w-full object-cover'
                                             />
                                         </button>
@@ -197,7 +200,9 @@ const ParkSubmissionViewer = ({
                                     <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
                                         Address
                                     </h3>
-                                    <p className='text-sm text-slate-600'>{parkAddress}</p>
+                                    <p className='text-sm text-slate-600'>
+                                        {parkAddress}
+                                    </p>
                                 </div>
                             )}
 

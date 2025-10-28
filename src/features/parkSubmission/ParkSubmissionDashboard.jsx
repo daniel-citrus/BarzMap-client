@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ParkSubmissionViewer from './components/ParkSubmissionViewer';
 
 const SUBMISSIONS = [
@@ -207,21 +207,26 @@ const ParkSubmissionDashboard = () => {
     const [submissions, setSubmissions] = useState(SUBMISSIONS);
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
+
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
     };
-
-    const ACTIONS = [
-        { title: 'View', action: (id) => setViewSubmission(id) },
-        { title: 'Approve', action: (id) => console.log('jhello') },
-        { title: 'Deny', action: (id) => console.log('jhello') },
-        { title: 'Mark Pending', action: (id) => console.log('jhello') },
-        { title: 'Delete', action: (id) => console.log('jhello') },
-    ];
-
+    const onViewSubmission = (id) => setViewSubmission(id);
+    const onApprove = (id) => {};
+    const onDeny = (id) => {};
+    const onMarkPending = (id) => {};
+    const onDelete = (id) => {};
     const onCloseSubmissionViewer = () => {
         setViewSubmission(null);
     };
+
+    const ACTIONS = [
+        { title: 'View', action: (id) => onViewSubmission(id) },
+        { title: 'Approve', action: (id) => onApprove(id) },
+        { title: 'Deny', action: (id) => onDeny(id) },
+        { title: 'Mark Pending', action: (id) => onMarkPending(id) },
+        { title: 'Delete', action: (id) => onDelete(id) },
+    ];
 
     return (
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6'>
@@ -263,7 +268,6 @@ const ParkSubmissionDashboard = () => {
                         const statusLabel =
                             STATUS_META[status]?.label ??
                             STATUS_META.pending.label;
-
                         return (
                             <li
                                 key={id}
@@ -327,7 +331,7 @@ const ParkSubmissionDashboard = () => {
                                                     <li key={title}>
                                                         <button
                                                             type='button'
-                                                            onClick={(id) => {
+                                                            onClick={() => {
                                                                 action(id);
                                                             }}
                                                             className='flex w-full items-center justify-start px-3 py-2 text-left transition hover:bg-slate-100'
@@ -344,18 +348,18 @@ const ParkSubmissionDashboard = () => {
                             </li>
                         );
                     })}
+                    {viewSubmission && (
+                        <ParkSubmissionViewer
+                            submission={submissions.find((submission) => {
+                                if (submission.id === viewSubmission) {
+                                    return submission;
+                                }
+                            })}
+                            onClose={onCloseSubmissionViewer}
+                        />
+                    )}
                 </ul>
             </div>
-            {viewSubmission && (
-                <ParkSubmissionViewer
-                    submission={() => {
-                        submissions.find((submission) => {
-                            return submission.id === viewSubmission.id;
-                        });
-                    }}
-                    onClose={onCloseSubmissionViewer}
-                />
-            )}
         </section>
     );
 };

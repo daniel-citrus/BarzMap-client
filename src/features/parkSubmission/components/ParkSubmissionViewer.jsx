@@ -35,9 +35,11 @@ const ParkSubmissionViewer = ({
 
     const [activeIndex, setActiveIndex] = useState(0);
     const hasImages = images.length > 0;
+    const [failedImages, setFailedImages] = useState({});
 
     useEffect(() => {
         setActiveIndex(0);
+        setFailedImages({});
     }, [images]);
 
     const clampedIndex = useMemo(() => {
@@ -49,6 +51,24 @@ const ParkSubmissionViewer = ({
     }, [activeIndex, hasImages, images.length]);
 
     const activeImage = hasImages ? images[clampedIndex] : null;
+    const isActiveImageFailed = activeImage ? failedImages[activeImage] : false;
+
+    const handleImageError = (imageUrl) => {
+        if (!imageUrl) {
+            return;
+        }
+
+        setFailedImages((prev) => {
+            if (prev[imageUrl]) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                [imageUrl]: true,
+            };
+        });
+    };
 
     const handlePrev = () => {
         if (!hasImages) {
@@ -97,14 +117,22 @@ const ParkSubmissionViewer = ({
                     <div className='flex flex-col overflow-hidden border-slate-100 bg-slate-900 text-white'>
                         <div className='relative flex min-h-[50%] flex-1 flex-col'>
                             {hasImages ? (
-                                <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
-                                    <img
-                                        src={activeImage}
-                                        alt={`${
-                                            parkName || 'Park submission'
-                                        } photo ${clampedIndex + 1}`}
-                                        className='h-full w-full object-cover'
-                                    />
+                                <div className='relative flex h-[260px] w-full items-center justify-center overflow-hidden bg-slate-900/60 sm:h-[320px] md:h-full'>
+                                    {!isActiveImageFailed ? (
+                                        <img
+                                            src={activeImage}
+                                            alt={`${
+                                                parkName || 'Park submission'
+                                            } photo ${clampedIndex + 1}`}
+                                            onError={() => handleImageError(activeImage)}
+                                            className='h-full w-full object-cover'
+                                        />
+                                    ) : (
+                                        <div className='flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-900/80 px-6 text-center text-sm font-medium text-slate-200'>
+                                            <span>Image unavailable</span>
+                                            <span className='text-xs text-slate-400'>Try another photo from the carousel.</span>
+                                        </div>
+                                    )}
                                     {images.length > 1 && (
                                         <>
                                             <button
@@ -141,7 +169,7 @@ const ParkSubmissionViewer = ({
                                     )}
                                 </div>
                             ) : (
-                                <div className='flex h-full items-center justify-center bg-slate-900/40 text-sm font-medium text-slate-200'>
+                                <div className='flex h-[260px] w-full items-center justify-center bg-slate-900/40 text-sm font-medium text-slate-200 sm:h-[320px] md:h-full'>
                                     No images available
                                 </div>
                             )}
@@ -159,14 +187,21 @@ const ParkSubmissionViewer = ({
                                                     : 'ring-1 ring-transparent hover:ring-white/50'
                                             }`}
                                         >
-                                            <img
-                                                src={image}
-                                                alt={`${
-                                                    parkName ||
-                                                    'Park submission'
-                                                } thumbnail ${index + 1}`}
-                                                className='h-full w-full object-cover'
-                                            />
+                                            {failedImages[image] ? (
+                                                <div className='flex h-full w-full items-center justify-center bg-slate-800 text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
+                                                    Unavailable
+                                                </div>
+                                            ) : (
+                                                <img
+                                                    src={image}
+                                                    alt={`${
+                                                        parkName ||
+                                                        'Park submission'
+                                                    } thumbnail ${index + 1}`}
+                                                    onError={() => handleImageError(image)}
+                                                    className='h-full w-full object-cover'
+                                                />
+                                            )}
                                         </button>
                                     ))}
                                 </div>

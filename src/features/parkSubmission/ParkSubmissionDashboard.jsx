@@ -204,28 +204,39 @@ const formatDate = (value) =>
     }).format(new Date(value));
 
 const ParkSubmissionDashboard = () => {
-    const [submissions, setSubmissions] = useState(SUBMISSIONS);
+    const submissions = useMemo(() => SUBMISSIONS, []);
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
 
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
     };
-    const onViewSubmission = (id) => setViewSubmission(id);
-    const onApprove = (id) => {};
-    const onDeny = (id) => {};
-    const onMarkPending = (id) => {};
-    const onDelete = (id) => {};
-    const onCloseSubmissionViewer = () => {
+    const handleViewSubmission = (id) => {
+        console.log('Viewing submission:', id);
+        setViewSubmission(id);
+    };
+    const handleApprove = (id) => {
+        console.log('Approved:', id);
+    };
+    const handleDeny = (id) => {
+        console.log('Denied:', id);
+    };
+    const handleMarkPending = (id) => {
+        console.log('Marked pending:', id);
+    };
+    const handleDelete = (id) => {
+        console.log('Deleted:', id);
+    };
+    const handleCloseSubmissionViewer = () => {
         setViewSubmission(null);
     };
 
     const ACTIONS = [
-        { title: 'View', action: (id) => onViewSubmission(id) },
-        { title: 'Approve', action: (id) => onApprove(id) },
-        { title: 'Deny', action: (id) => onDeny(id) },
-        { title: 'Mark Pending', action: (id) => onMarkPending(id) },
-        { title: 'Delete', action: (id) => onDelete(id) },
+        { title: 'View', action: (id) => handleViewSubmission(id) },
+        { title: 'Approve', action: (id) => handleApprove(id) },
+        { title: 'Deny', action: (id) => handleDeny(id) },
+        { title: 'Mark Pending', action: (id) => handleMarkPending(id) },
+        { title: 'Delete', action: (id) => handleDelete(id) },
     ];
 
     return (
@@ -355,7 +366,8 @@ const ParkSubmissionDashboard = () => {
                                     return submission;
                                 }
                             })}
-                            onClose={onCloseSubmissionViewer}
+                            onClose={handleCloseSubmissionViewer}
+                            onApprove={handleApprove}
                         />
                     )}
                 </ul>

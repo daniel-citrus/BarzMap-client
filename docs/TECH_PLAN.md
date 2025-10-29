@@ -39,18 +39,14 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [x] Enable browser geolocation, recenter the map, and expose manual address search.
   - [x] Render park markers filtered by viewport and show detailed popups.
 - [X] New outdoor gym submission form
-  - [ ] Gate the submission flow behind Auth0 login and display user context.
   - [x] Build the guided form with validation and equipment checklist
   - [x] Implement photo uploads and media preview handling.
   - [x] Add a location picker with map drag, coordinate inputs, and current location finder
 - [ ] Submission moderation
   - [x] Create an admin review dashboard to approve, reject, or request changes.
     - [x] Each section should have an approve, reject, or request change option to indiciate the status of each section
-- [ ] Events & programming
-  - [ ] Define frontend data models and API hooks for events tied to parks.
-  - [ ] Surface upcoming events in park popups and a list/calendar view with filters.
-  - [ ] Support RSVPs or share actions for authenticated users and persist responses.
-  - [ ] Provide moderation workflows for event submissions and notify creators of changes.
+- [x] Events Board
+  - [x] Display upcoming events
 
 ## Future Features
 - Integrate Auth0 provider with login/logout buttons and profile display.
@@ -65,3 +61,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - Extend admin dashboard with comment-based approvals and per-image review.
 - Donation system to help fund local community projects focused in developing outdoor exercise equipment.
 - Advanced event analytics and paid promotion slots for organizers.
+## P2
+- [ ] Park submission form
+  - [ ] Gate the submission flow behind authentication
+- [ ] 

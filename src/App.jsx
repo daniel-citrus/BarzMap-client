@@ -2,7 +2,7 @@ import Dashboard from './features/dashboard/Dashboard';
 import { MapLibreProvider } from './context/MapLibreContext';
 import ParkSubmissionForm from './features/parkSubmission/components/ParkSubmissionForm';
 import ParkSubmissionDashboard from './features/parkSubmission/ParkSubmissionDashboard';
-import ParkSubmissionViewer from './features/parkSubmission/components/ParkSubmissionViewer';
+import EventsBoard from './features/events/EventsBoard';
 
 function App() {
     return (
@@ -11,8 +11,8 @@ function App() {
                 <Dashboard />
             </MapLibreProvider> */}
             {/* <ParkSubmissionForm /> */}
-            <ParkSubmissionDashboard />
-            {/* <ParkSubmissionViewer /> */}
+            {/* <ParkSubmissionDashboard /> */}
+            <EventsBoard />
         </div>
     );
 }

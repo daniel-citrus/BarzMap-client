@@ -7,12 +7,12 @@ import EventsBoard from './features/events/EventsBoard';
 function App() {
     return (
         <div className='flex min-h-screen w-full flex-col'>
-            {/* <MapLibreProvider>
+            <MapLibreProvider>
                 <Dashboard />
-            </MapLibreProvider> */}
+            </MapLibreProvider>
             {/* <ParkSubmissionForm /> */}
             {/* <ParkSubmissionDashboard /> */}
-            <EventsBoard />
+            {/* <EventsBoard /> */}
         </div>
     );
 }

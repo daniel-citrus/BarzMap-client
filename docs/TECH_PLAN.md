@@ -48,20 +48,18 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 - [x] Events Board
   - [x] Display upcoming events
 
-## Future Features
-- Integrate Auth0 provider with login/logout buttons and profile display.
-- Define reusable component architecture for buttons, inputs, modals, and map wrappers.
-- Deliver design system polish (animations, skeleton loaders, mobile optimization).
-- Introduce caching strategies, lazy loading, and bundle size checks.
-- Run accessibility, cross-browser, and device QA.
-- Configure routing (Home, Map, Submit, Profile) with responsive layouts.
-- Enhance map markers with hover popups and Google Maps directions link.
-- Expand location search with address autocomplete and distance calculator.
-- Extend park submissions with progress states and save progress.
-- Extend admin dashboard with comment-based approvals and per-image review.
-- Donation system to help fund local community projects focused in developing outdoor exercise equipment.
-- Advanced event analytics and paid promotion slots for organizers.
 ## P2
-- [ ] Park submission form
-  - [ ] Gate the submission flow behind authentication
-- [ ] 
+- [ ] Gate the park submission flow behind authentication
+- [ ] New events board submissions
+- [ ] Integrate Auth0 provider with login/logout buttons and profile display.
+- [ ] Define reusable component architecture for buttons, inputs, modals, and map wrappers.
+- [ ] Deliver design system polish (animations, skeleton loaders, mobile optimization).
+- [ ] Introduce caching strategies, lazy loading, and bundle size checks.
+- [ ] Run accessibility, cross-browser, and device QA.
+- [ ] Configure routing (Home, Map, Submit, Profile) with responsive layouts.
+- [ ] Enhance map markers with hover popups and Google Maps directions link.
+- [ ] Expand location search with address autocomplete and distance calculator.
+- [ ] Extend park submissions with progress states and save progress.
+- [ ] Extend admin dashboard with comment-based approvals and per-image review.
+- [ ] Donation system to help fund local community projects focused in developing outdoor exercise equipment.
+- [ ] Advanced event analytics and paid promotion slots for organizers.

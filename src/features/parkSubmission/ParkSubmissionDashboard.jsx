@@ -204,7 +204,7 @@ const formatDate = (value) =>
     }).format(new Date(value));
 
 const ParkSubmissionDashboard = () => {
-    const [submissions] = useState(SUBMISSIONS);
+    const [submissions] = useState(SUBMISSIONS); // becomes an effect that pulls submissions from db
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
 

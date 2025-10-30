@@ -11,7 +11,7 @@ const Dashboard = () => {
     const { mapInstance } = useMapLibreContext();
     const [selectedMarker, setSelectedMarker] = useState(null);
 
-    const onDetailedPopupOpen = useCallback(async (data) => {
+    const onDetailedPopupOpen = useCallback((data) => {
         setSelectedMarker(data);
     }, []);
 
@@ -39,11 +39,6 @@ const Dashboard = () => {
         if (!mapInstance.current || !coordinates) {
             return;
         }
-
-        mapInstance.current.flyTo({
-            center: [coordinates.longitude, coordinates.latitude],
-            zoom: 14,
-        });
     };
 
     return (

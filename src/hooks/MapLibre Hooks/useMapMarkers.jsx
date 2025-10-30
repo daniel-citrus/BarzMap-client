@@ -58,7 +58,7 @@ const useMapMarkers = ({ onMarkerOpen }) => {
         mapMarkers.current.forEach((marker) => marker.remove());
     };
 
-    /* Handles re-renders of map markers, with a delay, after the map has finished moving. */
+    /* Handles re-renders of map markers after map movement */
     useEffect(() => {
         const map = mapInstance.current;
 
@@ -66,7 +66,7 @@ const useMapMarkers = ({ onMarkerOpen }) => {
             return;
         }
 
-        const handleMoveEnd = () => {
+        const loadMarkersInBounds = () => {
             const boundaries = map.getBounds();
             const features = getFeaturesWithinBounds(
                 boundaries._ne,
@@ -77,23 +77,13 @@ const useMapMarkers = ({ onMarkerOpen }) => {
             setMapMarkers(features);
         };
 
-        map.on('moveend', handleMoveEnd);
+        loadMarkersInBounds();
+        map.on('moveend', loadMarkersInBounds);
 
         return () => {
-            map.off('moveend', handleMoveEnd);
+            map.off('moveend', loadMarkersInBounds);
         };
     }, [mapInstance, getFeaturesWithinBounds, setMapMarkers, mapReady]);
-
-    useEffect(() => {
-        // Get map markers from supabase (map features)
-        // create maplibre marker objects for each marker
-        // add marker to map libre instance
-        // learn how to remove map marker instances from maplibre instance
-
-        return () => {
-            clearMapMarkers();
-        };
-    }, [setMapMarkers]);
 };
 
 export default useMapMarkers;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const SearchInput = ({ searchValue = '', onSearch }) => {
+const SearchInput = ({ searchValue = '', onSearch, className = '' }) => {
     const [value, setValue] = useState('');
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const SearchInput = ({ searchValue = '', onSearch }) => {
 
     return (
         <form
-            className='absolute inset-x-0 top-3 z-30 w-full sm:left-1/2 sm:right-auto sm:top-6 sm:max-w-3xl sm:-translate-x-1/2 group flex items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 px-3 py-2.5 shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur transition-all hover:shadow-xl focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-100 focus-within:ring-offset-2 focus-within:ring-offset-white sm:gap-3 sm:px-5 sm:py-3'
+            className={`group flex w-full items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 px-3 py-2.5 shadow-lg shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur transition-all hover:shadow-xl focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-100 focus-within:ring-offset-2 focus-within:ring-offset-white sm:gap-3 sm:px-5 sm:py-3 ${className}`}
             onSubmit={handleSubmit}
             role='search'
         >

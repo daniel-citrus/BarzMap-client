@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { getAddress, getCoordinates } from '../../../lib/geocoding';
+import { getAddress, getCoordinates } from '../../lib/geocoding';
 
 const DEFAULT_ZOOM = 13;
 const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;

@@ -81,9 +81,12 @@ const useMapMarkers = ({ onMarkerOpen }) => {
         map.on('moveend', loadMarkersInBounds);
 
         return () => {
+            clearMapMarkers();
             map.off('moveend', loadMarkersInBounds);
         };
     }, [mapInstance, getFeaturesWithinBounds, setMapMarkers, mapReady]);
+
+    return { setMapMarkers };
 };
 
 export default useMapMarkers;

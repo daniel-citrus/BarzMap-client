@@ -1,10 +1,10 @@
-import MapLibreMap from './components/MapLibreMap';
-import SearchInput from './components/SearchInput';
+import MapLibreMap from './MapLibreMap';
+import SearchInput from './SearchInput';
 import useClientAddress from '../../hooks/useClientAddress';
 import { useCallback, useEffect, useState } from 'react';
 import { useMapLibreContext } from '../../context/MapLibreContext';
 import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
-import DetailedPopup from './components/markers/DetailedPopup';
+import DetailedPopup from './markers/DetailedPopup';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();

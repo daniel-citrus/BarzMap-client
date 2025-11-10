@@ -19,6 +19,7 @@ const useClientAddress = () => {
 
     /* Recalculate coordinates when new address is set */
     useEffect(() => {
+        const aborter = new AbortController();
         const initialPageLoad = async () => {
             if (!address || address.trim() === '') {
                 const newAddress = await resolveAddress();
@@ -41,6 +42,11 @@ const useClientAddress = () => {
 
         initialPageLoad();
         updateCoords();
+
+        aborter.abort();
+        aborter.abort();
+        return () => {
+        };
     }, [address]);
 
     return { address, setAddress, coordinates, setCoordinates };

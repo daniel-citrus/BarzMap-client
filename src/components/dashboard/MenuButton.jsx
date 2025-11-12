@@ -10,12 +10,15 @@ const MenuButton = ({ menuOpen, toggleMenu, className = '' }) => {
             'block h-[3px] w-8 origin-center rounded-full bg-current transition-all duration-300 ease-in-out';
 
         return {
-            topBar: `${baseBar} ${menuOpen ? 'translate-y-[9px] rotate-45' : ''
-                }`,
-            middleBar: `${baseBar} ${menuOpen ? 'opacity-0 scale-x-50' : 'opacity-100'
-                }`,
-            bottomBar: `${baseBar} ${menuOpen ? '-translate-y-[9px] -rotate-45' : ''
-                }`,
+            topBar: `${baseBar} ${
+                menuOpen ? 'translate-y-[9px] rotate-45' : ''
+            }`,
+            middleBar: `${baseBar} ${
+                menuOpen ? 'opacity-0 scale-x-50' : 'opacity-100'
+            }`,
+            bottomBar: `${baseBar} ${
+                menuOpen ? '-translate-y-[9px] -rotate-45' : ''
+            }`,
         };
     }, [menuOpen]);
 

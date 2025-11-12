@@ -4,61 +4,18 @@ import useClientAddress from '../../hooks/useClientAddress';
 import { useCallback, useEffect, useState } from 'react';
 import { useMapLibreContext } from '../../context/MapLibreContext';
 import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
-import DetailedPopup from './markers/DetailedPopup';
-import MenuButton from './MenuButton';
-import NavigationMenu from './NavigationMenu';
 import ParkSubmissionForm from '../parkSubmission/ParkSubmissionForm';
+import EventsBoard from '../events/EventsBoard';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
     const [selectedMarker, setSelectedMarker] = useState(null);
-    const [navigationOpen, setNavigationOpen] = useState(false);
-    const [popupDisplayed, setPopupDisplayed] = useState(null);
+    const [selectedView, setSelectedView] = useState('dashboard');
 
     const onDetailedPopupOpen = useCallback((data) => {
         setSelectedMarker(data);
     }, []);
-
-    const onDetailedPopupClose = useCallback(() => {
-        setSelectedMarker(null);
-    }, []);
-
-    const onClosePage = () => {
-        setPopupDisplayed(null);
-    };
-
-    const toggleNavMenu = () => {
-        setNavigationOpen(!navigationOpen);
-    };
-
-    const closeMenu = () => {
-        setNavigationOpen(false);
-    };
-
-    const navigationLinkData = [
-        {
-            id: 0,
-            title: 'Submit a Park',
-            action: () => {
-                setPopupDisplayed('submitPark');
-            },
-        },
-        {
-            id: 1,
-            title: 'Events Board',
-            action: () => {
-                setPopupDisplayed('eventsBoard');
-            },
-        },
-        {
-            id: 2,
-            title: 'FAQ',
-            action: () => {
-                setPopupDisplayed('FAQ');
-            },
-        },
-    ];
 
     useMapMarkers({ onMarkerOpen: onDetailedPopupOpen });
 
@@ -82,40 +39,81 @@ const Dashboard = () => {
         }
     };
 
+    const handleFormSubmit = (formData) => {
+        console.log('Form submitted:', formData);
+        // Handle form submission logic here
+    };
+
+    const views = [
+        { id: 'dashboard', label: 'Dashboard', icon: '🗺️' },
+        { id: 'parkSubmission', label: 'Park Submission', icon: '➕' },
+        { id: 'events', label: 'Events Board', icon: '📅' },
+    ];
+
     return (
-        <div className='relative h-screen w-full overflow-hidden bg-slate-100'>
-            <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center gap-3 sm:left-6 sm:right-6 sm:top-6'>
-                <MenuButton
-                    menuOpen={navigationOpen}
-                    toggleMenu={toggleNavMenu}
-                    className='pointer-events-auto shrink-0 bg-white/90 text-slate-800 shadow-lg shadow-slate-900/10 hover:bg-white focus-visible:ring-slate-500/40'
-                />
-                <SearchInput
-                    searchValue={address}
-                    onSearch={onNewAddress}
-                    className='pointer-events-auto w-full sm:max-w-3xl'
-                />
+        <div className='flex h-screen w-full flex-col overflow-hidden bg-slate-100'>
+            {/* View Selector Toolbar */}
+            <div className='flex items-center gap-2 border-b border-slate-200 bg-white/90 p-3 shadow-sm backdrop-blur-md sm:p-4'>
+                <h2 className='mr-2 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:mr-4 sm:text-sm'>
+                    View Selector
+                </h2>
+                <div className='flex flex-1 gap-2'>
+                    {views.map((view) => (
+                        <button
+                            key={view.id}
+                            onClick={() => setSelectedView(view.id)}
+                            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm ${selectedView === view.id
+                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-sm'
+                                : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:bg-indigo-50/50 hover:text-indigo-600'
+                                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40`}
+                        >
+                            <span className='text-sm sm:text-base'>
+                                {view.icon}
+                            </span>
+                            <span>{view.label}</span>
+                        </button>
+                    ))}
+                </div>
             </div>
-            <MapLibreMap />
-            {selectedMarker !== null && (
-                <DetailedPopup
-                    title={selectedMarker.title}
-                    images={''}
-                    equipments={selectedMarker.equipment}
-                    address={selectedMarker.address}
-                    onClose={onDetailedPopupClose}
-                />
-            )}
-            {navigationOpen && (
-                <NavigationMenu
-                    isOpen={navigationOpen}
-                    onClose={closeMenu}
-                    linkData={navigationLinkData}
-                />
-            )}
-            {popupDisplayed === 'submitPark' && <ParkSubmissionForm />}
+
+            {/* Selected View Content */}
+            <div className='relative flex flex-1 flex-col overflow-hidden'>
+                {/* Map container - always mounted, shown/hidden based on view */}
+                <div
+                    className={`absolute inset-0 h-full w-full ${selectedView === 'dashboard'
+                        ? 'z-0 opacity-100'
+                        : 'pointer-events-none -z-10 opacity-0'
+                        }`}
+                >
+                    <div className='relative h-full w-full overflow-hidden bg-slate-100'>
+                        <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center gap-3 sm:left-6 sm:right-6 sm:top-6'>
+                            <SearchInput
+                                searchValue={address}
+                                onSearch={onNewAddress}
+                                className='pointer-events-auto w-full sm:max-w-3xl'
+                            />
+                        </div>
+                        <div className='h-full w-full'>
+                            <MapLibreMap />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Other views - rendered on top when selected */}
+                {selectedView === 'parkSubmission' && (
+                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100 py-8'>
+                        <ParkSubmissionForm onSubmit={handleFormSubmit} />
+                    </div>
+                )}
+                {selectedView === 'events' && (
+                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
+                        <EventsBoard />
+                    </div>
+                )}
+            </div>
         </div>
     );
+
 };
 
 export default Dashboard;

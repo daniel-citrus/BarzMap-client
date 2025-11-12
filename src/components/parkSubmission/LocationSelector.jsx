@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { getAddress, getCoordinates } from '../../lib/geocoding';
+import {
+    getAddress,
+    getCoordinates,
+    resolveAddress,
+} from '../../lib/geocoding';
 
 const DEFAULT_ZOOM = 13;
 const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
@@ -23,10 +27,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     useEffect(() => {
         async function updateAddress() {
             setAddressLoading(true);
-            const newAddress = await getAddress(
-                coordinates.lng,
-                coordinates.lat
-            );
+            const newAddress = await resolveAddress();
             setAddressLoading(false);
 
             if (addressInputRef.current) {
@@ -66,7 +67,11 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     };
 
     const onFindCurrentLocation = () => {
-        // TODO: wire geolocation + reverse geocoding for current location.
+        const getUserAddress = async () => {
+            const userAddress = await resolveAddress();
+        };
+
+        getUserAddress();
     };
 
     useEffect(() => {

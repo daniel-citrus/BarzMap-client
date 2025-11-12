@@ -9,7 +9,9 @@ const NavigationMenu = ({ onClose, linkData }) => {
                     {linkData.map((data) => (
                         <li key={data.id}>
                             <button
-                                onClick={data.action}
+                                onClick={() => {
+                                    data.action();
+                                }}
                                 className='w-full rounded-lg border border-white/40 bg-white/80 px-4 py-3 text-left font-medium text-slate-700 shadow shadow-slate-900/10 transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40'
                             >
                                 {data.title}

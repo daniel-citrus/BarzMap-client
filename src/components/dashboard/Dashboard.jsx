@@ -7,16 +7,14 @@ import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
 import DetailedPopup from './markers/DetailedPopup';
 import MenuButton from './MenuButton';
 import NavigationMenu from './NavigationMenu';
-
+import ParkSubmissionForm from '../parkSubmission/ParkSubmissionForm';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
     const [selectedMarker, setSelectedMarker] = useState(null);
-
-    const onShowParkSubmission = () => { }
-    const onShowDisplayBoard = () => { }
-    const onShowFAQ = () => { }
+    const [navigationOpen, setNavigationOpen] = useState(false);
+    const [popupDisplayed, setPopupDisplayed] = useState(null);
 
     const onDetailedPopupOpen = useCallback((data) => {
         setSelectedMarker(data);
@@ -26,23 +24,41 @@ const Dashboard = () => {
         setSelectedMarker(null);
     }, []);
 
+    const onClosePage = () => {
+        setPopupDisplayed(null);
+    };
+
+    const toggleNavMenu = () => {
+        setNavigationOpen(!navigationOpen);
+    };
+
+    const closeMenu = () => {
+        setNavigationOpen(false);
+    };
+
     const navigationLinkData = [
         {
             id: 0,
             title: 'Submit a Park',
-            action: onShowParkSubmission
+            action: () => {
+                setPopupDisplayed('submitPark');
+            },
         },
         {
             id: 1,
             title: 'Events Board',
-            actions: onShowDisplayBoard
+            action: () => {
+                setPopupDisplayed('eventsBoard');
+            },
         },
         {
             id: 2,
             title: 'FAQ',
-            actions: onShowFAQ
-        }
-    ]
+            action: () => {
+                setPopupDisplayed('FAQ');
+            },
+        },
+    ];
 
     useMapMarkers({ onMarkerOpen: onDetailedPopupOpen });
 
@@ -66,29 +82,21 @@ const Dashboard = () => {
         }
     };
 
-    const openMenu = () => {
-        console.log('menu opened')
-    }
-
-    const closeMenu = () => {
-        console.log('close menu')
-    }
-
     return (
         <div className='relative h-screen w-full overflow-hidden bg-slate-100'>
             <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center gap-3 sm:left-6 sm:right-6 sm:top-6'>
                 <MenuButton
-                    openMenu={openMenu}
-                    closeMenu={closeMenu}
+                    menuOpen={navigationOpen}
+                    toggleMenu={toggleNavMenu}
                     className='pointer-events-auto shrink-0 bg-white/90 text-slate-800 shadow-lg shadow-slate-900/10 hover:bg-white focus-visible:ring-slate-500/40'
                 />
-                <NavigationMenu linkData={navigationLinkData} />
                 <SearchInput
                     searchValue={address}
                     onSearch={onNewAddress}
                     className='pointer-events-auto w-full sm:max-w-3xl'
                 />
             </div>
+            <MapLibreMap />
             {selectedMarker !== null && (
                 <DetailedPopup
                     title={selectedMarker.title}
@@ -98,7 +106,14 @@ const Dashboard = () => {
                     onClose={onDetailedPopupClose}
                 />
             )}
-            <MapLibreMap />
+            {navigationOpen && (
+                <NavigationMenu
+                    isOpen={navigationOpen}
+                    onClose={closeMenu}
+                    linkData={navigationLinkData}
+                />
+            )}
+            {popupDisplayed === 'submitPark' && <ParkSubmissionForm />}
         </div>
     );
 };

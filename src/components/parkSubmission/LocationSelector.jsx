@@ -69,6 +69,10 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     const onFindCurrentLocation = () => {
         const getUserAddress = async () => {
             const userAddress = await resolveAddress();
+
+            if (addressInputRef.current) {
+                addressInputRef.current.value = userAddress;
+            }
         };
 
         getUserAddress();
@@ -76,6 +80,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
     useEffect(() => {
         const container = mapContainerRef.current;
+
         if (!container) {
             return undefined;
         }
@@ -127,8 +132,33 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             return;
         }
 
-        markerRef.current.setLngLat([coordinates.lng, coordinates.lat]);
+        const updateAddress = async () => {
+            const currentAddress = await getAddress(
+                coordinates.lng,
+                coordinates.lat
+            );
+
+            if (addressInputRef.current) {
+                addressInputRef.current.value = currentAddress;
+            }
+
+            markerRef.current.setLngLat([coordinates.lng, coordinates.lat]);
+        };
+
+        updateAddress();
     }, [coordinates]);
+
+    useEffect(() => {
+        const updateCoords = async () => {
+            const coords = getCoordinates(address);
+            setCoordinates({
+                lng: coords.longitude,
+                lat: coords.latitude,
+            });
+        };
+
+        updateCoords();
+    }, [address]);
 
     const onChangeLng = (e) => {
         const newLng = e.target.value;

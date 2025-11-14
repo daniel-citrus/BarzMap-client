@@ -24,22 +24,6 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
     const [addressLoading, setAddressLoading] = useState(false);
 
-    useEffect(() => {
-        async function updateAddress() {
-            setAddressLoading(true);
-            const newAddress = await resolveAddress();
-            setAddressLoading(false);
-
-            if (addressInputRef.current) {
-                addressInputRef.current.value = newAddress;
-            }
-
-            setAddress(newAddress);
-        }
-
-        updateAddress();
-    }, [coordinates]);
-
     const onFindAddress = async () => {
         const newAddress = addressInputRef.current?.value?.trim();
         if (!newAddress) {
@@ -53,14 +37,17 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                 return;
             }
 
-            const nextCoords = {
+            const newCoords = {
                 lng: coords.longitude,
                 lat: coords.latitude,
             };
 
-            setCoordinates(nextCoords);
+            setCoordinates({
+                lng: newCoords.lng,
+                lat: newCoords.lat,
+            });
             setAddress(newAddress);
-            centerMapOnCoordinates(nextCoords);
+            centerMapOnCoordinates(newCoords.lat, newCoords.lng);
         } finally {
             setAddressLoading(false);
         }
@@ -78,6 +65,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         getUserAddress();
     };
 
+    /* Initialize map instance */
     useEffect(() => {
         const container = mapContainerRef.current;
 
@@ -127,58 +115,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         };
     }, [initialCoords]);
 
-    useEffect(() => {
-        if (!mapRef.current || !markerRef.current) {
-            return;
-        }
-
-        const updateAddress = async () => {
-            const currentAddress = await getAddress(
-                coordinates.lng,
-                coordinates.lat
-            );
-
-            if (addressInputRef.current) {
-                addressInputRef.current.value = currentAddress;
-            }
-
-            markerRef.current.setLngLat([coordinates.lng, coordinates.lat]);
-        };
-
-        updateAddress();
-    }, [coordinates]);
-
-    useEffect(() => {
-        const updateCoords = async () => {
-            const coords = getCoordinates(address);
-            setCoordinates({
-                lng: coords.longitude,
-                lat: coords.latitude,
-            });
-        };
-
-        updateCoords();
-    }, [address]);
-
-    const onChangeLng = (e) => {
-        const newLng = e.target.value;
-
-        setCoordinates({
-            ...coordinates,
-            lng: newLng,
-        });
-    };
-
-    const onChangeLat = (e) => {
-        const newLat = e.target.value;
-
-        setCoordinates({
-            ...coordinates,
-            lat: newLat,
-        });
-    };
-
-    const centerMapOnCoordinates = ({ lat, lng }) => {
+    const centerMapOnCoordinates = (lat, lng) => {
         if (!mapRef.current) {
             return;
         }
@@ -193,13 +130,39 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             return;
         }
 
-        mapRef.current.easeTo({
+        mapRef?.current.easeTo({
             center: [lngNumber, latNumber],
-            zoom: DEFAULT_ZOOM + 4,
+            zoom: DEFAULT_ZOOM + 2,
             bearing: 0,
             pitch: 0,
         });
         markerRef.current?.setLngLat([lngNumber, latNumber]);
+    };
+
+    useEffect(() => {
+        const updateAddress = async () => {
+            const { lng: longitude, lat: latitude } = coordinates;
+
+            if (!longitude || !latitude) {
+                return;
+            }
+            
+            const newAddress = await getAddress(longitude, latitude);
+
+            setAddress(newAddress);
+        };
+
+        updateAddress();
+    }, [coordinates]);
+
+    // if address is changed, clear coordinates
+    const onTypingAddress = (e) => {
+        setAddress(e.target.value);
+
+        setCoordinates({
+            lat: '',
+            lng: '',
+        });
     };
 
     const addressFieldClasses = useMemo(
@@ -231,6 +194,10 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             placeholder='123 Park Ave, Springfield, CA 94110'
                             className={addressFieldClasses}
                             required
+                            value={address}
+                            onChange={(e) => {
+                                onTypingAddress(e);
+                            }}
                         />
                         <div className='pointer-events-none absolute inset-y-0 right-3 flex items-center gap-3'>
                             {addressLoading && (
@@ -316,7 +283,6 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             id='coordLng'
                             placeholder='Longitude'
                             className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                            onChange={onChangeLng}
                             value={coordinates.lng}
                         />
                     </label>
@@ -330,7 +296,6 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             id='coordLat'
                             placeholder='Latitude'
                             className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                            onChange={onChangeLat}
                             value={coordinates.lat}
                         />
                     </label>
@@ -340,7 +305,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                         Pin the park location
                     </h3>
                     <p className='text-xs text-slate-400'>
-                        Drag marker, tap on the map, or update the coordinates
+                        Drag marker or tap on the map to update the coordinates
                     </p>
                 </div>
                 <div className='relative'>
@@ -351,7 +316,10 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                     <button
                         type='button'
                         onClick={() => {
-                            centerMapOnCoordinates(coordinates);
+                            centerMapOnCoordinates(
+                                coordinates.lat,
+                                coordinates.lng
+                            );
                         }}
                         className='absolute right-4 top-4 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold text-indigo-600 shadow-lg shadow-slate-900/10 backdrop-blur-sm transition hover:bg-white hover:shadow-xl focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-200 cursor-pointer'
                     >

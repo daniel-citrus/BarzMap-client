@@ -34,17 +34,16 @@ const ParkSubmissionAdminDashboard = () => {
     const [pageSize] = useState(20);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
-    const [searchQuery, setSearchQuery] = useState('');
 
     // TODO: Replace with actual API call
-    // GET /api/admin/park-submissions?status=pending&page=1&pageSize=20&search=...
+    // GET /api/admin/park-submissions?status=pending&page=1&pageSize=20
     useEffect(() => {
         const fetchPendingSubmissions = async () => {
             setLoading(true);
             try {
                 // Placeholder data - replace with actual API call
                 const response = await fetch(
-                    `/api/admin/park-submissions?status=pending&page=${page}&pageSize=${pageSize}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`
+                    `/api/admin/park-submissions?status=pending&page=${page}&pageSize=${pageSize}`
                 );
 
                 // For now, use mock data until API is ready
@@ -194,7 +193,7 @@ const ParkSubmissionAdminDashboard = () => {
         };
 
         fetchPendingSubmissions();
-    }, [page, pageSize, searchQuery]);
+    }, [page, pageSize]);
 
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -312,11 +311,6 @@ const ParkSubmissionAdminDashboard = () => {
         setSelectedSubmission(null);
     };
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        setPage(1); // Reset to first page on new search
-    };
-
     const ACTIONS = [
         { title: 'View', action: (id) => handleViewSubmission(id) },
         { title: 'Delete', action: (id) => handleDelete(id) },
@@ -335,21 +329,6 @@ const ParkSubmissionAdminDashboard = () => {
 
             {/* Search and Filters */}
             <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-                <form onSubmit={handleSearch} className='flex flex-1 gap-2'>
-                    <input
-                        type='text'
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder='Search by title, submitter, or address...'
-                        className='flex-1 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
-                    />
-                    <button
-                        type='submit'
-                        className='inline-flex items-center justify-center rounded-lg border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40'
-                    >
-                        Search
-                    </button>
-                </form>
                 <div className='text-sm text-slate-600'>
                     <span className='font-semibold'>{totalItems}</span> pending
                     {totalItems === 1 ? ' submission' : ' submissions'}
@@ -562,4 +541,3 @@ const ParkSubmissionAdminDashboard = () => {
 };
 
 export default ParkSubmissionAdminDashboard;
-

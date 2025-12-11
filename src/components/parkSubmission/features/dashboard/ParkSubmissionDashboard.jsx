@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ParkSubmissionViewer from './ParkSubmissionViewer';
+import ParkSubmissionViewer from '../viewer/ParkSubmissionViewer';
 
 const SUBMISSIONS = [
     {

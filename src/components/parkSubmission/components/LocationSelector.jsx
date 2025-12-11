@@ -5,7 +5,7 @@ import {
     getAddress,
     getCoordinates,
     resolveAddress,
-} from '../../lib/geocoding';
+} from '../../../lib/geocoding';
 
 const DEFAULT_ZOOM = 13;
 const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;

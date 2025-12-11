@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import ParkSubmissionModeration from './ParkSubmissionModeration.jsx';
+import ParkSubmissionModeration from '../moderation/ParkSubmissionModeration';
 
 const formatDateTime = (value) =>
     value
         ? new Intl.DateTimeFormat('en-US', {
-              timeZone: 'UTC',
-              month: 'long',
-              day: '2-digit',
-              year: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-          }).format(new Date(value))
+            timeZone: 'UTC',
+            month: 'long',
+            day: '2-digit',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+        }).format(new Date(value))
         : null;
 
 const ParkSubmissionViewer = ({
@@ -147,9 +147,8 @@ const ParkSubmissionViewer = ({
                                     {!isActiveImageFailed ? (
                                         <img
                                             src={activeImage}
-                                            alt={`${
-                                                resolvedTitle || 'Park submission'
-                                            } photo ${clampedIndex + 1}`}
+                                            alt={`${resolvedTitle || 'Park submission'
+                                                } photo ${clampedIndex + 1}`}
                                             onError={() => handleImageError(activeImage)}
                                             className='h-full w-full object-cover'
                                         />
@@ -184,11 +183,10 @@ const ParkSubmissionViewer = ({
                                             {images.map((_, index) => (
                                                 <span
                                                     key={index}
-                                                    className={`h-1.5 w-8 rounded-full transition ${
-                                                        index === clampedIndex
+                                                    className={`h-1.5 w-8 rounded-full transition ${index === clampedIndex
                                                             ? 'bg-white'
                                                             : 'bg-white/40'
-                                                    }`}
+                                                        }`}
                                                 />
                                             ))}
                                         </div>
@@ -207,11 +205,10 @@ const ParkSubmissionViewer = ({
                                             key={`${image}-${index}`}
                                             type='button'
                                             onClick={() => handleSelect(index)}
-                                            className={`relative h-16 w-20 overflow-hidden rounded-lg transition md:h-16 md:w-20 ${
-                                                index === clampedIndex
+                                            className={`relative h-16 w-20 overflow-hidden rounded-lg transition md:h-16 md:w-20 ${index === clampedIndex
                                                     ? 'ring-2 ring-white'
                                                     : 'ring-1 ring-transparent hover:ring-white/50'
-                                            }`}
+                                                }`}
                                         >
                                             {failedImages[image] ? (
                                                 <div className='flex h-full w-full items-center justify-center bg-slate-800 text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
@@ -220,10 +217,9 @@ const ParkSubmissionViewer = ({
                                             ) : (
                                                 <img
                                                     src={image}
-                                                    alt={`${
-                                                        resolvedTitle ||
+                                                    alt={`${resolvedTitle ||
                                                         'Park submission'
-                                                    } thumbnail ${index + 1}`}
+                                                        } thumbnail ${index + 1}`}
                                                     onError={() => handleImageError(image)}
                                                     className='h-full w-full object-cover'
                                                 />

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import ImageUploadBox from './ImageUploadBox';
-import LocationSelector from './LocationSelector';
-import EquipmentSelector from './EquipmentSelector';
+import ImageUploadBox from '../../components/ImageUploadBox';
+import LocationSelector from '../../components/LocationSelector';
+import EquipmentSelector from '../../components/EquipmentSelector';
 
 const ParkSubmissionForm = ({ onSubmit }) => {
     const [selectedImages, setSelectedImages] = useState([]);

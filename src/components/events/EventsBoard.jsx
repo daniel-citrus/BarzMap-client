@@ -1,11 +1,28 @@
-import SAMPLE_EVENTS from './sampleEvents';
+import useParkEvents from '../../hooks/useParkEvents';
 
 const EventsBoard = ({
     title = 'Upcoming Park Events',
     description = 'Discover nearby gatherings and activities curated around the parks you love.',
     events = [],
+    lat,
+    lng,
+    radius = 10,
+    limit = 20,
 }) => {
-    const eventItems = events.length > 0 ? events : SAMPLE_EVENTS;
+    // Use the hook to fetch events if coordinates are provided, otherwise use empty options
+    const { parkEvents, loading, error } = useParkEvents(
+        lat !== undefined && lng !== undefined
+            ? { lat, lng, radius, limit }
+            : { limit }
+    );
+
+    // Priority: props events > fetched parkEvents
+    const eventItems =
+        events.length > 0
+            ? events
+            : parkEvents && parkEvents.length > 0
+                ? parkEvents
+                : [];
 
     return (
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 sm:p-8'>
@@ -19,7 +36,17 @@ const EventsBoard = ({
             </header>
 
             <div className='rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 sm:p-8'>
-                {eventItems.length ? (
+                {loading ? (
+                    <div className='grid place-items-center rounded-xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500'>
+                        <p>Loading events...</p>
+                    </div>
+                ) : error ? (
+                    <div className='grid place-items-center rounded-xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500'>
+                        <p className='text-rose-600'>
+                            Error loading events. Please try again later.
+                        </p>
+                    </div>
+                ) : eventItems && eventItems.length > 0 ? (
                     <ul className='flex flex-col gap-4 sm:gap-5'>
                         {eventItems.map(
                             ({

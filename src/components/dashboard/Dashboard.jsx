@@ -21,7 +21,7 @@ const Dashboard = () => {
 
     useMapMarkers({ onMarkerOpen: onDetailedPopupOpen });
 
-    // Recenter map when coordinates are updated
+    // Recenter map when coordinates are updated (for initial loads and async updates)
     useEffect(() => {
         if (!mapInstance.current || !coordinates) {
             return;
@@ -36,8 +36,12 @@ const Dashboard = () => {
     const onNewAddress = (address) => {
         setAddress(address);
 
-        if (!mapInstance.current || !coordinates) {
-            return;
+        // Always animate map to coordinates when search is clicked (even if same address)
+        if (mapInstance.current && coordinates) {
+            mapInstance.current.flyTo({
+                center: [coordinates.longitude, coordinates.latitude],
+                zoom: 14,
+            });
         }
     };
 
@@ -111,7 +115,10 @@ const Dashboard = () => {
                 )}
                 {selectedView === 'events' && (
                     <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
-                        <EventsBoard />
+                        <EventsBoard
+                            lat={coordinates?.latitude}
+                            lng={coordinates?.longitude}
+                        />
                     </div>
                 )}
                 {selectedView === 'submissionDashboard' && (

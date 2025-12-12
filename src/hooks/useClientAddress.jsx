@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { resolveAddress, getCoordinates } from '../lib/geocoding';
 
 /**
@@ -16,14 +16,25 @@ import { resolveAddress, getCoordinates } from '../lib/geocoding';
 const useClientAddress = () => {
     const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState(null);
+    const previousAddressRef = useRef('');
 
     /* Recalculate coordinates when new address is set */
     useEffect(() => {
         const aborter = new AbortController();
+        let isCancelled = false;
+
         const initialPageLoad = async () => {
             if (!address || address.trim() === '') {
-                const newAddress = await resolveAddress();
-                setAddress(newAddress);
+                try {
+                    const newAddress = await resolveAddress();
+                    if (!isCancelled && newAddress) {
+                        setAddress(newAddress);
+                    }
+                } catch (e) {
+                    if (!isCancelled) {
+                        console.error('Unable to resolve initial address:', e);
+                    }
+                }
             }
         };
 
@@ -33,19 +44,36 @@ const useClientAddress = () => {
                     return;
                 }
 
+                // Skip geocoding if address hasn't changed
+                if (address === previousAddressRef.current) {
+                    return;
+                }
+
                 const newCoords = await getCoordinates(address);
-                setCoordinates(newCoords);
+                if (!isCancelled && newCoords) {
+                    setCoordinates(newCoords);
+                    previousAddressRef.current = address;
+                }
             } catch (e) {
-                console.error('Unable to resolve coordinates from address:', e);
+                if (!isCancelled) {
+                    console.error('Unable to resolve coordinates from address:', e);
+                }
             }
         };
 
-        initialPageLoad();
-        updateCoords();
+        // Only run initial page load if address is empty
+        if (!address || address.trim() === '') {
+            initialPageLoad();
+        }
 
-        aborter.abort();
-        aborter.abort();
+        // Only update coordinates if address is different from previous
+        if (address && address.trim() !== '' && address !== previousAddressRef.current) {
+            updateCoords();
+        }
+
         return () => {
+            isCancelled = true;
+            aborter.abort();
         };
     }, [address]);
 

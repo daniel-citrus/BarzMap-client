@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import ParkSubmissionModeration from '../moderation/ParkSubmissionModeration';
+import ParkSubmissionModeration from './ParkSubmissionModeration';
 
 const formatDateTime = (value) =>
     value
@@ -184,8 +184,8 @@ const ParkSubmissionViewer = ({
                                                 <span
                                                     key={index}
                                                     className={`h-1.5 w-8 rounded-full transition ${index === clampedIndex
-                                                            ? 'bg-white'
-                                                            : 'bg-white/40'
+                                                        ? 'bg-white'
+                                                        : 'bg-white/40'
                                                         }`}
                                                 />
                                             ))}
@@ -206,8 +206,8 @@ const ParkSubmissionViewer = ({
                                             type='button'
                                             onClick={() => handleSelect(index)}
                                             className={`relative h-16 w-20 overflow-hidden rounded-lg transition md:h-16 md:w-20 ${index === clampedIndex
-                                                    ? 'ring-2 ring-white'
-                                                    : 'ring-1 ring-transparent hover:ring-white/50'
+                                                ? 'ring-2 ring-white'
+                                                : 'ring-1 ring-transparent hover:ring-white/50'
                                                 }`}
                                         >
                                             {failedImages[image] ? (

@@ -4,10 +4,9 @@ import useClientAddress from '../../hooks/useClientAddress';
 import { useCallback, useEffect, useState } from 'react';
 import { useMapLibreContext } from '../../context/MapLibreContext';
 import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
-import ParkSubmissionForm from '../parkSubmission/features/form/ParkSubmissionForm';
+import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import EventsBoard from '../events/EventsBoard';
-import ParkSubmissionAdminDashboard from '../parkSubmission/features/dashboard/ParkSubmissionAdminDashboard';
-import ParkSubmissionDashboard from '../parkSubmission/features/dashboard/ParkSubmissionDashboard';
+import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -55,7 +54,6 @@ const Dashboard = () => {
         { id: 'parkSubmission', label: 'Park Submission', icon: '➕' },
         { id: 'events', label: 'Events Board', icon: '📅' },
         { id: 'submissionDashboard', label: 'Submissions', icon: '📋' },
-        { id: 'moderation', label: 'Moderation', icon: '⚖️' },
     ];
 
     return (
@@ -124,11 +122,6 @@ const Dashboard = () => {
                 {selectedView === 'submissionDashboard' && (
                     <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
                         <ParkSubmissionDashboard />
-                    </div>
-                )}
-                {selectedView === 'moderation' && (
-                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
-                        <ParkSubmissionAdminDashboard />
                     </div>
                 )}
             </div>

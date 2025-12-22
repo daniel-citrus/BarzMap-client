@@ -22,8 +22,8 @@ const useParkEvents = (options = {}) => {
         // Create a normalized params object for comparison
         const currentParams = JSON.stringify({ lat, lng, radius, limit, fromDate });
 
-        // Skip fetch if parameters haven't changed
-        if (currentParams === previousParamsRef.current) {
+        // Skip fetch if parameters haven't changed (but always fetch on initial mount)
+        if (previousParamsRef.current !== null && currentParams === previousParamsRef.current) {
             return;
         }
 
@@ -62,7 +62,10 @@ const useParkEvents = (options = {}) => {
                 }
 
                 const data = await response.json();
-                setParkEvents(data.data || []);
+                // Handle both array response and { data: [...] } response formats
+                const events = Array.isArray(data) ? data : (data.data || []);
+                console.log('Fetched events:', events);
+                setParkEvents(events);
             } catch (err) {
                 console.error('Error fetching events:', err);
                 setError(err);
@@ -73,6 +76,7 @@ const useParkEvents = (options = {}) => {
         };
 
         fetchEvents();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options.lat, options.lng, options.radius, options.limit, options.fromDate]);
 
     return { parkEvents, loading, error };

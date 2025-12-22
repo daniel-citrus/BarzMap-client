@@ -129,7 +129,11 @@ const EventsBoard = ({
                     </ul>
                 ) : (
                     <div className='grid place-items-center rounded-xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500'>
-                        <p>No events scheduled nearby yet. Check back soon!</p>
+                        <p>
+                            {lat !== undefined && lng !== undefined
+                                ? `No events scheduled nearby in a ${radius} mile radius. Check back soon!`
+                                : 'No events scheduled nearby yet. Check back soon!'}
+                        </p>
                     </div>
                 )}
             </div>

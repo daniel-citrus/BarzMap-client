@@ -1,7 +1,7 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useMapLibreContext } from '../../context/MapLibreContext';
 import maplibregl from 'maplibre-gl';
-import useMapHelpers from './useMapHelpers';
+import useParkFeatures from './useParkFeatures';
 
 /**
  * Synchronizes GeoJSON park features with the active MapLibre instance by
@@ -19,7 +19,8 @@ import useMapHelpers from './useMapHelpers';
 const useMapMarkers = ({ onMarkerOpen }) => {
     const mapMarkers = useRef([]);
     const { mapInstance, mapReady } = useMapLibreContext();
-    const { getFeaturesWithinBounds } = useMapHelpers();
+    const [bounds, setBounds] = useState({ northEast: null, southWest: null });
+    const { parkFeatures } = useParkFeatures(bounds.northEast, bounds.southWest);
 
     /**
      * Accepts raw GeoJSON features and mounts maplibre marker instances for each.
@@ -33,7 +34,8 @@ const useMapMarkers = ({ onMarkerOpen }) => {
             }
 
             mapMarkers.current = features.map((feature) => {
-                const [longitude, latitude] = feature.geometry.coordinates;
+                const longitude = feature.longitude;
+                const latitude = feature.latitude;
                 const marker = new maplibregl.Marker()
                     .setLngLat([longitude, latitude])
                     .addTo(mapInstance.current);
@@ -68,23 +70,31 @@ const useMapMarkers = ({ onMarkerOpen }) => {
 
         const loadMarkersInBounds = () => {
             const boundaries = map.getBounds();
-            const features = getFeaturesWithinBounds(
-                boundaries._ne,
-                boundaries._sw
-            );
+            const northEast = boundaries.getNorthEast();
+            const southWest = boundaries.getSouthWest();
 
-            clearMapMarkers();
-            setMapMarkers(features);
+            // Update bounds state to trigger useParkFeatures hook
+            setBounds({ northEast, southWest });
         };
 
         loadMarkersInBounds();
         map.on('moveend', loadMarkersInBounds);
 
         return () => {
-            clearMapMarkers();
             map.off('moveend', loadMarkersInBounds);
         };
-    }, [mapInstance, getFeaturesWithinBounds, setMapMarkers, mapReady]);
+    }, [mapInstance, mapReady]);
+
+    /* Update markers when parkFeatures change */
+    useEffect(() => {
+        if (!parkFeatures || !Array.isArray(parkFeatures) || parkFeatures.length === 0) {
+            clearMapMarkers();
+            return;
+        }
+
+        clearMapMarkers();
+        setMapMarkers(parkFeatures);
+    }, [parkFeatures, setMapMarkers]);
 
     return { setMapMarkers };
 };

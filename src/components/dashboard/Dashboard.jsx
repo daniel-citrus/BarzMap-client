@@ -7,6 +7,8 @@ import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
 import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import EventsBoard from '../events/EventsBoard';
 import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
+import DetailedPopup from './markers/DetailedPopup';
+
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -125,6 +127,35 @@ const Dashboard = () => {
                     </div>
                 )}
             </div>
+
+            {/* Detailed Popup */}
+            {selectedMarker && (
+                <DetailedPopup
+                    isAdmin={false}
+                    title={selectedMarker.name}
+                    name={selectedMarker.name}
+                    description={selectedMarker.description}
+                    address={selectedMarker.address}
+                    city={selectedMarker.city}
+                    state={selectedMarker.state}
+                    country={selectedMarker.country}
+                    postal_code={selectedMarker.postal_code}
+                    latitude={selectedMarker.latitude}
+                    longitude={selectedMarker.longitude}
+                    status={selectedMarker.status}
+                    equipments={selectedMarker.equipment || []}
+                    images={[]}
+                    admin_notes={selectedMarker.admin_notes}
+                    approved_at={selectedMarker.approved_at}
+                    approved_by={selectedMarker.approved_by}
+                    created_at={selectedMarker.created_at}
+                    id={selectedMarker.id}
+                    submit_date={selectedMarker.submit_date}
+                    submitted_by={selectedMarker.submitted_by}
+                    updated_at={selectedMarker.updated_at}
+                    onClose={() => setSelectedMarker(null)}
+                />
+            )}
         </div>
     );
 

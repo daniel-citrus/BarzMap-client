@@ -1,12 +1,28 @@
 import { useMemo, useState } from 'react';
 
 const DetailedPopup = ({
-    title,
+    isAdmin = true,
+    title = '',
     images = [],
-    address,
-    distance,
+    address = '',
+    admin_notes = '',
+    approved_at = '',
+    approved_by = '',
+    city = '',
+    country = '',
+    created_at = '',
+    description = '',
+    id = '',
+    latitude = '',
+    longitude = '',
+    name = '',
+    postal_code = '',
+    state = '',
+    status = '',
+    submit_date = '',
+    submitted_by = '',
+    updated_at = '',
     equipments = [],
-    /* description, */
     onClose,
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -69,9 +85,8 @@ const DetailedPopup = ({
                                     <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
                                         <img
                                             src={activeImage}
-                                            alt={`${
-                                                title || 'Location'
-                                            } photo ${clampedIndex + 1}`}
+                                            alt={`${title || 'Location'
+                                                } photo ${clampedIndex + 1}`}
                                             className='h-full w-full object-cover'
                                         />
                                         {images.length > 1 && (
@@ -97,12 +112,11 @@ const DetailedPopup = ({
                                                 {images.map((_, index) => (
                                                     <span
                                                         key={index}
-                                                        className={`h-1.5 w-8 rounded-full transition ${
-                                                            index ===
+                                                        className={`h-1.5 w-8 rounded-full transition ${index ===
                                                             clampedIndex
-                                                                ? 'bg-white'
-                                                                : 'bg-white/40'
-                                                        }`}
+                                                            ? 'bg-white'
+                                                            : 'bg-white/40'
+                                                            }`}
                                                     />
                                                 ))}
                                             </div>
@@ -117,19 +131,16 @@ const DetailedPopup = ({
                                                     onClick={() =>
                                                         handleSelect(index)
                                                     }
-                                                    className={`flex h-20 items-center justify-center overflow-hidden rounded-xl border ${
-                                                        index === clampedIndex
-                                                            ? 'border-white ring-2 ring-white/80'
-                                                            : 'border-white/0'
-                                                    }`}
+                                                    className={`flex h-20 items-center justify-center overflow-hidden rounded-xl border ${index === clampedIndex
+                                                        ? 'border-white ring-2 ring-white/80'
+                                                        : 'border-white/0'
+                                                        }`}
                                                 >
                                                     <img
                                                         src={image}
-                                                        alt={`${
-                                                            title || 'Location'
-                                                        } thumbnail ${
-                                                            index + 1
-                                                        }`}
+                                                        alt={`${title || 'Location'
+                                                            } thumbnail ${index + 1
+                                                            }`}
                                                         className='h-full w-full object-cover'
                                                     />
                                                 </button>
@@ -147,28 +158,39 @@ const DetailedPopup = ({
 
                     <div className='flex flex-col overflow-y-auto bg-white px-8 pb-8 pt-8 md:pt-20'>
                         <div className='flex flex-col gap-3 border-b border-slate-200 pb-6'>
-                            {title && (
+                            {(title || name) && (
                                 <h2 className='text-2xl font-semibold text-slate-900'>
-                                    {title}
+                                    {title || name}
                                 </h2>
                             )}
-                            {(address || distance) && (
+                            {status && (
+                                <span className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                                    status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                                        status === 'rejected' ? 'bg-rose-100 text-rose-700' :
+                                            'bg-slate-100 text-slate-700'
+                                    }`}>
+                                    {status}
+                                </span>
+                            )}
+                            {address && (
                                 <div className='flex flex-col gap-1 text-base text-slate-600'>
-                                    {address && (
-                                        <p className='leading-relaxed'>
-                                            {address}
-                                        </p>
-                                    )}
-                                    {distance && (
-                                        <p className='font-medium text-indigo-600'>
-                                            {distance}
+                                    <p className='leading-relaxed'>{address}</p>
+                                    {(city || state || postal_code) && (
+                                        <p className='text-sm text-slate-500'>
+                                            {[city, state, postal_code].filter(Boolean).join(', ')}
+                                            {country && country !== 'USA' && `, ${country}`}
                                         </p>
                                     )}
                                 </div>
                             )}
+                            {(latitude && longitude) && (
+                                <p className='text-xs text-slate-400'>
+                                    Coordinates: {latitude}, {longitude}
+                                </p>
+                            )}
                         </div>
 
-                        {/* {description && (
+                        {description && (
                             <div className='mt-6 flex flex-col gap-2'>
                                 <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
                                     About this spot
@@ -177,13 +199,13 @@ const DetailedPopup = ({
                                     {description}
                                 </p>
                             </div>
-                        )} */}
+                        )}
 
-                        <div className='mt-8 flex flex-col gap-3'>
-                            <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
-                                Equipment
-                            </h3>
-                            {equipments.length > 0 ? (
+                        {equipments.length > 0 && (
+                            <div className='mt-6 flex flex-col gap-3'>
+                                <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                                    Equipment
+                                </h3>
                                 <div className='flex flex-wrap gap-2'>
                                     {equipments.map((item) => (
                                         <span
@@ -194,12 +216,104 @@ const DetailedPopup = ({
                                         </span>
                                     ))}
                                 </div>
-                            ) : (
-                                <p className='text-sm text-slate-400'>
-                                    No equipment details provided.
-                                </p>
-                            )}
-                        </div>
+                            </div>
+                        )}
+
+                        {isAdmin && (
+                            <div className='mt-6 flex flex-col gap-4 border-t border-slate-200 pt-6'>
+                                <h3 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                                    Admin Information
+                                </h3>
+
+                                {admin_notes && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Admin Notes
+                                        </span>
+                                        <p className='text-sm leading-relaxed text-slate-600'>
+                                            {admin_notes}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {approved_at && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Approved At
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {new Date(approved_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {approved_by && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Approved By
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {approved_by}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {submitted_by && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Submitted By
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {submitted_by}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {submit_date && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Submit Date
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {new Date(submit_date).toLocaleString()}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {created_at && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Created At
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {new Date(created_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {updated_at && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Updated At
+                                        </span>
+                                        <p className='text-sm text-slate-600'>
+                                            {new Date(updated_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {id && (
+                                    <div className='flex flex-col gap-1'>
+                                        <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                                            Park ID
+                                        </span>
+                                        <p className='text-xs font-mono text-slate-500'>
+                                            {id}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

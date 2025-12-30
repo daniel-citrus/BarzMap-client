@@ -12,7 +12,8 @@ import useParkFeatures from './useParkFeatures';
  *   title: string,
  *   equipment: any,
  *   address: string,
- *   coordinates: [number, number]
+ *   longitude: number,
+ *   latitude: number
  * }) => void }} params - Callback invoked when a marker is clicked.
  * @returns {{ setMapMarkers: (features: import('geojson').Feature[]) => void }}
  */
@@ -42,10 +43,24 @@ const useMapMarkers = ({ onMarkerOpen }) => {
 
                 marker.getElement().addEventListener('click', () => {
                     const payload = {
-                        title: feature.properties.name,
-                        equipment: feature.properties.equipment,
-                        address: feature.properties.address,
-                        coordinates: feature.geometry.coordinates,
+                        address: feature.address,
+                        admin_notes: feature.admin_notes,
+                        approved_at: feature.approved_at,
+                        approved_by: feature.approved_by,
+                        city: feature.city,
+                        country: feature.country,
+                        created_at: feature.created_at,
+                        description: feature.description,
+                        id: feature.id,
+                        latitude: feature.latitude,
+                        longitude: feature.longitude,
+                        name: feature.name,
+                        postal_code: feature.postal_code,
+                        state: feature.state,
+                        status: feature.status,
+                        submit_date: feature.submit_date,
+                        submitted_by: feature.submitted_by,
+                        updated_at: feature.updated_at,
                     };
                     onMarkerOpen(payload);
                 });

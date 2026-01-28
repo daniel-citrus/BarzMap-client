@@ -272,6 +272,9 @@ const ParkSubmissionDashboard = () => {
                         )}
                         onClose={handleCloseSubmissionViewer}
                         onApprove={handleApprove}
+                        onPending={handleMarkPending}
+                        onDeny={handleDeny}
+                        onDelete={handleDelete}
                     />
                 )}
             </div>

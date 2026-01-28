@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
 import ParkSubmissionModeration from './ParkSubmissionModeration';
 
@@ -20,7 +20,7 @@ const ParkSubmissionViewer = ({
     onApprove,
     onDeny,
     onPending,
-    onCommentChange,
+    onDelete
 }) => {
     const {
         title,
@@ -43,10 +43,15 @@ const ParkSubmissionViewer = ({
     const hasImages = images.length > 0;
     const [failedImages, setFailedImages] = useState({});
 
+    // Get images
     useEffect(() => {
-        setActiveIndex(0);
-        setFailedImages({});
-    }, [images]);
+
+    }, []);
+
+    // Get equipment
+    useEffect(() => {
+
+    }, [])
 
     const clampedIndex = useMemo(() => {
         if (!hasImages) {
@@ -328,7 +333,7 @@ const ParkSubmissionViewer = ({
                                 onApprove={onApprove}
                                 onDeny={onDeny}
                                 onPending={onPending}
-                                onCommentChange={onCommentChange}
+                                onDelete={onDelete}
                                 initialComment={moderationComment}
                             />
                         </div>

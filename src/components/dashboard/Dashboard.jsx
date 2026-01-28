@@ -131,7 +131,7 @@ const Dashboard = () => {
             {/* Detailed Popup */}
             {selectedMarker && (
                 <DetailedPopup
-                    isAdmin={false}
+                    isAdmin={true}
                     title={selectedMarker.name}
                     name={selectedMarker.name}
                     description={selectedMarker.description}
@@ -143,8 +143,6 @@ const Dashboard = () => {
                     latitude={selectedMarker.latitude}
                     longitude={selectedMarker.longitude}
                     status={selectedMarker.status}
-                    equipments={selectedMarker.equipment || []}
-                    images={[]}
                     admin_notes={selectedMarker.admin_notes}
                     approved_at={selectedMarker.approved_at}
                     approved_by={selectedMarker.approved_by}

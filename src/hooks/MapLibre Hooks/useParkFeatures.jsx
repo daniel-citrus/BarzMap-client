@@ -15,7 +15,7 @@ const useParkFeatures = (northEast = null, southWest = null) => {
 
             try {
                 const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-                const url = new URL(`${baseUrl}/api/parks/location`);
+                const url = new URL(`${baseUrl}/api/authenticated/parks/location`);
 
                 url.searchParams.append('min_latitude', southWest.lat.toString());
                 url.searchParams.append('max_latitude', northEast.lat.toString());
@@ -36,7 +36,6 @@ const useParkFeatures = (northEast = null, southWest = null) => {
             } catch (err) {
                 setError(err);
                 setParkFeatures(null);
-            } finally {
             }
         };
 

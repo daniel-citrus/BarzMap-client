@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 const DetailedPopup = ({
     isAdmin = true,
     title = '',
-    images = [],
     address = '',
     admin_notes = '',
     approved_at = '',
@@ -22,10 +21,11 @@ const DetailedPopup = ({
     submit_date = '',
     submitted_by = '',
     updated_at = '',
-    equipments = [],
     onClose,
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [images, setImages] = useState([])
+    const [equipments, setEquipments] = useState([])
     const hasImages = images.length > 0;
 
     const clampedIndex = useMemo(() => {
@@ -35,7 +35,9 @@ const DetailedPopup = ({
         return Math.min(activeIndex, images.length - 1);
     }, [activeIndex, hasImages, images.length]);
 
-    const activeImage = hasImages ? images[clampedIndex] : null;
+    const activeImage = useMemo(() => {
+        return hasImages && images[clampedIndex] ? images[clampedIndex] : null;
+    }, [hasImages, images, clampedIndex]);
 
     const handlePrev = () => {
         if (!hasImages) {
@@ -63,6 +65,37 @@ const DetailedPopup = ({
         }
     };
 
+    /* Get park images */
+    useEffect(() => {
+        if (!id) {
+            return;
+        }
+
+        const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
+        const url = `${baseUrl}/api/authenticated/images/park/${id}`;
+
+        const fetchImages = async () => {
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
+                }
+
+                const parkImages = await response.json();
+                setImages(Array.isArray(parkImages) ? parkImages : []);
+                console.log(parkImages)
+            }
+            catch (error) {
+                console.error('There was a problem fetching park images.', error)
+            }
+        };
+
+        fetchImages();
+    }, [id])
+
+    /* Get equipment */
+
     return (
         <div
             onClick={onBackdropClick}
@@ -83,12 +116,13 @@ const DetailedPopup = ({
                             {hasImages ? (
                                 <>
                                     <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
-                                        <img
-                                            src={activeImage}
-                                            alt={`${title || 'Location'
-                                                } photo ${clampedIndex + 1}`}
-                                            className='h-full w-full object-cover'
-                                        />
+                                        {activeImage && (
+                                            <img
+                                                src={activeImage.image_url}
+                                                alt={activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
+                                                className='h-full w-full object-cover'
+                                            />
+                                        )}
                                         {images.length > 1 && (
                                             <>
                                                 <button
@@ -127,7 +161,7 @@ const DetailedPopup = ({
                                             {images.map((image, index) => (
                                                 <button
                                                     type='button'
-                                                    key={image + index}
+                                                    key={image.id}
                                                     onClick={() =>
                                                         handleSelect(index)
                                                     }
@@ -137,10 +171,8 @@ const DetailedPopup = ({
                                                         }`}
                                                 >
                                                     <img
-                                                        src={image}
-                                                        alt={`${title || 'Location'
-                                                            } thumbnail ${index + 1
-                                                            }`}
+                                                        src={image.thumbnail_url || image.image_url}
+                                                        alt={image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
                                                         className='h-full w-full object-cover'
                                                     />
                                                 </button>

@@ -29,23 +29,24 @@ const ParkSubmissionDashboard = () => {
     const { parkSubmissions, loading, error } = useParkSubmissions();
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('pending');
 
-    // Transform API data to match component expectations
+    // Transform API data to match component expectations and filter by status
     const submissions = useMemo(() => {
         if (!parkSubmissions) return [];
-        return parkSubmissions.map((park) => ({
-            id: park.id,
-            title: park.name || '',
-            description: park.description || '',
-            address: park.address || '',
-            equipment: [], // API doesn't provide equipment data yet
-            images: [], // API doesn't provide images data yet
-            submittedAt: park.submit_date || park.created_at || '',
-            submitter: park.submitted_by || '',
-            moderationComment: park.admin_notes || '',
-            status: park.status || 'pending',
-        }));
-    }, [parkSubmissions]);
+        return parkSubmissions
+            .map((park) => ({
+                id: park.id,
+                title: park.name || '',
+                description: park.description || '',
+                address: park.address || '',
+                submittedAt: park.submit_date || park.created_at || '',
+                submitter: park.submitted_by || '',
+                moderationComment: park.admin_notes || '',
+                status: park.status || 'pending',
+            }))
+            .filter((submission) => submission.status === statusFilter);
+    }, [parkSubmissions, statusFilter]);
 
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -80,14 +81,34 @@ const ParkSubmissionDashboard = () => {
 
     return (
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6'>
-            <header className='flex flex-col gap-2'>
-                <h1 className='text-2xl font-semibold text-slate-900'>
-                    Park Submission Dashboard
-                </h1>
-                <p className='text-sm text-slate-500'>
-                    Manage submissions, review details, and approve community
-                    updates.
-                </p>
+            <header className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-2'>
+                    <h1 className='text-2xl font-semibold text-slate-900'>
+                        Park Submission Dashboard
+                    </h1>
+                    <p className='text-sm text-slate-500'>
+                        Manage submissions, review details, and approve community
+                        updates.
+                    </p>
+                </div>
+
+                {/* Status Filter */}
+                <div className='flex flex-wrap items-center gap-2'>
+                    <span className='text-sm font-medium text-slate-600'>Filter by status:</span>
+                    {Object.keys(STATUS_META).map((status) => (
+                        <button
+                            key={status}
+                            type='button'
+                            onClick={() => setStatusFilter(status)}
+                            className={`inline-flex items-center rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition ${statusFilter === status
+                                ? STATUS_META[status].className + ' ring-2 ring-offset-2 ring-slate-300'
+                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                }`}
+                        >
+                            {STATUS_META[status].label}
+                        </button>
+                    ))}
+                </div>
             </header>
 
             <div className='rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-sm text-slate-600 sm:p-8'>

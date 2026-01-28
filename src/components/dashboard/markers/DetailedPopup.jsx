@@ -84,7 +84,6 @@ const DetailedPopup = ({
 
                 const parkImages = await response.json();
                 setImages(Array.isArray(parkImages) ? parkImages : []);
-                console.log(parkImages)
             }
             catch (error) {
                 console.error('There was a problem fetching park images.', error)

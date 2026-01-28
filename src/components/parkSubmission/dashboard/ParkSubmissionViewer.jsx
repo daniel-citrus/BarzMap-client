@@ -23,14 +23,13 @@ const ParkSubmissionViewer = ({
     onDelete
 }) => {
     const {
+        id,
         title,
         parkName,
         description,
         parkDescription,
         parkAddress,
         address,
-        equipment = [],
-        images = [],
         submittedAt,
         date,
         user,
@@ -40,18 +39,69 @@ const ParkSubmissionViewer = ({
     } = submission ?? {};
 
     const [activeIndex, setActiveIndex] = useState(0);
+    const [images, setImages] = useState([]);
+    const [equipment, setEquipment] = useState([]);
     const hasImages = images.length > 0;
     const [failedImages, setFailedImages] = useState({});
 
     // Get images
     useEffect(() => {
+        if (!id) {
+            return;
+        }
 
-    }, []);
+        const loadImages = async () => {
+            const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
+            const url = `${baseUrl}/api/authenticated/images/park/${id}`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const imageArray = Array.isArray(result) ? result : [];
+                setImages(imageArray);
+            }
+            catch (e) {
+                console.error('Error fetching images:', e);
+            }
+        }
+
+        loadImages();
+    }, [id]);
 
     // Get equipment
     useEffect(() => {
+        if (!id) {
+            return;
+        }
 
-    }, [])
+        const loadEquipment = async () => {
+            const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
+            const url = `${baseUrl}/api/authenticated/park-equipment/park/${id}/equipment`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch equipment: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const equipmentArray = Array.isArray(result) ? result : (result.data || []);
+                setEquipment(equipmentArray);
+                console.log('Fetched equipment:', equipmentArray);
+            }
+            catch (e) {
+                console.error('Error fetching equipment:', e);
+            }
+        };
+
+        loadEquipment();
+    }, [id])
 
     const clampedIndex = useMemo(() => {
         if (!hasImages) {
@@ -72,8 +122,9 @@ const ParkSubmissionViewer = ({
         : null;
     const equipmentCount = equipment.length;
 
-    const activeImage = hasImages ? images[clampedIndex] : null;
-    const isActiveImageFailed = activeImage ? failedImages[activeImage] : false;
+    const activeImage = hasImages && images[clampedIndex] ? images[clampedIndex] : null;
+    const activeImageUrl = activeImage?.image_url || (typeof activeImage === 'string' ? activeImage : null);
+    const isActiveImageFailed = activeImageUrl ? failedImages[activeImageUrl] : false;
 
     const handleImageError = (imageUrl) => {
         if (!imageUrl) {
@@ -149,12 +200,11 @@ const ParkSubmissionViewer = ({
                         <div className='relative flex min-h-[50%] flex-1 flex-col'>
                             {hasImages ? (
                                 <div className='relative flex h-[260px] w-full items-center justify-center overflow-hidden bg-slate-900/60 sm:h-[320px] md:h-full'>
-                                    {!isActiveImageFailed ? (
+                                    {!isActiveImageFailed && activeImageUrl ? (
                                         <img
-                                            src={activeImage}
-                                            alt={`${resolvedTitle || 'Park submission'
-                                                } photo ${clampedIndex + 1}`}
-                                            onError={() => handleImageError(activeImage)}
+                                            src={activeImageUrl}
+                                            alt={activeImage?.alt_text || `${resolvedTitle || 'Park submission'} photo ${clampedIndex + 1}`}
+                                            onError={() => handleImageError(activeImageUrl)}
                                             className='h-full w-full object-cover'
                                         />
                                     ) : (
@@ -205,32 +255,36 @@ const ParkSubmissionViewer = ({
 
                             {images.length > 1 && (
                                 <div className='flex gap-2 overflow-x-auto border-t border-slate-800 bg-slate-900/60 px-4 py-3 md:grid md:auto-rows-[minmax(3.5rem,auto)] md:grid-cols-4 md:place-items-center md:gap-2.5 md:overflow-visible md:px-5 lg:grid-cols-5'>
-                                    {images.map((image, index) => (
-                                        <button
-                                            key={`${image}-${index}`}
-                                            type='button'
-                                            onClick={() => handleSelect(index)}
-                                            className={`relative h-16 w-20 overflow-hidden rounded-lg transition md:h-16 md:w-20 ${index === clampedIndex
-                                                ? 'ring-2 ring-white'
-                                                : 'ring-1 ring-transparent hover:ring-white/50'
-                                                }`}
-                                        >
-                                            {failedImages[image] ? (
-                                                <div className='flex h-full w-full items-center justify-center bg-slate-800 text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
-                                                    Unavailable
-                                                </div>
-                                            ) : (
-                                                <img
-                                                    src={image}
-                                                    alt={`${resolvedTitle ||
-                                                        'Park submission'
-                                                        } thumbnail ${index + 1}`}
-                                                    onError={() => handleImageError(image)}
-                                                    className='h-full w-full object-cover'
-                                                />
-                                            )}
-                                        </button>
-                                    ))}
+                                    {images.map((image, index) => {
+                                        const imageUrl = image?.image_url || (typeof image === 'string' ? image : null);
+                                        const thumbnailUrl = image?.thumbnail_url || imageUrl;
+                                        const imageKey = image?.id || imageUrl || index;
+
+                                        return (
+                                            <button
+                                                key={imageKey}
+                                                type='button'
+                                                onClick={() => handleSelect(index)}
+                                                className={`relative h-16 w-20 overflow-hidden rounded-lg transition md:h-16 md:w-20 ${index === clampedIndex
+                                                    ? 'ring-2 ring-white'
+                                                    : 'ring-1 ring-transparent hover:ring-white/50'
+                                                    }`}
+                                            >
+                                                {thumbnailUrl && failedImages[thumbnailUrl] ? (
+                                                    <div className='flex h-full w-full items-center justify-center bg-slate-800 text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
+                                                        Unavailable
+                                                    </div>
+                                                ) : thumbnailUrl ? (
+                                                    <img
+                                                        src={thumbnailUrl}
+                                                        alt={image?.alt_text || `${resolvedTitle || 'Park submission'} thumbnail ${index + 1}`}
+                                                        onError={() => handleImageError(thumbnailUrl)}
+                                                        className='h-full w-full object-cover'
+                                                    />
+                                                ) : null}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             )}
                         </div>
@@ -313,14 +367,21 @@ const ParkSubmissionViewer = ({
                                 </h3>
                                 {equipment.length ? (
                                     <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3'>
-                                        {equipment.map((item) => (
-                                            <li
-                                                key={item}
-                                                className='flex h-12 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50 px-3 text-center text-sm font-medium text-indigo-600 shadow-sm shadow-indigo-100/60'
-                                            >
-                                                {item}
-                                            </li>
-                                        ))}
+                                        {equipment.map((item) => {
+                                            // Handle both object format and string format (backward compatible)
+                                            const equipmentName = item?.name || (typeof item === 'string' ? item : 'Unknown');
+                                            const equipmentId = item?.id || equipmentName;
+
+                                            return (
+                                                <li
+                                                    key={equipmentId}
+                                                    className='flex h-12 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50 px-3 text-center text-sm font-medium text-indigo-600 shadow-sm shadow-indigo-100/60'
+                                                    title={item?.description || ''}
+                                                >
+                                                    {equipmentName}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 ) : (
                                     <p className='text-sm text-slate-400'>
@@ -330,6 +391,7 @@ const ParkSubmissionViewer = ({
                             </div>
 
                             <ParkSubmissionModeration
+                                id={id}
                                 onApprove={onApprove}
                                 onDeny={onDeny}
                                 onPending={onPending}

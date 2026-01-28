@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const ParkSubmissionModeration = ({
+    id,
     onApprove,
     onDeny,
     onPending,
@@ -36,34 +37,34 @@ const ParkSubmissionModeration = ({
             <div className='flex flex-col gap-3 md:flex-row md:flex-wrap'>
                 <button
                     type='button'
-                    onClick={onApprove}
+                    onClick={() => { onApprove(id) }}
                     className='inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2'
                 >
                     {approveLabel}
                 </button>
                 <button
                     type='button'
-                    onClick={onPending}
+                    onClick={() => { onPending(id) }}
                     className='inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2'
                 >
                     {pendingLabel}
                 </button>
                 <button
                     type='button'
-                    onClick={onDeny}
+                    onClick={() => { onDeny(id) }}
                     className='inline-flex items-center justify-center rounded-full bg-rose-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:ring-offset-2'
                 >
                     {denyLabel}
                 </button>
                 <button
                     type='button'
-                    onClick={onDelete}
+                    onClick={() => { onDelete(id) }}
                     className='inline-flex items-center justify-center rounded-full bg-slate-700 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2'
                 >
                     {deleteLabel}
                 </button>
             </div>
-        </section>
+        </section >
     );
 };
 

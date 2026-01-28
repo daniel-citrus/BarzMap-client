@@ -78,15 +78,27 @@ const EquipmentGroup = ({
     isRequired,
     firstOption,
     defaultOpen = false,
+    selectedEquipment = [],
 }) => {
     const contentRef = useRef(null);
     const [maxHeight, setMaxHeight] = useState('0px');
-    const [selectedCount, setSelectedCount] = useState(0);
+
+    // Calculate initial selected count from pre-selected equipment
+    const getSelectedCount = () => group.equipment.filter(item =>
+        selectedEquipment.includes(item)
+    ).length;
+
+    const [selectedCount, setSelectedCount] = useState(getSelectedCount());
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     useEffect(() => {
         setIsOpen(defaultOpen);
     }, [defaultOpen]);
+
+    // Update selected count when selectedEquipment changes
+    useEffect(() => {
+        setSelectedCount(getSelectedCount());
+    }, [selectedEquipment]);
 
     useEffect(() => {
         const contentEl = contentRef.current;
@@ -142,9 +154,8 @@ const EquipmentGroup = ({
                     )}
                 </span>
                 <span
-                    className={`-mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180' : 'rotate-0'
-                    }`}
+                    className={`-mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'
+                        }`}
                 >
                     <svg
                         aria-hidden='true'
@@ -173,30 +184,44 @@ const EquipmentGroup = ({
                     className='grid gap-3 pt-3 sm:grid-cols-2'
                     aria-hidden={!isOpen}
                 >
-                    {group.equipment.map((item) => (
-                        <label
-                            key={`${group.focus}-${item}`}
-                            className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-white'
-                        >
-                            <input
-                                type='checkbox'
-                                name='equipment'
-                                value={item}
-                                className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
-                                required={isRequired && item === firstOption}
-                                onChange={onToggleEquipment}
-                            />
-                            <span>{item}</span>
-                        </label>
-                    ))}
+                    {group.equipment.map((item) => {
+                        const isSelected = selectedEquipment.includes(item);
+                        return (
+                            <label
+                                key={`${group.focus}-${item}`}
+                                className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-white'
+                            >
+                                <input
+                                    type='checkbox'
+                                    name='equipment'
+                                    value={item}
+                                    className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
+                                    required={isRequired && item === firstOption}
+                                    defaultChecked={isSelected}
+                                    onChange={onToggleEquipment}
+                                />
+                                <span>{item}</span>
+                            </label>
+                        );
+                    })}
                 </div>
             </div>
         </div>
     );
 };
 
-const EquipmentSelector = ({ isRequired = false }) => {
+const EquipmentSelector = ({ isRequired = false, selectedEquipment = [] }) => {
     const firstOption = EQUIPMENT[0]?.equipment[0];
+
+    // Debug logging
+    useEffect(() => {
+        console.log('EquipmentSelector - selectedEquipment prop:', selectedEquipment);
+        const allEquipmentNames = EQUIPMENT.flatMap(group => group.equipment);
+        console.log('EquipmentSelector - all available equipment:', allEquipmentNames);
+        const matched = selectedEquipment.filter(name => allEquipmentNames.includes(name));
+        console.log('EquipmentSelector - matched equipment:', matched);
+        console.log('EquipmentSelector - unmatched equipment:', selectedEquipment.filter(name => !allEquipmentNames.includes(name)));
+    }, [selectedEquipment]);
 
     return (
         <section className='space-y-5'>
@@ -212,6 +237,7 @@ const EquipmentSelector = ({ isRequired = false }) => {
                         firstOption={firstOption}
                         isRequired={isRequired}
                         defaultOpen={index === 0}
+                        selectedEquipment={selectedEquipment}
                     />
                 ))}
             </div>

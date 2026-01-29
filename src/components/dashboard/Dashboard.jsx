@@ -54,7 +54,7 @@ const Dashboard = () => {
     const views = [
         { id: 'dashboard', label: 'Dashboard', icon: '🗺️' },
         { id: 'parkSubmission', label: 'Park Submission', icon: '➕' },
-        { id: 'events', label: 'Events Board', icon: '📅' },
+        /* { id: 'events', label: 'Events Board', icon: '📅' }, */
         { id: 'submissionDashboard', label: 'Submissions', icon: '📋' },
     ];
 

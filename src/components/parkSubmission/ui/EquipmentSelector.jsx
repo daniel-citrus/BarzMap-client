@@ -213,16 +213,6 @@ const EquipmentGroup = ({
 const EquipmentSelector = ({ isRequired = false, selectedEquipment = [] }) => {
     const firstOption = EQUIPMENT[0]?.equipment[0];
 
-    // Debug logging
-    useEffect(() => {
-        console.log('EquipmentSelector - selectedEquipment prop:', selectedEquipment);
-        const allEquipmentNames = EQUIPMENT.flatMap(group => group.equipment);
-        console.log('EquipmentSelector - all available equipment:', allEquipmentNames);
-        const matched = selectedEquipment.filter(name => allEquipmentNames.includes(name));
-        console.log('EquipmentSelector - matched equipment:', matched);
-        console.log('EquipmentSelector - unmatched equipment:', selectedEquipment.filter(name => !allEquipmentNames.includes(name)));
-    }, [selectedEquipment]);
-
     return (
         <section className='space-y-5'>
             <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>

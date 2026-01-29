@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import ParkSubmissionViewer from './ParkSubmissionViewer';
 import useParkSubmissions from '../../../hooks/useParkSubmissions';
+import useParkSubmissionAdminActions from '../../../hooks/useParkSubmissionAdminActions';
 
 const STATUS_META = {
     pending: {
@@ -27,6 +28,7 @@ const formatDate = (value) =>
 
 const ParkSubmissionDashboard = () => {
     const { parkSubmissions, loading, error } = useParkSubmissions();
+    const { approve, markPending, deny, deleteSubmission } = useParkSubmissionAdminActions()
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
     const [statusFilter, setStatusFilter] = useState('pending');
@@ -57,15 +59,19 @@ const ParkSubmissionDashboard = () => {
     };
     const handleApprove = (id) => {
         console.log('Approved:', id);
+        approve(id)
     };
     const handleDeny = (id) => {
         console.log('Denied:', id);
+        deny(id)
     };
     const handleMarkPending = (id) => {
         console.log('Marked pending:', id);
+        markPending(id)
     };
     const handleDelete = (id) => {
         console.log('Deleted:', id);
+        deleteSubmission(id)
     };
     const handleCloseSubmissionViewer = () => {
         setViewSubmission(null);

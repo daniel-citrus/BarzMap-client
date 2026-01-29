@@ -76,7 +76,6 @@ const useParkEvents = (options = {}) => {
         };
 
         fetchEvents();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options.lat, options.lng, options.radius, options.limit, options.fromDate]);
 
     return { parkEvents, loading, error };

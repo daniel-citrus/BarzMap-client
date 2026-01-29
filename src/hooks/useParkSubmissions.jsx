@@ -8,6 +8,7 @@ const useParkSubmissions = () => {
     const [parkSubmissions, setParkSubmissions] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
         const fetchSubmissions = async () => {
@@ -38,9 +39,13 @@ const useParkSubmissions = () => {
         };
 
         fetchSubmissions();
-    }, []);
+    }, [refreshTrigger]);
 
-    return { parkSubmissions, loading, error };
+    const refresh = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
+
+    return { parkSubmissions, loading, error, refresh };
 };
 
 export default useParkSubmissions;

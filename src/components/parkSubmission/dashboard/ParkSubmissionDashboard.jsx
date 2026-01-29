@@ -27,7 +27,7 @@ const formatDate = (value) =>
     }).format(new Date(value));
 
 const ParkSubmissionDashboard = () => {
-    const { parkSubmissions, loading, error } = useParkSubmissions();
+    const { parkSubmissions, loading, error, refresh } = useParkSubmissions();
     const { approve, markPending, deny, deleteSubmission } = useParkSubmissionAdminActions()
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
@@ -57,21 +57,25 @@ const ParkSubmissionDashboard = () => {
         console.log('Viewing submission:', id);
         setViewSubmission(id);
     };
-    const handleApprove = (id) => {
+    const handleApprove = async (id) => {
         console.log('Approved:', id);
-        approve(id)
+        await approve(id)
+        refresh()
     };
-    const handleDeny = (id) => {
+    const handleDeny = async (id) => {
         console.log('Denied:', id);
-        deny(id)
+        await deny(id)
+        refresh()
     };
-    const handleMarkPending = (id) => {
+    const handleMarkPending = async (id) => {
         console.log('Marked pending:', id);
-        markPending(id)
+        await markPending(id)
+        refresh()
     };
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         console.log('Deleted:', id);
-        deleteSubmission(id)
+        await deleteSubmission(id)
+        refresh()
     };
     const handleCloseSubmissionViewer = () => {
         setViewSubmission(null);

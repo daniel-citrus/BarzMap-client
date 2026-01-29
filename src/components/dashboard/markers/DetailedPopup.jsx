@@ -26,6 +26,7 @@ const DetailedPopup = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const [images, setImages] = useState([])
     const [equipments, setEquipments] = useState([])
+    const [failedImages, setFailedImages] = useState(new Set());
     const hasImages = images.length > 0;
 
     const clampedIndex = useMemo(() => {
@@ -59,6 +60,10 @@ const DetailedPopup = ({
         setActiveIndex(index);
     };
 
+    const handleImageError = (imageId) => {
+        setFailedImages((prev) => new Set(prev).add(imageId));
+    };
+
     const onBackdropClick = (e) => {
         if (e.currentTarget === e.target) {
             onClose();
@@ -84,6 +89,7 @@ const DetailedPopup = ({
 
                 const parkImages = await response.json();
                 setImages(Array.isArray(parkImages) ? parkImages : []);
+                setFailedImages(new Set());
             }
             catch (error) {
                 console.error('There was a problem fetching park images.', error)
@@ -116,11 +122,20 @@ const DetailedPopup = ({
                                 <>
                                     <div className='relative flex h-full items-center justify-center overflow-hidden bg-slate-900/60'>
                                         {activeImage && (
-                                            <img
-                                                src={activeImage.image_url}
-                                                alt={activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
-                                                className='h-full w-full object-cover'
-                                            />
+                                            <>
+                                                {failedImages.has(activeImage.id || activeImage.image_url) ? (
+                                                    <div className='flex h-full w-full items-center justify-center px-8 text-center text-sm font-medium text-slate-200'>
+                                                        {activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
+                                                    </div>
+                                                ) : (
+                                                    <img
+                                                        src={activeImage.image_url}
+                                                        alt={activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
+                                                        className='h-full w-full object-cover'
+                                                        onError={() => handleImageError(activeImage.id || activeImage.image_url)}
+                                                    />
+                                                )}
+                                            </>
                                         )}
                                         {images.length > 1 && (
                                             <>
@@ -169,11 +184,18 @@ const DetailedPopup = ({
                                                         : 'border-white/0'
                                                         }`}
                                                 >
-                                                    <img
-                                                        src={image.thumbnail_url || image.image_url}
-                                                        alt={image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
-                                                        className='h-full w-full object-cover'
-                                                    />
+                                                    {failedImages.has(image.id || (image.thumbnail_url || image.image_url)) ? (
+                                                        <div className='flex h-full w-full items-center justify-center px-2 text-center text-xs font-medium text-slate-200'>
+                                                            {image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
+                                                        </div>
+                                                    ) : (
+                                                        <img
+                                                            src={image.thumbnail_url || image.image_url}
+                                                            alt={image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
+                                                            className='h-full w-full object-cover'
+                                                            onError={() => handleImageError(image.id || (image.thumbnail_url || image.image_url))}
+                                                        />
+                                                    )}
                                                 </button>
                                             ))}
                                         </div>

@@ -5,16 +5,12 @@ const EQUIPMENT = [
         focus: 'Upper Body',
         equipment: [
             'Pull-up Bars',
-            'Monkey Bars',
             'Dip Bars',
+            'Low Horizontal Bars',
             'Push-up Bars',
             'Parallettes',
             'Rings',
-            'Climbing Rope',
-            'Stall Bars',
-            'Peg Board',
-            'Salmon Ladder',
-            'Lache Bars',
+            'Monkey Bars'
         ],
     },
     {
@@ -23,8 +19,6 @@ const EQUIPMENT = [
             'Sit-up Bench',
             'Roman Chair',
             'Leg Raise Station',
-            'Incline Bench',
-            'Incline Board',
             'Stall Bars',
         ],
     },
@@ -32,51 +26,16 @@ const EQUIPMENT = [
         focus: 'Lower Body',
         equipment: [
             'Plyo Boxes',
-            'Balance Beam',
-            'Lunge Bench',
             'Squat Stand',
             'Calf Block',
-            'Hurdles',
-            'Sprint Track',
-        ],
-    },
-    {
-        focus: 'Mobility & Flexibility',
-        equipment: [
-            'Stretch Bars',
-            'Foam Roller Station',
-            'Balance Beam',
-            'Incline Board',
-        ],
-    },
-    {
-        focus: 'Skill & Coordination',
-        equipment: [
-            'Parkour Wall',
-            'Precision Rails',
-            'Ninja Grips',
-            'Rings',
-            'Lache Bars',
-            'Peg Board',
-            'Salmon Ladder',
-        ],
-    },
-    {
-        focus: 'Conditioning & Endurance',
-        equipment: [
-            'Stepper',
-            'Air Walker',
-            'Row Machine',
-            'Bike Trainer',
-            'Elliptical',
+            'Running Track',
         ],
     },
 ];
 
 const EquipmentGroup = ({
     group,
-    isRequired,
-    firstOption,
+    isRequired = false,
     defaultOpen = false,
     selectedEquipment = [],
 }) => {
@@ -196,7 +155,7 @@ const EquipmentGroup = ({
                                     name='equipment'
                                     value={item}
                                     className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
-                                    required={isRequired && item === firstOption}
+                                    required={isRequired}
                                     defaultChecked={isSelected}
                                     onChange={onToggleEquipment}
                                 />

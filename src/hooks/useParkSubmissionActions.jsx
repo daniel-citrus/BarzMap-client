@@ -1,4 +1,4 @@
-const useParkSubmissionAdminActions = () => {
+const useParkSubmissionActions = () => {
     const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
 
     const approve = async (id, comment = '') => {
@@ -106,7 +106,23 @@ const useParkSubmissionAdminActions = () => {
         }
     };
 
+    const submitPark = async ({
+        name,
+        description,
+        latitude,
+        longitude,
+        address,
+        city,
+        state,
+        country,
+        postal_code,
+        submitted_by = null,
+    }) => {
+
+    }
+
     return { approve, deny, markPending, deleteSubmission };
 };
 
-export default useParkSubmissionAdminActions;
+export default useParkSubmissionActions;
+

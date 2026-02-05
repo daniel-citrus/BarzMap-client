@@ -8,7 +8,7 @@ const ParkSubmissionModeration = ({
     onDelete,
     initialComment = '',
     approveLabel = 'Approve',
-    denyLabel = 'Deny',
+    denyLabel = 'Reject',
     pendingLabel = 'Pending',
     deleteLabel = 'Delete',
     commentPlaceholder = 'Add an optional note for the submitter...',

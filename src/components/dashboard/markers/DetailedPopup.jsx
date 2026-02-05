@@ -124,15 +124,22 @@ const DetailedPopup = ({
                                         {activeImage && (
                                             <>
                                                 {failedImages.has(activeImage.id || activeImage.image_url) ? (
-                                                    <div className='flex h-full w-full items-center justify-center px-8 text-center text-sm font-medium text-slate-200'>
+                                                    <div className='absolute inset-0 flex h-full w-full items-center justify-center px-8 text-center text-sm font-medium text-slate-200'>
                                                         {activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
                                                     </div>
                                                 ) : (
                                                     <img
                                                         src={activeImage.image_url}
-                                                        alt={activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`}
+                                                        alt=""
                                                         className='h-full w-full object-cover'
-                                                        onError={() => handleImageError(activeImage.id || activeImage.image_url)}
+                                                        style={{ font: '0/0 a', color: 'transparent' }}
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            handleImageError(activeImage.id || activeImage.image_url);
+                                                        }}
+                                                        onLoad={(e) => {
+                                                            e.target.setAttribute('aria-label', activeImage.alt_text || `${title || 'Location'} photo ${clampedIndex + 1}`);
+                                                        }}
                                                     />
                                                 )}
                                             </>
@@ -179,21 +186,28 @@ const DetailedPopup = ({
                                                     onClick={() =>
                                                         handleSelect(index)
                                                     }
-                                                    className={`flex h-20 items-center justify-center overflow-hidden rounded-xl border ${index === clampedIndex
+                                                    className={`relative flex h-20 items-center justify-center overflow-hidden rounded-xl border ${index === clampedIndex
                                                         ? 'border-white ring-2 ring-white/80'
                                                         : 'border-white/0'
                                                         }`}
                                                 >
                                                     {failedImages.has(image.id || (image.thumbnail_url || image.image_url)) ? (
-                                                        <div className='flex h-full w-full items-center justify-center px-2 text-center text-xs font-medium text-slate-200'>
+                                                        <div className='absolute inset-0 flex h-full w-full items-center justify-center px-2 text-center text-xs font-medium text-slate-200'>
                                                             {image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
                                                         </div>
                                                     ) : (
                                                         <img
                                                             src={image.thumbnail_url || image.image_url}
-                                                            alt={image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`}
+                                                            alt=""
                                                             className='h-full w-full object-cover'
-                                                            onError={() => handleImageError(image.id || (image.thumbnail_url || image.image_url))}
+                                                            style={{ font: '0/0 a', color: 'transparent' }}
+                                                            onError={(e) => {
+                                                                e.target.style.display = 'none';
+                                                                handleImageError(image.id || (image.thumbnail_url || image.image_url));
+                                                            }}
+                                                            onLoad={(e) => {
+                                                                e.target.setAttribute('aria-label', image.alt_text || `${title || 'Location'} thumbnail ${index + 1}`);
+                                                            }}
                                                         />
                                                     )}
                                                 </button>

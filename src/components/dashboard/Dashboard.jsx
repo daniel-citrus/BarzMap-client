@@ -46,11 +46,6 @@ const Dashboard = () => {
         }
     };
 
-    const handleFormSubmit = (formData) => {
-        console.log('Form submitted:', formData);
-        // Handle form submission logic here
-    };
-
     const views = [
         { id: 'dashboard', label: 'Dashboard', icon: '🗺️' },
         { id: 'parkSubmission', label: 'Park Submission', icon: '➕' },
@@ -110,7 +105,7 @@ const Dashboard = () => {
                 {/* Other views - rendered on top when selected */}
                 {selectedView === 'parkSubmission' && (
                     <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100 py-8'>
-                        <ParkSubmissionForm onSubmit={handleFormSubmit} />
+                        <ParkSubmissionForm />
                     </div>
                 )}
                 {selectedView === 'events' && (

@@ -4,6 +4,29 @@ const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_CLOUD_API;
 config.apiKey = MAPTILER_API_KEY;
 
 /**
+ * Extract address data using the context provided by MapTiler
+ * @param {*} context 
+ * @param {*} name 
+ * @returns
+ */
+const findContext = (context, name) => {
+    let contextLine = '';
+
+    if (name !== "postal_code") {
+        contextLine = context.find(line => {
+            return line.place_designation === name
+        });
+    }
+    else {
+        contextLine = context.find(line => {
+            return line.id.startsWith("postal_code");
+        })
+    }
+
+    return contextLine.text;
+}
+
+/**
  * Reverse-geocodes a longitude/latitude pair into a human-readable address
  * using MapTiler's geocoding API.
  *
@@ -22,6 +45,16 @@ const getAddress = async (longitude, latitude) => {
 
     if (!primaryFeature) {
         return '';
+    }
+
+    const context = primaryFeature.context;
+
+    const addressDetails = {
+        street: `${primaryFeature.address} ${primaryFeature.text}`,
+        city: `${findContext(context, 'city')}`,
+        state: `${findContext(context, 'state')}`,
+        zipcode: `${findContext(context, 'postal_code')}`,
+        country: `${findContext(context, 'country')}`,
     }
 
     return primaryFeature.place_name;

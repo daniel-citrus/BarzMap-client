@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 
+/**
+ * Custom hook to fetch park features within a geographic bounding box.
+ * 
+ * @param {Object|null} northEast - Northeast corner of the bounding box with {lat, lng} properties
+ * @param {Object|null} southWest - Southwest corner of the bounding box with {lat, lng} properties
+ * @returns {Object} Object containing:
+ *   - parkFeatures: Array of park features within the specified bounds (null if not loaded or on error)
+ *   - error: Error object if the fetch failed (null otherwise)
+ */
 const useParkFeatures = (northEast = null, southWest = null) => {
     const [parkFeatures, setParkFeatures] = useState(null)
     const [error, setError] = useState(null)

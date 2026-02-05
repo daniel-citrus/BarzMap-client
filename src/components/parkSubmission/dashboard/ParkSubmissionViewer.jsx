@@ -64,6 +64,7 @@ const ParkSubmissionViewer = ({
                 const result = await response.json();
                 const imageArray = Array.isArray(result) ? result : [];
                 setImages(imageArray);
+                setFailedImages({});
             }
             catch (e) {
                 console.error('Error fetching images:', e);
@@ -203,12 +204,19 @@ const ParkSubmissionViewer = ({
                                     {!isActiveImageFailed && activeImageUrl ? (
                                         <img
                                             src={activeImageUrl}
-                                            alt={activeImage?.alt_text || `${resolvedTitle || 'Park submission'} photo ${clampedIndex + 1}`}
-                                            onError={() => handleImageError(activeImageUrl)}
+                                            alt=""
                                             className='h-full w-full object-cover'
+                                            style={{ font: '0/0 a', color: 'transparent' }}
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                                handleImageError(activeImageUrl);
+                                            }}
+                                            onLoad={(e) => {
+                                                e.target.setAttribute('aria-label', activeImage?.alt_text || `${resolvedTitle || 'Park submission'} photo ${clampedIndex + 1}`);
+                                            }}
                                         />
                                     ) : (
-                                        <div className='flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-900/80 px-6 text-center text-sm font-medium text-slate-200'>
+                                        <div className='absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-900/80 px-6 text-center text-sm font-medium text-slate-200'>
                                             <span>Image unavailable</span>
                                             <span className='text-xs text-slate-400'>Try another photo from the carousel.</span>
                                         </div>
@@ -271,15 +279,22 @@ const ParkSubmissionViewer = ({
                                                     }`}
                                             >
                                                 {thumbnailUrl && failedImages[thumbnailUrl] ? (
-                                                    <div className='flex h-full w-full items-center justify-center bg-slate-800 text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
+                                                    <div className='absolute inset-0 z-10 flex h-full w-full items-center justify-center bg-slate-800 text-center text-[0.65rem] font-medium uppercase tracking-wide text-slate-300'>
                                                         Unavailable
                                                     </div>
                                                 ) : thumbnailUrl ? (
                                                     <img
                                                         src={thumbnailUrl}
-                                                        alt={image?.alt_text || `${resolvedTitle || 'Park submission'} thumbnail ${index + 1}`}
-                                                        onError={() => handleImageError(thumbnailUrl)}
+                                                        alt=""
                                                         className='h-full w-full object-cover'
+                                                        style={{ font: '0/0 a', color: 'transparent' }}
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            handleImageError(thumbnailUrl);
+                                                        }}
+                                                        onLoad={(e) => {
+                                                            e.target.setAttribute('aria-label', image?.alt_text || `${resolvedTitle || 'Park submission'} thumbnail ${index + 1}`);
+                                                        }}
                                                     />
                                                 ) : null}
                                             </button>

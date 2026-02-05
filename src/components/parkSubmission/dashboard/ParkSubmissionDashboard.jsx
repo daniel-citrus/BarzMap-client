@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import ParkSubmissionViewer from './ParkSubmissionViewer';
 import useParkSubmissions from '../../../hooks/useParkSubmissions';
-import useParkSubmissionAdminActions from '../../../hooks/useParkSubmissionAdminActions';
+import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
 
 const STATUS_META = {
     pending: {
@@ -28,7 +28,7 @@ const formatDate = (value) =>
 
 const ParkSubmissionDashboard = () => {
     const { parkSubmissions, loading, error, refresh } = useParkSubmissions();
-    const { approve, markPending, deny, deleteSubmission } = useParkSubmissionAdminActions()
+    const { approve, markPending, deny, deleteSubmission } = useParkSubmissionActions();
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
     const [statusFilter, setStatusFilter] = useState('pending');
@@ -53,41 +53,50 @@ const ParkSubmissionDashboard = () => {
     const toggleMenu = (id) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
     };
+
     const handleViewSubmission = (id) => {
-        console.log('Viewing submission:', id);
         setViewSubmission(id);
     };
-    const handleApprove = async (id) => {
-        console.log('Approved:', id);
-        await approve(id)
-        refresh()
-    };
-    const handleDeny = async (id) => {
-        console.log('Denied:', id);
-        await deny(id)
-        refresh()
-    };
-    const handleMarkPending = async (id) => {
-        console.log('Marked pending:', id);
-        await markPending(id)
-        refresh()
-    };
-    const handleDelete = async (id) => {
-        console.log('Deleted:', id);
-        await deleteSubmission(id)
-        refresh()
-    };
+
     const handleCloseSubmissionViewer = () => {
         setViewSubmission(null);
     };
 
+    // Generic handler for async submission actions (approve, deny, markPending, delete)
+    const createActionHandler = (actionFn, actionName) => {
+        return async (id) => {
+            try {
+                await actionFn(id);
+                refresh();
+                setViewSubmission(null);
+            } catch (error) {
+                console.error(`Failed to ${actionName} submission ${id}:`, error);
+            }
+        };
+    };
+
+    const handleApprove = createActionHandler(approve, 'approve');
+    const handleDeny = createActionHandler(deny, 'deny');
+    const handleMarkPending = createActionHandler(markPending, 'mark as pending');
+    const handleDelete = createActionHandler(deleteSubmission, 'delete');
+
     const ACTIONS = [
-        { title: 'View', action: (id) => handleViewSubmission(id) },
-        { title: 'Approve', action: (id) => handleApprove(id) },
-        { title: 'Deny', action: (id) => handleDeny(id) },
-        { title: 'Mark Pending', action: (id) => handleMarkPending(id) },
-        { title: 'Delete', action: (id) => handleDelete(id) },
+        { title: 'View', action: handleViewSubmission },
+        { title: 'Approve', action: handleApprove },
+        { title: 'Deny', action: handleDeny },
+        { title: 'Mark Pending', action: handleMarkPending },
+        { title: 'Delete', action: handleDelete },
     ];
+
+    // Helper function to get status metadata
+    const getStatusMeta = (status) => {
+        return STATUS_META[status] || STATUS_META.pending;
+    };
+
+    // Memoize selected submission to avoid recalculating on every render
+    const selectedSubmission = useMemo(() => {
+        return submissions.find((submission) => submission.id === viewSubmission);
+    }, [submissions, viewSubmission]);
 
     return (
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6'>
@@ -150,12 +159,7 @@ const ParkSubmissionDashboard = () => {
                                 equipment = [],
                                 status,
                             } = submission;
-                            const statusClass =
-                                STATUS_META[status]?.className ??
-                                STATUS_META.pending.className;
-                            const statusLabel =
-                                STATUS_META[status]?.label ??
-                                STATUS_META.pending.label;
+                            const { className: statusClass, label: statusLabel } = getStatusMeta(status);
                             const equipmentPreview = equipment.slice(0, 5);
                             const remainingEquipmentCount =
                                 equipment.length - equipmentPreview.length;
@@ -275,11 +279,9 @@ const ParkSubmissionDashboard = () => {
                         })}
                     </ul>
                 )}
-                {viewSubmission && (
+                {selectedSubmission && (
                     <ParkSubmissionViewer
-                        submission={submissions.find(
-                            (submission) => submission.id === viewSubmission
-                        )}
+                        submission={selectedSubmission}
                         onClose={handleCloseSubmissionViewer}
                         onApprove={handleApprove}
                         onPending={handleMarkPending}

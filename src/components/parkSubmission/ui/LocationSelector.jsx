@@ -17,10 +17,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
     const markerRef = useRef(null);
     const addressInputRef = useRef(null);
     const [address, setAddress] = useState('');
-    const [coordinates, setCoordinates] = useState({
-        lat: 37.7749,
-        lng: -122.4194,
-    });
+    const [coordinates, setCoordinates] = useState(initialCoords);
 
     const [addressLoading, setAddressLoading] = useState(false);
 
@@ -99,6 +96,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
         map.on('click', (event) => {
             marker.setLngLat(event.lngLat);
+
             setCoordinates({
                 lng: event.lngLat.lng,
                 lat: event.lngLat.lat,
@@ -139,6 +137,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         markerRef.current?.setLngLat([lngNumber, latNumber]);
     };
 
+    // Update physical address when coordinates are changed via map marker.
     useEffect(() => {
         const updateAddress = async () => {
             const { lng: longitude, lat: latitude } = coordinates;
@@ -146,7 +145,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             if (!longitude || !latitude) {
                 return;
             }
-            
+
             const newAddress = await getAddress(longitude, latitude);
 
             setAddress(newAddress);
@@ -167,10 +166,9 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
     const addressFieldClasses = useMemo(
         () =>
-            `w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-[border-color,box-shadow] duration-200 ${
-                addressLoading
-                    ? 'border-indigo-200 ring-2 ring-indigo-100 pr-10'
-                    : 'border-slate-200'
+            `w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-[border-color,box-shadow] duration-200 ${addressLoading
+                ? 'border-indigo-200 ring-2 ring-indigo-100 pr-10'
+                : 'border-slate-200'
             }`,
         [addressLoading]
     );

@@ -15,49 +15,8 @@ const ParkSubmissionForm = () => {
             latitude: formData.get("coordLat"),
             longitude: formData.get("coordLng"),
             address: formData.get("address"),
-            city: formData.get("city"),
-            state: formData.get("state")
-            /* 
-                {
-                    "name": "Washington Park",
-                    "description": "A small outdoor gym located next to the Washington Park lower baseball field.",
-                    "latitude": 40.785091,
-                    "longitude": -73.968285,
-                    "address": "Central Park, Upper East Side",
-                    "city": "Alameda",
-                    "state": "CA",
-                    "country": "USA",
-                    "postal_code": "94501",
-                    "images": [
-                        {
-                        "file_data": "",
-                        "url": "https://i.pinimg.com/736x/ff/35/01/ff3501402d2b46257e8d104508323a53.jpg",
-                        "alt_text": "Outdoor gym equipment at Central Park"
-                        },
-                        {
-                        "file_data": "",
-                        "url": "https://c4.wallpaperflare.com/wallpaper/635/923/784/anime-my-hero-academia-all-might-hd-wallpaper-preview.jpg",
-                        "alt_text": "Park overview"
-                        },
-                        {
-                        "file_data": "",
-                        "url": "https://c4.wallpaperflare.com/wallpaper/635/923/784/anime-my-hero-academia-all-might-hd-wallpaper-preview.jpg",
-                        "alt_text": "Park overvie2"
-                        }
-                    ]
-                } 
-
-                0: images → File { lastModified: 1770237467026, size: 0, type: "application/octet-stream", … }
-                1: title → "Daniel's Home"
-                2: address → "1500 Market Street, San Francisco, California 94103, United States"
-                3: coordLng → "-122.4194"
-                4: coordLat → "37.7749"
-                5: equipment → "Stall Bars"
-                6: equipment → "Running Track"
-                7: description → ""
-            */
+            submitted_by: null
         }
-        /* console.log(formattedData) */
     }
 
     const handleSubmit = (event) => {

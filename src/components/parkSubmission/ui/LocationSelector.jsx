@@ -193,9 +193,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             className={addressFieldClasses}
                             required
                             value={address}
-                            onChange={(e) => {
-                                onTypingAddress(e);
-                            }}
+                            onChange={onTypingAddress}
                         />
                         <div className='pointer-events-none absolute inset-y-0 right-3 flex items-center gap-3'>
                             {addressLoading && (

@@ -1,195 +1,82 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
+import useEquipment from '../../../hooks/useEquipment';
 
-const EQUIPMENT = [
-    {
-        focus: 'Upper Body',
-        equipment: [
-            'Pull-up Bars',
-            'Dip Bars',
-            'Low Horizontal Bars',
-            'Push-up Bars',
-            'Parallettes',
-            'Rings',
-            'Monkey Bars'
-        ],
-    },
-    {
-        focus: 'Core & Midsection',
-        equipment: [
-            'Sit-up Bench',
-            'Roman Chair',
-            'Leg Raise Station',
-            'Stall Bars',
-        ],
-    },
-    {
-        focus: 'Lower Body',
-        equipment: [
-            'Plyo Boxes',
-            'Squat Stand',
-            'Calf Block',
-            'Running Track',
-        ],
-    },
-];
+const EquipmentSelector = ({ isRequired = false, onEquipmentChange }) => {
+    const { equipment } = useEquipment();
+    const [selectedEquipment, setSelectedEquipment] = useState(new Set());
 
-const EquipmentGroup = ({
-    group,
-    isRequired = false,
-    defaultOpen = false,
-    selectedEquipment = [],
-}) => {
-    const contentRef = useRef(null);
-    const [maxHeight, setMaxHeight] = useState('0px');
-
-    // Calculate initial selected count from pre-selected equipment
-    const getSelectedCount = () => group.equipment.filter(item =>
-        selectedEquipment.includes(item)
-    ).length;
-
-    const [selectedCount, setSelectedCount] = useState(getSelectedCount());
-    const [isOpen, setIsOpen] = useState(defaultOpen);
-
-    useEffect(() => {
-        setIsOpen(defaultOpen);
-    }, [defaultOpen]);
-
-    // Update selected count when selectedEquipment changes
-    useEffect(() => {
-        setSelectedCount(getSelectedCount());
-    }, [selectedEquipment]);
-
-    useEffect(() => {
-        const contentEl = contentRef.current;
-        if (!contentEl) {
-            return undefined;
-        }
-
-        if (isOpen) {
-            const updateHeight = () => {
-                setMaxHeight(`${contentEl.scrollHeight}px`);
-            };
-
-            updateHeight();
-
-            let resizeObserver;
-            if (typeof ResizeObserver !== 'undefined') {
-                resizeObserver = new ResizeObserver(updateHeight);
-                resizeObserver.observe(contentEl);
+    // Handle checkbox toggle
+    const handleToggle = (itemId) => {
+        setSelectedEquipment((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(itemId)) {
+                newSet.delete(itemId);
+            } else {
+                newSet.add(itemId);
             }
 
-            return () => {
-                resizeObserver?.disconnect();
-            };
-        }
+            // Notify parent component if callback provided
+            if (onEquipmentChange) {
+                onEquipmentChange(Array.from(newSet));
+            }
 
-        setMaxHeight('0px');
-        return undefined;
-    }, [isOpen, group.equipment]);
-
-    const onToggleEquipment = (event) => {
-        const { checked } = event.target;
-
-        setSelectedCount((prev) =>
-            checked ? prev + 1 : Math.max(prev - 1, 0)
-        );
+            return newSet;
+        });
     };
 
+    // Ensure equipment is an array
+    const equipmentList = Array.isArray(equipment) ? equipment : [];
+    const selectedCount = selectedEquipment.size;
+
     return (
-        <div className='rounded-xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5'>
-            <button
-                type='button'
-                onClick={() => setIsOpen((prev) => !prev)}
-                className='relative -mx-3 -my-2 flex w-full items-center justify-between rounded-lg pl-3 pr-0 py-2 text-left text-sm font-semibold text-slate-700 cursor-pointer'
-                aria-expanded={isOpen}
-                aria-controls={`${group.focus}-equipment`}
-            >
-                <span className='flex items-center gap-3'>
-                    <span>{group.focus}</span>
-                    {selectedCount > 0 && (
-                        <span className='inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide text-slate-500'>
-                            {selectedCount} selected
-                        </span>
-                    )}
-                </span>
-                <span
-                    className={`-mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'
-                        }`}
-                >
-                    <svg
-                        aria-hidden='true'
-                        className='h-3.5 w-3.5'
-                        viewBox='0 0 20 20'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                    >
-                        <path
-                            d='M5 8.5 10 13l5-4.5'
-                            stroke='currentColor'
-                            strokeWidth='1.6'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                        />
-                    </svg>
-                </span>
-            </button>
-            <div
-                id={`${group.focus}-equipment`}
-                className='overflow-hidden transition-[max-height] duration-300 ease-in-out'
-                style={{ maxHeight }}
-            >
-                <div
-                    ref={contentRef}
-                    className='grid gap-3 pt-3 sm:grid-cols-2'
-                    aria-hidden={!isOpen}
-                >
-                    {group.equipment.map((item) => {
-                        const isSelected = selectedEquipment.includes(item);
+        <section className='space-y-4'>
+            <div className='flex items-center justify-between'>
+                <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                    Equipment
+                    {isRequired && <span className='text-rose-500'> *</span>}
+                </h2>
+                {selectedCount > 0 && (
+                    <span className='text-xs font-medium text-slate-500'>
+                        {selectedCount} selected
+                    </span>
+                )}
+            </div>
+
+            {equipmentList.length === 0 ? (
+                <div className='rounded-lg border border-slate-200 bg-slate-50 p-4 text-center text-sm text-slate-500'>
+                    No equipment available
+                </div>
+            ) : (
+                <div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-3'>
+                    {equipmentList.map((item, index) => {
+                        // Handle different data formats from API
+                        const itemId = item?.id;
+                        const itemLabel = item?.name;
+                        const isSelected = selectedEquipment.has(itemId);
+
                         return (
                             <label
-                                key={`${group.focus}-${item}`}
-                                className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-white'
+                                key={itemId}
+                                className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-sm transition cursor-pointer ${isSelected
+                                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                    : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-indigo-300 hover:bg-white'
+                                    }`}
                             >
                                 <input
                                     type='checkbox'
                                     name='equipment'
-                                    value={item}
+                                    value={itemId}
+                                    checked={isSelected}
+                                    onChange={() => handleToggle(itemId)}
                                     className='mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500'
-                                    required={isRequired}
-                                    defaultChecked={isSelected}
-                                    onChange={onToggleEquipment}
+                                    required={isRequired && selectedCount === 0}
                                 />
-                                <span>{item}</span>
+                                <span className='flex-1'>{itemLabel}</span>
                             </label>
                         );
                     })}
                 </div>
-            </div>
-        </div>
-    );
-};
-
-const EquipmentSelector = ({ isRequired = false, selectedEquipment = [] }) => {
-    const firstOption = EQUIPMENT[0]?.equipment[0];
-
-    return (
-        <section className='space-y-5'>
-            <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
-                Equipment
-                {isRequired && <span className='text-rose-500'> *</span>}
-            </h2>
-            <div className='space-y-4'>
-                {EQUIPMENT.map((group, index) => (
-                    <EquipmentGroup
-                        key={group.focus}
-                        group={group}
-                        firstOption={firstOption}
-                        isRequired={isRequired}
-                        defaultOpen={index === 0}
-                        selectedEquipment={selectedEquipment}
-                    />
-                ))}
-            </div>
+            )}
         </section>
     );
 };

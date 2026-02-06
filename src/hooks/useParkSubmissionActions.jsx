@@ -43,7 +43,6 @@ const useParkSubmissionActions = () => {
             }
 
             const result = await response.json();
-            console.log('Denied submission:', result);
             return result;
         } catch (error) {
             console.error(`Unable to deny submission: ${id}. Error:`, error);
@@ -112,11 +111,8 @@ const useParkSubmissionActions = () => {
         latitude,
         longitude,
         address,
-        city,
-        state,
-        country,
-        postal_code,
         submitted_by = null,
+        images = []
     }) => {
 
     }

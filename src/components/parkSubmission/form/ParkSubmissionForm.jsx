@@ -2,12 +2,16 @@ import { useState } from 'react';
 import ImageUploadBox from '../ui/ImageUploadBox';
 import LocationSelector from '../ui/LocationSelector';
 import EquipmentSelector from '../ui/EquipmentSelector';
+import { useEffect } from 'react';
 
 const ParkSubmissionForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
+    const [selectedEquipment, setSelectedEquipment] = useState([]);
 
-    const formatFormData = (form) => {
-        const formData = new FormData(form);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
 
         const formattedData = {
             name: formData.get("title"),
@@ -15,15 +19,30 @@ const ParkSubmissionForm = () => {
             latitude: formData.get("coordLat"),
             longitude: formData.get("coordLng"),
             address: formData.get("address"),
+            images: selectedImages,
+            equipment_ids: selectedEquipment,
             submitted_by: null
         }
-    }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+        console.log(formattedData)
+        const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
+        const url = new URL(`${baseUrl}/api/parks/`);
 
-        const formData = formatFormData(event.currentTarget)
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formattedData
+            })
+
+            const result = await response.json()
+        } catch (error) {
+
+        }
     };
+
+    const handleEquipmentChange = (newArray = []) => {
+        setSelectedEquipment([...newArray]);
+    }
 
     return (
         <form
@@ -58,7 +77,7 @@ const ParkSubmissionForm = () => {
 
             <LocationSelector />
 
-            <EquipmentSelector />
+            <EquipmentSelector onEquipmentChange={handleEquipmentChange} />
 
             <section className='space-y-2'>
                 <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>

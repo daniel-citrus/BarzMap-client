@@ -20,7 +20,7 @@ const ImageUploadBox = ({
                                 id: `${file.name}-${file.lastModified
                                     }-${Date.now()}-${index}`,
                                 preview: e.target?.result ?? '',
-                                file_data: file,
+                                file: file,
                             });
                         };
                         reader.readAsDataURL(file);

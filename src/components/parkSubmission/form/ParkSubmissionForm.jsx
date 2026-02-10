@@ -2,7 +2,6 @@ import { useState } from 'react';
 import ImageUploadBox from '../ui/ImageUploadBox';
 import LocationSelector from '../ui/LocationSelector';
 import EquipmentSelector from '../ui/EquipmentSelector';
-import { useEffect } from 'react';
 
 const ParkSubmissionForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
@@ -30,8 +29,9 @@ const ParkSubmissionForm = () => {
         selectedImages.forEach((image) => {
             if (image.file) {
                 submissionData.append('images', image.file);
-                // Collect alt text for parallel array
-                altTexts.push('User uploaded image'); // Or image.alt_text if you have it
+                altTexts.push('User uploaded image');
+            } else {
+                console.warn('Image missing file property:', image);
             }
         });
 

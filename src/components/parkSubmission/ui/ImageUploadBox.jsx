@@ -17,11 +17,10 @@ const ImageUploadBox = ({
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             resolve({
-                                id: `${file.name}-${
-                                    file.lastModified
-                                }-${Date.now()}-${index}`,
+                                id: `${file.name}-${file.lastModified
+                                    }-${Date.now()}-${index}`,
                                 preview: e.target?.result ?? '',
-                                file,
+                                file_data: file,
                             });
                         };
                         reader.readAsDataURL(file);
@@ -71,9 +70,8 @@ const ImageUploadBox = ({
                                         onClick={() =>
                                             handleRemoveImage(image.id)
                                         }
-                                        aria-label={`Remove park preview ${
-                                            index + 1
-                                        }`}
+                                        aria-label={`Remove park preview ${index + 1
+                                            }`}
                                     >
                                         <svg
                                             aria-hidden='true'

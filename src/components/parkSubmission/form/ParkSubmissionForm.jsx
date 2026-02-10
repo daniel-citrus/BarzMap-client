@@ -12,37 +12,64 @@ const ParkSubmissionForm = () => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
+        const submissionData = new FormData();
 
-        const formattedData = {
-            name: formData.get("title"),
-            description: formData.get("description"),
-            latitude: formData.get("coordLat"),
-            longitude: formData.get("coordLng"),
-            address: formData.get("address"),
-            images: selectedImages,
-            equipment_ids: selectedEquipment,
-            submitted_by: null
+        // 1. Text Fields
+        submissionData.append('name', formData.get("title") || '');
+        submissionData.append('description', formData.get("description") || '');
+
+        const lat = formData.get("coordLat");
+        const lng = formData.get("coordLng");
+        if (lat) submissionData.append('latitude', lat);
+        if (lng) submissionData.append('longitude', lng);
+
+        submissionData.append('address', formData.get("address") || '');
+
+        // 2. Images (List[UploadFile])
+        const altTexts = [];
+        selectedImages.forEach((image) => {
+            if (image.file) {
+                submissionData.append('images', image.file);
+                // Collect alt text for parallel array
+                altTexts.push('User uploaded image'); // Or image.alt_text if you have it
+            }
+        });
+
+        // 3. Equipment IDs (JSON String)
+        if (selectedEquipment.length > 0) {
+            submissionData.append('equipment_ids', JSON.stringify(selectedEquipment));
         }
 
-        console.log(formattedData)
+        // 4. Image Alt Texts (JSON String)
+        if (altTexts.length > 0) {
+            submissionData.append('image_alt_texts', JSON.stringify(altTexts));
+        }
+
+        // 5. Submitted By (Optional)
+
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = new URL(`${baseUrl}/api/parks/`);
+        const url = `${baseUrl}/api/authenticated/submissions/`;
 
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                body: formattedData
-            })
+                body: submissionData,
+                // Browser automatically sets Content-Type: multipart/form-data with boundary
+            });
 
-            const result = await response.json()
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to submit: ${response.status} ${response.statusText}. ${errorText}`);
+            }
+
+            const result = await response.json();
+            console.log('Submission successful:', result);
+
+            // TODO: Handle success (reset form, redirect, toast, etc.)
         } catch (error) {
-
+            console.error('Error submitting park:', error);
         }
     };
-
-    const handleEquipmentChange = (newArray = []) => {
-        setSelectedEquipment([...newArray]);
-    }
 
     return (
         <form
@@ -77,7 +104,7 @@ const ParkSubmissionForm = () => {
 
             <LocationSelector />
 
-            <EquipmentSelector onEquipmentChange={handleEquipmentChange} />
+            <EquipmentSelector onEquipmentChange={setSelectedEquipment} />
 
             <section className='space-y-2'>
                 <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>

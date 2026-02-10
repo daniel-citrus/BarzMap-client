@@ -42,7 +42,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
   - [x] Build the guided form with validation and equipment checklist
   - [x] Implement photo uploads and media preview handling.
   - [x] Add a location picker with map drag, coordinate inputs, and current location finder
-- [ ] Submission moderation
+- [x] Submission moderation
   - [x] Create an admin review dashboard to approve, reject, or request changes.
     - [x] Each section should have an approve, reject, or request change option to indiciate the status of each section
 - [x] Events Board

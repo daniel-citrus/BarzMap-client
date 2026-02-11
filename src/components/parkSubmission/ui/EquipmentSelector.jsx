@@ -7,21 +7,16 @@ const EquipmentSelector = ({ isRequired = false, onEquipmentChange }) => {
 
     // Handle checkbox toggle
     const handleToggle = (itemId) => {
-        setSelectedEquipment((prev) => {
-            const newSet = new Set(prev);
-            if (newSet.has(itemId)) {
-                newSet.delete(itemId);
-            } else {
-                newSet.add(itemId);
-            }
-
-            // Notify parent component if callback provided
-            if (onEquipmentChange) {
-                onEquipmentChange(Array.from(newSet));
-            }
-
-            return newSet;
-        });
+        const newSet = new Set(selectedEquipment);
+        if (newSet.has(itemId)) {
+            newSet.delete(itemId);
+        } else {
+            newSet.add(itemId);
+        }
+        setSelectedEquipment(newSet);
+        if (onEquipmentChange) {
+            onEquipmentChange(Array.from(newSet));
+        }
     };
 
     // Ensure equipment is an array

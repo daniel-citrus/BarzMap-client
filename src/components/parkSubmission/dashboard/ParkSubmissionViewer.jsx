@@ -52,7 +52,7 @@ const ParkSubmissionViewer = ({
 
         const loadImages = async () => {
             const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-            const url = `${baseUrl}/api/authenticated/images/park/${id}`;
+            const url = `${baseUrl}/api/images/park/${id}`;
 
             try {
                 const response = await fetch(url);
@@ -82,7 +82,7 @@ const ParkSubmissionViewer = ({
 
         const loadEquipment = async () => {
             const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-            const url = `${baseUrl}/api/authenticated/park-equipment/park/${id}/equipment`;
+            const url = `${baseUrl}/api/park-equipment/park/${id}/equipment`;
 
             try {
                 const response = await fetch(url);

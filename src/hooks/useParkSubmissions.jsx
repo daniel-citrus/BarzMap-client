@@ -16,7 +16,7 @@ const useParkSubmissions = () => {
             setError(null);
 
             const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-            const url = `${baseUrl}/api/authenticated/parks/`;
+            const url = `${baseUrl}/api/parks/`;
 
             try {
                 const response = await fetch(url);

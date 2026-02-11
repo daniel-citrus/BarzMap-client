@@ -6,14 +6,15 @@ import EquipmentSelector from '../ui/EquipmentSelector';
 const ParkSubmissionForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsSubmitting(true);
 
         const formData = new FormData(event.currentTarget);
         const submissionData = new FormData();
 
-        // 1. Text Fields
         submissionData.append('name', formData.get("title") || '');
         submissionData.append('description', formData.get("description") || '');
 
@@ -24,7 +25,6 @@ const ParkSubmissionForm = () => {
 
         submissionData.append('address', formData.get("address") || '');
 
-        // 2. Images (List[UploadFile])
         const altTexts = [];
         selectedImages.forEach((image) => {
             if (image.file) {
@@ -35,20 +35,16 @@ const ParkSubmissionForm = () => {
             }
         });
 
-        // 3. Equipment IDs (JSON String)
         if (selectedEquipment.length > 0) {
             submissionData.append('equipment_ids', JSON.stringify(selectedEquipment));
         }
 
-        // 4. Image Alt Texts (JSON String)
         if (altTexts.length > 0) {
             submissionData.append('image_alt_texts', JSON.stringify(altTexts));
         }
 
-        // 5. Submitted By (Optional)
-
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = `${baseUrl}/api/authenticated/submissions/`;
+        const url = `${baseUrl}/api/submissions/`;
 
         try {
             const response = await fetch(url, {
@@ -64,10 +60,10 @@ const ParkSubmissionForm = () => {
 
             const result = await response.json();
             console.log('Submission successful:', result);
-
-            // TODO: Handle success (reset form, redirect, toast, etc.)
         } catch (error) {
             console.error('Error submitting park:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -126,9 +122,10 @@ const ParkSubmissionForm = () => {
             <div className='flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-5'>
                 <button
                     type='submit'
-                    className='inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:w-auto cursor-pointer'
+                    disabled={isSubmitting}
+                    className='inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:w-auto cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed'
                 >
-                    Submit Park
+                    {isSubmitting ? 'Submitting…' : 'Submit Park'}
                 </button>
             </div>
         </form>

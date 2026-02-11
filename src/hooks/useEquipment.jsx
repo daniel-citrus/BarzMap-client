@@ -6,7 +6,7 @@ const useEquipment = () => {
 
     useEffect(() => {
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = new URL(`${baseUrl}/api/authenticated/equipment/?skip=0`);
+        const url = new URL(`${baseUrl}/api/equipment/?skip=0`);
 
         const getEquipment = async () => {
             try {

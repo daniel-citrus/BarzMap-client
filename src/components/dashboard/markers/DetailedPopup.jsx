@@ -266,7 +266,7 @@ const DetailedPopup = ({
         if (!id) return;
 
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = `${baseUrl}/api/authenticated/images/park/${id}`;
+        const url = `${baseUrl}/api/images/park/${id}`;
 
         const fetchImages = async () => {
             try {

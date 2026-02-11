@@ -44,7 +44,7 @@ const ParkSubmissionForm = () => {
         }
 
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = `${baseUrl}/api/submissions/`;
+        const url = `${baseUrl}/api/park/`;
 
         try {
             const response = await fetch(url, {

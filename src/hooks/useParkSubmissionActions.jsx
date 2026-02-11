@@ -18,7 +18,7 @@ const useParkSubmissionActions = () => {
     };
 
     const handleSubmission = async (id, action, comment = '') => {
-        const url = `${baseUrl}/api/park-submissions/${id}`;
+        const url = `${baseUrl}/api/park/${id}`;
 
         try {
             const response = await fetch(url, {

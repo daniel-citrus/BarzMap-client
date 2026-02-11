@@ -3,12 +3,12 @@ import { useState } from 'react';
 const ParkSubmissionModeration = ({
     id,
     onApprove,
-    onDeny,
+    onReject,
     onPending,
     onDelete,
     initialComment = '',
     approveLabel = 'Approve',
-    denyLabel = 'Reject',
+    rejectLabel = 'Reject',
     pendingLabel = 'Pending',
     deleteLabel = 'Delete',
     commentPlaceholder = 'Add an optional note for the submitter...',
@@ -51,10 +51,10 @@ const ParkSubmissionModeration = ({
                 </button>
                 <button
                     type='button'
-                    onClick={() => { onDeny(id) }}
+                    onClick={() => { onReject(id) }}
                     className='inline-flex items-center justify-center rounded-full bg-rose-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:ring-offset-2'
                 >
-                    {denyLabel}
+                    {rejectLabel}
                 </button>
                 <button
                     type='button'

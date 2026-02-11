@@ -28,7 +28,7 @@ const formatDate = (value) =>
 
 const ParkSubmissionDashboard = () => {
     const { parkSubmissions, loading, error, refresh } = useParkSubmissions();
-    const { approve, markPending, deny, deleteSubmission } = useParkSubmissionActions();
+    const { approve, markPending, reject, deleteSubmission } = useParkSubmissionActions();
     const [openMenuId, setOpenMenuId] = useState(null);
     const [viewSubmission, setViewSubmission] = useState(null);
     const [statusFilter, setStatusFilter] = useState('pending');
@@ -76,14 +76,14 @@ const ParkSubmissionDashboard = () => {
     };
 
     const handleApprove = createActionHandler(approve, 'approve');
-    const handleDeny = createActionHandler(deny, 'deny');
+    const handleReject = createActionHandler(reject, 'deny');
     const handleMarkPending = createActionHandler(markPending, 'mark as pending');
     const handleDelete = createActionHandler(deleteSubmission, 'delete');
 
     const ACTIONS = [
         { title: 'View', action: handleViewSubmission },
         { title: 'Approve', action: handleApprove },
-        { title: 'Deny', action: handleDeny },
+        { title: 'Reject', action: handleReject },
         { title: 'Mark Pending', action: handleMarkPending },
         { title: 'Delete', action: handleDelete },
     ];
@@ -285,7 +285,7 @@ const ParkSubmissionDashboard = () => {
                         onClose={handleCloseSubmissionViewer}
                         onApprove={handleApprove}
                         onPending={handleMarkPending}
-                        onDeny={handleDeny}
+                        onDeny={handleReject}
                         onDelete={handleDelete}
                     />
                 )}

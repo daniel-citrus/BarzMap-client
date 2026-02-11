@@ -2,108 +2,51 @@ const useParkSubmissionActions = () => {
     const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
 
     const approve = async (id, comment = '') => {
-        const url = `${baseUrl}/api/admin/park-submissions/${id}/approve`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment: comment.trim() }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to approve submission: ${response.status} ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            console.log('Approved submission:', result);
-            return result;
-        } catch (error) {
-            console.error(`Unable to approve submission: ${id}. Error:`, error);
-            throw error;
-        }
+        await handleSubmission(id, 'approved', comment)
     };
 
-    const deny = async (id, comment = '') => {
-        const url = `${baseUrl}/api/admin/park-submissions/${id}/deny`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment: comment.trim() }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to deny submission: ${response.status} ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error(`Unable to deny submission: ${id}. Error:`, error);
-            throw error;
-        }
+    const reject = async (id, comment = '') => {
+        await handleSubmission(id, 'rejected', comment);
     };
 
     const markPending = async (id, comment = '') => {
-        const url = `${baseUrl}/api/admin/park-submissions/${id}/pending`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment: comment.trim() }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to mark submission as pending: ${response.status} ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            console.log('Marked submission as pending:', result);
-            return result;
-        } catch (error) {
-            console.error(`Unable to mark submission as pending: ${id}. Error:`, error);
-            throw error;
-        }
+        await handleSubmission(id, 'pending', comment);
     };
 
     const deleteSubmission = async (id) => {
+        await handleSubmission(id, 'delete')
+    };
+
+    const handleSubmission = async (id, action, comment = '') => {
         const url = `${baseUrl}/api/admin/park-submissions/${id}`;
 
         try {
             const response = await fetch(url, {
-                method: 'DELETE',
+                method: action === 'delete' ? 'DELETE' : 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    status: action,
+                    comment: comment.trim()
+                }),
             });
 
-            if (!response.ok) {
-                throw new Error(`Failed to delete submission: ${response.status} ${response.statusText}`);
+            const text = await response.text();
+
+            if (!text) {
+                return null;
             }
 
-            // DELETE returns 204 No Content, so no JSON to parse
-            if (response.status === 204) {
-                console.log('Deleted submission:', id);
-                return { success: true };
-            }
+            const result = await text.json()
 
-            const result = await response.json();
-            console.log('Deleted submission:', result);
+            console.log(`Action Success: ${action}; submission:`, result);
             return result;
         } catch (error) {
             console.error(`Unable to delete submission: ${id}. Error:`, error);
             throw error;
         }
-    };
+    }
 
     const submitPark = async ({
         name,
@@ -117,7 +60,7 @@ const useParkSubmissionActions = () => {
 
     }
 
-    return { approve, deny, markPending, deleteSubmission };
+    return { approve, reject, markPending, deleteSubmission };
 };
 
 export default useParkSubmissionActions;

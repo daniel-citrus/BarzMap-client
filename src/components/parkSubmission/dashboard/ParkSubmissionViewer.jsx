@@ -18,7 +18,7 @@ const ParkSubmissionViewer = ({
     submission,
     onClose,
     onApprove,
-    onDeny,
+    onReject,
     onPending,
     onDelete
 }) => {
@@ -408,7 +408,7 @@ const ParkSubmissionViewer = ({
                             <ParkSubmissionModeration
                                 id={id}
                                 onApprove={onApprove}
-                                onDeny={onDeny}
+                                onReject={onReject}
                                 onPending={onPending}
                                 onDelete={onDelete}
                                 initialComment={moderationComment}

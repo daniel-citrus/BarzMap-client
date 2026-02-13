@@ -38,12 +38,12 @@ const useParkSubmissionActions = () => {
                 return null;
             }
 
-            const result = await text.json()
+            const result = JSON.parse(text);
 
             console.log(`Action Success: ${action}; submission:`, result);
             return result;
         } catch (error) {
-            console.error(`Unable to delete submission: ${id}. Error:`, error);
+            console.error(`Unable to ${action} submission ${id}. Error:`, error);
             throw error;
         }
     }

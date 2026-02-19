@@ -2,63 +2,33 @@ import { useState } from 'react';
 import ImageUploadBox from '../ui/ImageUploadBox';
 import LocationSelector from '../ui/LocationSelector';
 import EquipmentSelector from '../ui/EquipmentSelector';
+import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
 
 const ParkSubmissionForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const { submitPark } = useParkSubmissionActions();
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsSubmitting(true);
 
         const formData = new FormData(event.currentTarget);
-        const submissionData = new FormData();
-
-        submissionData.append('name', formData.get("title") || '');
-        submissionData.append('description', formData.get("description") || '');
-
-        const lat = formData.get("coordLat");
-        const lng = formData.get("coordLng");
-        if (lat) submissionData.append('latitude', lat);
-        if (lng) submissionData.append('longitude', lng);
-
-        submissionData.append('address', formData.get("address") || '');
-
-        const altTexts = [];
-        selectedImages.forEach((image) => {
-            if (image.file) {
-                submissionData.append('images', image.file);
-                altTexts.push('User uploaded image');
-            } else {
-                console.warn('Image missing file property:', image);
-            }
-        });
-
-        if (selectedEquipment.length > 0) {
-            submissionData.append('equipment_ids', JSON.stringify(selectedEquipment));
-        }
-
-        if (altTexts.length > 0) {
-            submissionData.append('image_alt_texts', JSON.stringify(altTexts));
-        }
-
-        const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-        const url = `${baseUrl}/api/park/`;
+        const name = formData.get("title") || '';
+        const description = formData.get("description") || '';
+        const lat = formData.get("coordLat") || '';
+        const lng = formData.get("coordLng") || '';
+        const address = formData.get('address') || '';
 
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                body: submissionData,
-                // Browser automatically sets Content-Type: multipart/form-data with boundary
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to submit: ${response.status} ${response.statusText}. ${errorText}`);
-            }
-
-            const result = await response.json();
+            const result = await submitPark({
+                name, description,
+                latitude: lat,
+                longitude: lng,
+                address,
+                images: selectedImages,
+                equipment_ids: selectedEquipment,
+            })
             console.log('Submission successful:', result);
         } catch (error) {
             console.error('Error submitting park:', error);

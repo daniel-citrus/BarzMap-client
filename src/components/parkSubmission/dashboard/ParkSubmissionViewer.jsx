@@ -94,7 +94,6 @@ const ParkSubmissionViewer = ({
                 const result = await response.json();
                 const equipmentArray = Array.isArray(result) ? result : (result.data || []);
                 setEquipment(equipmentArray);
-                console.log('Fetched equipment:', equipmentArray);
             }
             catch (e) {
                 console.error('Error fetching equipment:', e);

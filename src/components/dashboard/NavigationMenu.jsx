@@ -1,33 +1,56 @@
-const NavigationMenu = ({ onClose, linkData }) => {
+import { useEffect, useRef, useState } from 'react';
+
+const STAGGER_MS = 50;
+const DURATION_MS = 300;
+
+const NavigationMenu = ({ isOpen, linkData }) => {
+    const [visible, setVisible] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const closeTimer = useRef(null);
+
+    useEffect(() => {
+        clearTimeout(closeTimer.current);
+
+        if (isOpen) {
+            setMounted(true);
+            requestAnimationFrame(() => setVisible(true));
+        } else {
+            setVisible(false);
+            const totalClose = (linkData.length - 1) * STAGGER_MS + DURATION_MS;
+            closeTimer.current = setTimeout(() => setMounted(false), totalClose);
+        }
+
+        return () => clearTimeout(closeTimer.current);
+    }, [isOpen, linkData.length]);
+
+    if (!mounted) return null;
+
     return (
-        <div className='pointer-events-none fixed inset-y-0 left-0 z-40 flex w-full max-w-xs sm:max-w-sm lg:max-w-md'>
-            <div className='pointer-events-auto relative flex h-full w-full flex-col gap-2 overflow-y-auto bg-white/90 p-6 text-slate-800 shadow-xl shadow-slate-900/20 backdrop-blur-md'>
-                <h2 className='text-lg font-semibold tracking-tight text-slate-900'>
-                    Navigate
-                </h2>
-                <ul className='flex flex-col gap-2'>
-                    {linkData.map((data) => (
-                        <li key={data.id}>
-                            <button
-                                onClick={() => {
-                                    data.action();
-                                }}
-                                className='w-full rounded-lg border border-white/40 bg-white/80 px-4 py-3 text-left font-medium text-slate-700 shadow shadow-slate-900/10 transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40'
-                            >
-                                {data.title}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <button
-                type='button'
-                onClick={onClose}
-                className='pointer-events-auto mt-4 self-start rounded-full border border-white/40 bg-white/80 px-3 py-2 text-sm font-semibold text-slate-700 shadow shadow-slate-900/15 transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40'
-            >
-                &times;
-            </button>
-        </div>
+        <ul className='pointer-events-auto flex flex-col items-center gap-2'>
+            {linkData.map((data, i) => {
+                const openDelay = (linkData.length - 1 - i) * STAGGER_MS;
+                const closeDelay = i * STAGGER_MS;
+                return (
+                    <li
+                        key={data.id}
+                        className='transition-all duration-300 ease-out'
+                        style={{
+                            transitionDelay: `${visible ? openDelay : closeDelay}ms`,
+                            opacity: visible ? 1 : 0,
+                            transform: visible ? 'translateY(0)' : 'translateY(16px)',
+                        }}
+                    >
+                        <button
+                            onClick={() => data.action()}
+                            className='flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-lg shadow-slate-900/15 transition-colors duration-200 active:bg-slate-100 sm:h-13 sm:w-13 md:h-14 md:w-14 md:hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40'
+                            aria-label={data.title}
+                        >
+                            {data.icon}
+                        </button>
+                    </li>
+                );
+            })}
+        </ul>
     );
 };
 

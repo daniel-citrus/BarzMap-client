@@ -32,11 +32,19 @@ const useMapLibreInstance = () => {
             attributionControl: false,
         });
 
-        instance.on('load', () => {
-            setMapReady(true);
+        const geolocateControl = new maplibregl.GeolocateControl({
+            positionOptions: { enableHighAccuracy: true },
+            trackUserLocation: true,
         });
 
         instance.addControl(new AttributionControl({ compact: true }));
+        instance.addControl(new maplibregl.NavigationControl({ showZoom: false }), 'bottom-right');
+        instance.addControl(geolocateControl, 'bottom-right');
+
+        instance.on('load', () => {
+            geolocateControl.trigger();
+            setMapReady(true);
+        });
         mapInstance.current = instance;
 
         return () => {

@@ -8,3 +8,16 @@ body {
     margin: 0;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
+
+@media (max-width: 1024px) {
+    .maplibregl-ctrl-group button {
+        width: 52px;
+        height: 52px;
+    }
+
+    .maplibregl-ctrl-geolocate .maplibregl-ctrl-icon,
+    .maplibregl-ctrl-compass .maplibregl-ctrl-icon {
+        width: 52px;
+        height: 52px;
+    }
+}

@@ -10,6 +10,7 @@ import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionD
 import DetailedPopup from './markers/DetailedPopup';
 import MenuButton from './MenuButton';
 import NavigationMenu from './NavigationMenu';
+import PopupWrapper from './PopupWrapper';
 
 
 const Dashboard = () => {
@@ -83,12 +84,7 @@ const Dashboard = () => {
             {/* Selected View Content */}
             <div className='relative flex flex-1 flex-col overflow-hidden'>
                 {/* Map container - always mounted, shown/hidden based on view */}
-                <div
-                    className={`absolute inset-0 h-full w-full ${selectedView === 'dashboard'
-                        ? 'z-0 opacity-100'
-                        : 'pointer-events-none -z-10 opacity-0'
-                        }`}
-                >
+                <div className='absolute inset-0 z-0 h-full w-full'>
                     <div className='relative h-full w-full overflow-hidden bg-slate-100'>
                         <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center justify-center gap-3 sm:left-6 sm:right-6 sm:top-6'>
                             <SearchInput
@@ -116,22 +112,22 @@ const Dashboard = () => {
 
                 {/* Other views - rendered on top when selected */}
                 {selectedView === 'parkSubmission' && (
-                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100 py-8'>
+                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
                         <ParkSubmissionForm />
-                    </div>
+                    </PopupWrapper>
                 )}
                 {selectedView === 'events' && (
-                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
+                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
                         <EventsBoard
                             lat={coordinates?.latitude}
                             lng={coordinates?.longitude}
                         />
-                    </div>
+                    </PopupWrapper>
                 )}
                 {selectedView === 'submissionDashboard' && (
-                    <div className='relative z-10 h-full w-full overflow-y-auto bg-slate-100'>
+                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
                         <ParkSubmissionDashboard />
-                    </div>
+                    </PopupWrapper>
                 )}
             </div>
 

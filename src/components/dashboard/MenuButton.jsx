@@ -11,13 +11,13 @@ const MenuButton = ({ menuOpen, toggleMenu, className = '' }) => {
 
         return {
             topBar: `${baseBar} ${
-                menuOpen ? 'translate-y-[8px] rotate-45 sm:translate-y-[9px]' : ''
+                menuOpen ? 'translate-y-[6.5px] rotate-45 sm:translate-y-[8px]' : ''
             }`,
             middleBar: `${baseBar} ${
                 menuOpen ? 'opacity-0 scale-x-50' : 'opacity-100'
             }`,
             bottomBar: `${baseBar} ${
-                menuOpen ? '-translate-y-[8px] -rotate-45 sm:-translate-y-[9px]' : ''
+                menuOpen ? '-translate-y-[6.5px] -rotate-45 sm:-translate-y-[8px]' : ''
             }`,
         };
     }, [menuOpen]);

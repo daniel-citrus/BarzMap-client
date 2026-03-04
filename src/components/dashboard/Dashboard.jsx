@@ -10,8 +10,8 @@ import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionD
 import DetailedPopup from './markers/DetailedPopup';
 import MenuButton from './MenuButton';
 import NavigationMenu from './NavigationMenu';
+import DesktopSidebar from './DesktopSidebar';
 import PopupWrapper from './PopupWrapper';
-
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -20,9 +20,23 @@ const Dashboard = () => {
     const [selectedView, setSelectedView] = useState('dashboard');
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const onNavSelect = (viewId) => {
+        setSelectedView(viewId);
+        setMenuOpen(false);
+    };
+
     const navLinks = [
         {
-            id: 'parkSubmission', title: 'Park Submission', action: () => { setSelectedView('parkSubmission'); setMenuOpen(false); },
+            id: 'dashboard', title: 'Map', action: () => onNavSelect('dashboard'),
+            icon: (
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' className='h-6 w-6'>
+                    <polygon points='1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6' />
+                    <line x1='8' y1='2' x2='8' y2='18' /><line x1='16' y1='6' x2='16' y2='22' />
+                </svg>
+            ),
+        },
+        {
+            id: 'parkSubmission', title: 'Submit a Park', action: () => onNavSelect('parkSubmission'),
             icon: (
                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' className='h-6 w-6'>
                     <path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z' />
@@ -31,7 +45,7 @@ const Dashboard = () => {
             ),
         },
         {
-            id: 'events', title: 'Events', action: () => { setSelectedView('events'); setMenuOpen(false); },
+            id: 'events', title: 'Events', action: () => onNavSelect('events'),
             icon: (
                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' className='h-6 w-6'>
                     <path d='M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9' /><path d='M13.73 21a2 2 0 0 1-3.46 0' />
@@ -40,7 +54,7 @@ const Dashboard = () => {
             ),
         },
         {
-            id: 'submissionDashboard', title: 'Submission Dashboard', action: () => { setSelectedView('submissionDashboard'); setMenuOpen(false); },
+            id: 'submissionDashboard', title: 'Submission Dashboard', action: () => onNavSelect('submissionDashboard'),
             icon: (
                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' className='h-6 w-6'>
                     <path d='M9 11l3 3L22 4' /><path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' />
@@ -80,13 +94,20 @@ const Dashboard = () => {
     };
 
     return (
-        <div className='flex h-screen w-full flex-col overflow-hidden bg-slate-100'>
-            {/* Selected View Content */}
+        <div className='flex h-screen w-full overflow-hidden bg-slate-100'>
+            {/* Desktop sidebar - visible lg and up */}
+            <DesktopSidebar
+                linkData={navLinks}
+                selectedView={selectedView}
+                onNavigate={onNavSelect}
+            />
+
+            {/* Main content area */}
             <div className='relative flex flex-1 flex-col overflow-hidden'>
-                {/* Map container - always mounted, shown/hidden based on view */}
+                {/* Map container - always mounted */}
                 <div className='absolute inset-0 z-0 h-full w-full'>
                     <div className='relative h-full w-full overflow-hidden bg-slate-100'>
-                        <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center justify-center gap-3 sm:left-6 sm:right-6 sm:top-6'>
+                        <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center justify-center gap-3 sm:left-6 sm:right-6 sm:top-6 lg:left-6'>
                             <SearchInput
                                 searchValue={address}
                                 onSearch={onNewAddress}
@@ -96,10 +117,11 @@ const Dashboard = () => {
                         <div className='h-full w-full'>
                             <MapLibreMap />
                         </div>
-                        <div className='pointer-events-none absolute bottom-6 left-4 z-30 flex flex-col items-start gap-3 sm:bottom-8 sm:left-6'>
+                        {/* Mobile nav - hamburger + floating menu, hidden on desktop */}
+                        <div className='pointer-events-none absolute bottom-6 left-4 z-30 flex flex-col items-start gap-3 sm:bottom-8 sm:left-6 lg:hidden'>
                             <NavigationMenu
                                 isOpen={menuOpen}
-                                linkData={navLinks}
+                                linkData={navLinks.filter((l) => l.id !== 'dashboard')}
                             />
                             <MenuButton
                                 menuOpen={menuOpen}

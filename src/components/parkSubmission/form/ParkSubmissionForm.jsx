@@ -42,6 +42,9 @@ const ParkSubmissionForm = () => {
             className='mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10'
             onSubmit={handleSubmit}
         >
+            <h1 className='text-xl font-semibold text-slate-900 sm:text-2xl'>
+                Submit a Park
+            </h1>
             <p className='text-xs font-medium uppercase tracking-wide text-slate-400'>
                 <span className='text-rose-500'>*</span> Required
             </p>

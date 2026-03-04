@@ -41,7 +41,7 @@ const SearchInput = ({ searchValue = '', onSearch, className = '' }) => {
                 {value && (
                     <button
                         type='button'
-                        className='inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/80 bg-white/80 text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-white hover:text-slate-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-9 sm:w-9'
+                        className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-slate-500 transition hover:bg-slate-100/50 hover:text-slate-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:h-9 sm:w-9'
                         onClick={handleClear}
                         aria-label='Clear search'
                     >

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import ParkSubmissionViewer from './ParkSubmissionViewer';
+import SubmissionActionsMenu from './SubmissionActionsMenu';
 import useParkSubmissions from '../../../hooks/useParkSubmissions';
 import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
 
@@ -81,11 +82,11 @@ const ParkSubmissionDashboard = () => {
     const handleDelete = createActionHandler(deleteSubmission, 'delete');
 
     const ACTIONS = [
-        { title: 'View', action: handleViewSubmission },
-        { title: 'Approve', action: handleApprove },
-        { title: 'Reject', action: handleReject },
-        { title: 'Mark Pending', action: handleMarkPending },
-        { title: 'Delete', action: handleDelete },
+        { id: 'view', title: 'View', action: handleViewSubmission, showInModeration: false },
+        { id: 'approve', title: 'Approve', action: handleApprove, showInModeration: true, buttonClassName: 'bg-emerald-600 hover:bg-emerald-500 focus:ring-emerald-300 focus:ring-offset-2' },
+        { id: 'reject', title: 'Reject', action: handleReject, showInModeration: true, buttonClassName: 'bg-rose-600 hover:bg-rose-500 focus:ring-rose-300 focus:ring-offset-2' },
+        { id: 'pending', title: 'Mark Pending', action: handleMarkPending, showInModeration: true, buttonClassName: 'bg-amber-500 hover:bg-amber-400 focus:ring-amber-300 focus:ring-offset-2' },
+        { id: 'delete', title: 'Delete', action: handleDelete, showInModeration: true, buttonClassName: 'bg-slate-700 hover:bg-slate-600 focus:ring-slate-400 focus:ring-offset-2' },
     ];
 
     // Helper function to get status metadata
@@ -214,30 +215,12 @@ const ParkSubmissionDashboard = () => {
                                                         />
                                                     </svg>
                                                 </button>
-                                                {openMenuId === id && (
-                                                    <ul
-                                                        className='absolute right-0 top-11 z-10 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-600 shadow-lg shadow-slate-900/10'
-                                                        role='menu'
-                                                    >
-                                                        {ACTIONS.map(
-                                                            ({ title, action }) => (
-                                                                <li key={title}>
-                                                                    <button
-                                                                        type='button'
-                                                                        onClick={() => {
-                                                                            action(id);
-                                                                            toggleMenu(id);
-                                                                        }}
-                                                                        className='flex w-full items-center justify-start px-3 py-2 text-left transition hover:bg-slate-100'
-                                                                        role='menuitem'
-                                                                    >
-                                                                        {title}
-                                                                    </button>
-                                                                </li>
-                                                            )
-                                                        )}
-                                                    </ul>
-                                                )}
+                                                <SubmissionActionsMenu
+                                                    actions={ACTIONS}
+                                                    submissionId={id}
+                                                    isOpen={openMenuId === id}
+                                                    onClose={() => setOpenMenuId(null)}
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -282,11 +265,8 @@ const ParkSubmissionDashboard = () => {
                 {selectedSubmission && (
                     <ParkSubmissionViewer
                         submission={selectedSubmission}
+                        actions={ACTIONS}
                         onClose={handleCloseSubmissionViewer}
-                        onApprove={handleApprove}
-                        onPending={handleMarkPending}
-                        onReject={handleReject}
-                        onDelete={handleDelete}
                     />
                 )}
             </div>

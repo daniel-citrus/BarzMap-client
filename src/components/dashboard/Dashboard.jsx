@@ -19,6 +19,7 @@ const Dashboard = () => {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [selectedView, setSelectedView] = useState('dashboard');
     const [menuOpen, setMenuOpen] = useState(false);
+    const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
     const onNavSelect = (viewId) => {
         setSelectedView(viewId);
@@ -94,20 +95,17 @@ const Dashboard = () => {
     };
 
     return (
-        <div className='flex h-screen w-full overflow-hidden bg-slate-100'>
-            {/* Desktop sidebar - visible lg and up */}
-            <DesktopSidebar
-                linkData={navLinks}
-                selectedView={selectedView}
-                onNavigate={onNavSelect}
-            />
-
-            {/* Main content area */}
+        <div className='relative flex h-screen w-full overflow-hidden bg-slate-100'>
+            {/* Main content area - full width */}
             <div className='relative flex flex-1 flex-col overflow-hidden'>
                 {/* Map container - always mounted */}
                 <div className='absolute inset-0 z-0 h-full w-full'>
                     <div className='relative h-full w-full overflow-hidden bg-slate-100'>
-                        <div className='pointer-events-none absolute left-3 right-3 top-3 z-30 flex items-center justify-center gap-3 sm:left-6 sm:right-6 sm:top-6 lg:left-6'>
+                        <div
+                            className={`pointer-events-none absolute top-3 z-30 flex items-center justify-center gap-3 transition-[left] duration-200 left-3 right-3 sm:left-6 sm:right-6 sm:top-6 lg:right-6 ${
+                                sidebarExpanded ? 'lg:left-56' : 'lg:left-16'
+                            }`}
+                        >
                             <SearchInput
                                 searchValue={address}
                                 onSearch={onNewAddress}
@@ -152,6 +150,15 @@ const Dashboard = () => {
                     </PopupWrapper>
                 )}
             </div>
+
+            {/* Desktop sidebar - overlays map on lg and up */}
+            <DesktopSidebar
+                linkData={navLinks}
+                selectedView={selectedView}
+                onNavigate={onNavSelect}
+                expanded={sidebarExpanded}
+                onExpandedChange={setSidebarExpanded}
+            />
 
             {/* Detailed Popup */}
             {selectedMarker && (

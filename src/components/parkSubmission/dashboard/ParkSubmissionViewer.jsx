@@ -14,14 +14,7 @@ const formatDateTime = (value) =>
         }).format(new Date(value))
         : null;
 
-const ParkSubmissionViewer = ({
-    submission,
-    onClose,
-    onApprove,
-    onReject,
-    onPending,
-    onDelete
-}) => {
+const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
     const {
         id,
         title,
@@ -406,10 +399,8 @@ const ParkSubmissionViewer = ({
 
                             <ParkSubmissionModeration
                                 id={id}
-                                onApprove={onApprove}
-                                onReject={onReject}
-                                onPending={onPending}
-                                onDelete={onDelete}
+                                actions={actions.filter((a) => a.showInModeration)}
+                                onClose={onClose}
                                 initialComment={moderationComment}
                             />
                         </div>

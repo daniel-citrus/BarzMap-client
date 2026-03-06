@@ -4,7 +4,7 @@ import useMapLibreInstance from '../hooks/MapLibre Hooks/useMapLibreInstance';
 const MapLibreContext = createContext(null);
 
 const MapLibreProvider = ({ children }) => {
-    const { mapContainerRef, mapInstance , mapReady} = useMapLibreInstance();
+    const { mapContainerRef, mapInstance, mapReady } = useMapLibreInstance();
 
     const value = useMemo(
         () => ({ mapContainerRef, mapInstance, mapReady }),

@@ -3,7 +3,7 @@ import { MapLibreProvider } from './context/MapLibreContext';
 
 function App() {
     return (
-        <div className='flex min-h-screen w-full flex-col'>
+        <div className='flex h-full min-h-[100dvh] w-full flex-col'>
             <MapLibreProvider>
                 <Dashboard />
             </MapLibreProvider>

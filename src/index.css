@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
-html, body, #root {
+/* Use 100dvh for mobile viewport (avoids 100vh overflow with browser chrome); 100vh fallback for older browsers */
+html {
+    height: 100vh;
+    height: 100dvh;
+}
+
+body, #root {
     height: 100%;
 }
 

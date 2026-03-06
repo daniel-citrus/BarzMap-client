@@ -95,7 +95,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className='relative flex h-screen w-full overflow-hidden bg-slate-100'>
+        <div className='relative flex h-full w-full overflow-hidden bg-slate-100 pb-[env(safe-area-inset-bottom)]'>
             {/* Main content area - full width */}
             <div className='relative flex flex-1 flex-col overflow-hidden'>
                 {/* Map container - always mounted */}

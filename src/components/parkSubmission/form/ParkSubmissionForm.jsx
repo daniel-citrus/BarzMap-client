@@ -3,8 +3,9 @@ import ImageUploadBox from '../ui/ImageUploadBox';
 import LocationSelector from '../ui/LocationSelector';
 import EquipmentSelector from '../ui/EquipmentSelector';
 import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
+import PopupWrapper from '../../dashboard/PopupWrapper';
 
-const ParkSubmissionForm = () => {
+const ParkSubmissionForm = ({ onClose }) => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,6 +39,7 @@ const ParkSubmissionForm = () => {
     };
 
     return (
+        <PopupWrapper onClose={onClose}>
         <form
             className='mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10'
             onSubmit={handleSubmit}
@@ -102,6 +104,7 @@ const ParkSubmissionForm = () => {
                 </button>
             </div>
         </form>
+        </PopupWrapper>
     );
 };
 

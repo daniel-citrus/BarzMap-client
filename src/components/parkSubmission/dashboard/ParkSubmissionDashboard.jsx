@@ -3,6 +3,7 @@ import ParkSubmissionViewer from './ParkSubmissionViewer';
 import SubmissionActionsMenu from './SubmissionActionsMenu';
 import useParkSubmissions from '../../../hooks/useParkSubmissions';
 import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
+import PopupWrapper from '../../dashboard/PopupWrapper';
 
 const STATUS_META = {
     pending: {
@@ -27,7 +28,7 @@ const formatDate = (value) =>
         year: 'numeric',
     }).format(new Date(value));
 
-const ParkSubmissionDashboard = () => {
+const ParkSubmissionDashboard = ({ onClose }) => {
     const { parkSubmissions, loading, error, refresh } = useParkSubmissions();
     const { approve, markPending, reject, deleteSubmission } = useParkSubmissionActions();
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -100,6 +101,7 @@ const ParkSubmissionDashboard = () => {
     }, [submissions, viewSubmission]);
 
     return (
+        <PopupWrapper onClose={onClose}>
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6'>
             <header className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-2'>
@@ -271,6 +273,7 @@ const ParkSubmissionDashboard = () => {
                 )}
             </div>
         </section>
+        </PopupWrapper>
     );
 };
 

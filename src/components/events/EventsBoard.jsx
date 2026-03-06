@@ -1,4 +1,5 @@
 import useParkEvents from '../../hooks/useParkEvents';
+import PopupWrapper from '../dashboard/PopupWrapper';
 
 const EventsBoard = ({
     title = 'Upcoming Park Events',
@@ -8,6 +9,7 @@ const EventsBoard = ({
     lng,
     radius = 10,
     limit = 20,
+    onClose,
 }) => {
     // Use the hook to fetch events if coordinates are provided, otherwise use empty options
     const { parkEvents, loading, error } = useParkEvents(
@@ -25,6 +27,7 @@ const EventsBoard = ({
                 : [];
 
     return (
+        <PopupWrapper onClose={onClose}>
         <section className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-6 sm:p-8'>
             <header className='flex flex-col gap-2 text-slate-900'>
                 <h2 className='text-2xl font-semibold sm:text-3xl'>{title}</h2>
@@ -138,6 +141,7 @@ const EventsBoard = ({
                 )}
             </div>
         </section>
+        </PopupWrapper>
     );
 };
 

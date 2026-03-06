@@ -11,7 +11,7 @@ import DetailedPopup from './markers/DetailedPopup';
 import MenuButton from './MenuButton';
 import NavigationMenu from './NavigationMenu';
 import DesktopSidebar from './DesktopSidebar';
-import PopupWrapper from './PopupWrapper';
+import LoginWindow from '../authentication/Login';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
@@ -101,53 +101,52 @@ const Dashboard = () => {
                 {/* Map container - always mounted */}
                 <div className='absolute inset-0 z-0 h-full w-full'>
                     <div className='relative h-full w-full overflow-hidden bg-slate-100'>
-                        <div
-                            className={`pointer-events-none absolute top-3 z-30 flex items-center justify-center gap-3 transition-[left] duration-200 left-3 right-3 sm:left-6 sm:right-6 sm:top-6 lg:right-6 ${
-                                sidebarExpanded ? 'lg:left-56' : 'lg:left-16'
-                            }`}
-                        >
-                            <SearchInput
-                                searchValue={address}
-                                onSearch={onNewAddress}
-                                className='pointer-events-auto w-full sm:max-w-3xl'
-                            />
-                        </div>
                         <div className='h-full w-full'>
                             <MapLibreMap />
                         </div>
-                        {/* Mobile nav - hamburger + floating menu, hidden on desktop */}
-                        <div className='pointer-events-none absolute bottom-6 left-4 z-30 flex flex-col items-start gap-3 sm:bottom-8 sm:left-6 lg:hidden'>
-                            <NavigationMenu
-                                isOpen={menuOpen}
-                                linkData={navLinks.filter((l) => l.id !== 'dashboard')}
-                            />
-                            <MenuButton
-                                menuOpen={menuOpen}
-                                toggleMenu={() => setMenuOpen((prev) => !prev)}
-                                className='pointer-events-auto'
-                            />
+                        {/* Overlay: SearchInput, NavigationMenu, MenuButton */}
+                        <div className='pointer-events-none absolute inset-0 z-30'>
+                            <div
+                                className={`flex items-center justify-center gap-3 transition-[left] duration-200 left-3 right-3 sm:left-6 sm:right-6 sm:top-6 lg:right-6 top-3 absolute ${sidebarExpanded ? 'lg:left-56' : 'lg:left-16'
+                                    }`}
+                            >
+                                <SearchInput
+                                    searchValue={address}
+                                    onSearch={onNewAddress}
+                                    className='pointer-events-auto w-full sm:max-w-3xl'
+                                />
+                            </div>
+                            <div className='pointer-events-auto absolute bottom-6 left-4 flex flex-col items-start gap-3 sm:bottom-8 sm:left-6 lg:hidden'>
+                                <NavigationMenu
+                                    isOpen={menuOpen}
+                                    linkData={navLinks.filter((l) => l.id !== 'dashboard')}
+                                />
+                                <MenuButton
+                                    menuOpen={menuOpen}
+                                    toggleMenu={() => setMenuOpen((prev) => !prev)}
+                                    className='pointer-events-auto'
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Other views - rendered on top when selected */}
                 {selectedView === 'parkSubmission' && (
-                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
-                        <ParkSubmissionForm />
-                    </PopupWrapper>
+                    <ParkSubmissionForm onClose={() => setSelectedView('dashboard')} />
                 )}
                 {selectedView === 'events' && (
-                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
-                        <EventsBoard
-                            lat={coordinates?.latitude}
-                            lng={coordinates?.longitude}
-                        />
-                    </PopupWrapper>
+                    <EventsBoard
+                        lat={coordinates?.latitude}
+                        lng={coordinates?.longitude}
+                        onClose={() => setSelectedView('dashboard')}
+                    />
                 )}
                 {selectedView === 'submissionDashboard' && (
-                    <PopupWrapper onClose={() => setSelectedView('dashboard')}>
-                        <ParkSubmissionDashboard />
-                    </PopupWrapper>
+                    <ParkSubmissionDashboard onClose={() => setSelectedView('dashboard')} />
+                )}
+                {selectedView === 'Login' && (
+                    <LoginWindow onClose={() => setSelectedView('dashboard')} />
                 )}
             </div>
 

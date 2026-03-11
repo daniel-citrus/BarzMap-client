@@ -1,12 +1,13 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import type { MapLibreInstanceValue } from '../types';
 import useMapLibreInstance from '../hooks/MapLibre Hooks/useMapLibreInstance';
 
-const MapLibreContext = createContext(null);
+const MapLibreContext = createContext<MapLibreInstanceValue | null>(null);
 
-const MapLibreProvider = ({ children }) => {
+const MapLibreProvider = ({ children }: { children: ReactNode }) => {
     const { mapContainerRef, mapInstance, mapReady } = useMapLibreInstance();
 
-    const value = useMemo(
+    const value = useMemo<MapLibreInstanceValue>(
         () => ({ mapContainerRef, mapInstance, mapReady }),
         [mapContainerRef, mapInstance, mapReady]
     );
@@ -18,7 +19,8 @@ const MapLibreProvider = ({ children }) => {
     );
 };
 
-const useMapLibreContext = () => {
+/** All descendants of the MapLibreProvider can use this hook to access the MapLibre context value */
+const useMapLibreContext = (): MapLibreInstanceValue => {
     const context = useContext(MapLibreContext);
 
     if (!context) {

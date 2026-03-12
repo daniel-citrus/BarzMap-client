@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 const useAuthentication = () => {
     const { user, getAccessTokenSilently } = useAuth0();
-    const [userToken, setUserToken] = useState();
+    const [userToken, setUserToken] = useState<string | undefined>();
 
     useEffect(() => {
         async function fetchData() {

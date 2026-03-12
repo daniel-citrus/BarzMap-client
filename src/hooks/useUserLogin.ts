@@ -1,13 +1,8 @@
-import useAuthentication from '../hooks/useAuthentication';
+import useAuthentication from './useAuthentication';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 
-/**
- * Validates the authenticated Auth0 user with the backend API whenever
- * an ID token becomes available in client state.
- *
- * @returns {void}
- */
+/** Validates the authenticated Auth0 user with the backend API when an ID token is available. */
 const useUserLogin = () => {
     const { userToken } = useAuthentication();
     const { isAuthenticated, user } = useAuth0();
@@ -16,7 +11,7 @@ const useUserLogin = () => {
         async function loginUser() {
             if (isAuthenticated && userToken) {
                 try {
-                    let response = await fetch(
+                    const response = await fetch(
                         `${import.meta.env.VITE_BACKEND_API}/auth/validate`,
                         {
                             method: 'POST',
@@ -26,16 +21,15 @@ const useUserLogin = () => {
                             },
                             body: JSON.stringify({
                                 userToken,
-                                firstName: user.given_name,
-                                lastName: user.family_name,
-                                profile_picture_url: user.picture,
-                                email: user.email,
+                                firstName: user?.given_name,
+                                lastName: user?.family_name,
+                                profile_picture_url: user?.picture,
+                                email: user?.email,
                             }),
                         }
                     );
-
-                    response = await response.json();
-                    console.log(response);
+                    const data = await response.json();
+                    console.log(data);
                 } catch (e) {
                     console.error('Login Issue: ', e);
                 }

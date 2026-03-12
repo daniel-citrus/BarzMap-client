@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import type { MapLibreInstanceValue } from '../types';
+import type { MapLibreInstanceValue } from '../types/mapLibre';
 import useMapLibreInstance from '../hooks/MapLibre Hooks/useMapLibreInstance';
 
 const MapLibreContext = createContext<MapLibreInstanceValue | null>(null);

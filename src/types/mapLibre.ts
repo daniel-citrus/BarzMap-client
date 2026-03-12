@@ -31,3 +31,19 @@ export interface ParkMarkerPayload {
 export interface UseMapMarkersParams {
     onMarkerOpen: (payload: ParkMarkerPayload) => void;
 }
+
+export interface SubmitParkImage {
+    file?: File;
+    [key: string]: unknown;
+}
+
+export interface SubmitParkParams {
+    name: string;
+    description?: string;
+    latitude?: string | number;
+    longitude?: string | number;
+    address?: string;
+    submitted_by?: string | null;
+    images?: SubmitParkImage[];
+    equipment_ids?: number[];
+}

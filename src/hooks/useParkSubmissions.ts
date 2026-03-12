@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
+import type { ParkMarkerPayload } from '../types/mapLibre';
 
-/**
- * Custom hook to fetch park submissions from the backend API
- * @returns {{parkSubmissions: Array|null, loading: boolean, error: Error|null}} Submissions data, loading state, and error state
- */
+/** Fetches park submissions from the backend API. */
 const useParkSubmissions = () => {
-    const [parkSubmissions, setParkSubmissions] = useState(null);
+    const [parkSubmissions, setParkSubmissions] = useState<ParkMarkerPayload[] | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<Error | null>(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
@@ -20,7 +18,6 @@ const useParkSubmissions = () => {
 
             try {
                 const response = await fetch(url);
-
                 if (!response.ok) {
                     throw new Error(
                         `Failed to fetch park submissions: ${response.status} ${response.statusText}`
@@ -31,7 +28,7 @@ const useParkSubmissions = () => {
                 setParkSubmissions(data || []);
             } catch (err) {
                 console.error('Error fetching park submissions:', err);
-                setError(err);
+                setError(err instanceof Error ? err : new Error(String(err)));
                 setParkSubmissions(null);
             } finally {
                 setLoading(false);
@@ -41,9 +38,7 @@ const useParkSubmissions = () => {
         fetchSubmissions();
     }, [refreshTrigger]);
 
-    const refresh = () => {
-        setRefreshTrigger(prev => prev + 1);
-    };
+    const refresh = () => setRefreshTrigger((prev) => prev + 1);
 
     return { parkSubmissions, loading, error, refresh };
 };

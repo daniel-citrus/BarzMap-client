@@ -1,27 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import type { ParkMarkerPayload } from '../../types/mapLibre';
 
-/**
- * Custom hook to fetch park features within a geographic bounding box.
- * 
- * @param {Object|null} northEast - Northeast corner of the bounding box with {lat, lng} properties
- * @param {Object|null} southWest - Southwest corner of the bounding box with {lat, lng} properties
- * @returns {Object} Object containing:
- *   - parkFeatures: Array of park features within the specified bounds (null if not loaded or on error)
- *   - error: Error object if the fetch failed (null otherwise)
- */
-const useParkFeatures = (northEast = null, southWest = null) => {
-    const [parkFeatures, setParkFeatures] = useState(null)
-    const [error, setError] = useState(null)
+interface Bounds {
+    lat: number;
+    lng: number;
+}
+
+/** Fetches park features within a geographic bounding box. */
+const useParkFeatures = (
+    northEast: Bounds | null = null,
+    southWest: Bounds | null = null
+) => {
+    const [parkFeatures, setParkFeatures] = useState<ParkMarkerPayload[] | null>(null);
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        // Don't fetch if bounds are not provided
-        if (!northEast || !southWest) {
-            return;
-        }
+        if (!northEast || !southWest) return;
 
         const loadParks = async () => {
             setError(null);
-
             try {
                 const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
                 const url = new URL(`${baseUrl}/api/park/location`);
@@ -32,7 +29,6 @@ const useParkFeatures = (northEast = null, southWest = null) => {
                 url.searchParams.append('max_longitude', northEast.lng.toString());
 
                 const response = await fetch(url);
-
                 if (!response.ok) {
                     throw new Error(
                         `Failed to fetch park features: ${response.status} ${response.statusText}`
@@ -40,10 +36,10 @@ const useParkFeatures = (northEast = null, southWest = null) => {
                 }
 
                 const data = await response.json();
-                const features = Array.isArray(data) ? data : (data.data || data.features || []);
-                setParkFeatures(features);
+                const features = Array.isArray(data) ? data : (data.data ?? data.features ?? []);
+                setParkFeatures(features as ParkMarkerPayload[]);
             } catch (err) {
-                setError(err);
+                setError(err instanceof Error ? err : new Error(String(err)));
                 setParkFeatures(null);
             }
         };
@@ -51,7 +47,7 @@ const useParkFeatures = (northEast = null, southWest = null) => {
         loadParks();
     }, [northEast, southWest]);
 
-    return { parkFeatures, error }
-}
+    return { parkFeatures, error };
+};
 
-export default useParkFeatures
+export default useParkFeatures;

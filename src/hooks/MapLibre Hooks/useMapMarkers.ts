@@ -2,9 +2,11 @@ import { useEffect, useCallback, useRef, useState } from 'react';
 import { useMapLibreContext } from '../../context/MapLibreContext';
 import maplibregl from 'maplibre-gl';
 import useParkFeatures from './useParkFeatures';
-import type { ParkMarkerPayload, UseMapMarkersParams } from '../../types';
+import type { ParkMarkerPayload, UseMapMarkersParams } from '../../types/mapLibre';
 
-/** Syncs park features with the MapLibre instance; creates markers and wires click handlers. */
+/** 
+ * Syncs park features with the MapLibre instance, creates markers, and wires click handlers. 
+ **/
 const useMapMarkers = ({ onMarkerOpen }: UseMapMarkersParams) => {
     const mapMarkers = useRef<maplibregl.Marker[]>([]);
     const { mapInstance, mapReady } = useMapLibreContext();
@@ -12,9 +14,7 @@ const useMapMarkers = ({ onMarkerOpen }: UseMapMarkersParams) => {
         northEast: { lat: number; lng: number } | null;
         southWest: { lat: number; lng: number } | null;
     }>({ northEast: null, southWest: null });
-    const { parkFeatures } = useParkFeatures(bounds.northEast, bounds.southWest) as {
-        parkFeatures: ParkMarkerPayload[] | null;
-    };
+    const { parkFeatures } = useParkFeatures(bounds.northEast, bounds.southWest);
 
     const setMapMarkers = useCallback(
         (features: ParkMarkerPayload[]) => {

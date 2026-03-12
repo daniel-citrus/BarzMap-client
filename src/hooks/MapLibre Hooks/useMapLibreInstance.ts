@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import maplibregl, { AttributionControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import type { MapLibreInstanceValue } from '../../types';
+import type { MapLibreInstanceValue } from '../../types/mapLibre';
 
 const DEFAULT_ZOOM = 8;
 const DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';

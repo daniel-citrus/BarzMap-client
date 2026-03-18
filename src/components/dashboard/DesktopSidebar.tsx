@@ -1,13 +1,22 @@
 import { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import type { NavLinkData } from './NavigationMenu';
 
-const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, onExpandedChange }) => {
+interface DesktopSidebarProps {
+    linkData: NavLinkData[];
+    selectedView: string;
+    onNavigate: (viewId: string) => void;
+    expanded?: boolean;
+    onExpandedChange?: (expanded: boolean) => void;
+}
+
+const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, onExpandedChange }: DesktopSidebarProps) => {
     const [internalExpanded, setInternalExpanded] = useState(true);
-    const [hoveredTooltip, setHoveredTooltip] = useState(null);
+    const [hoveredTooltip, setHoveredTooltip] = useState<{ title: string; top: number; left: number } | null>(null);
     const isExpanded = onExpandedChange != null ? expanded : internalExpanded;
     const setExpanded = onExpandedChange ?? setInternalExpanded;
 
-    const handleMouseEnter = useCallback((e, title) => {
+    const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>, title: string) => {
         if (isExpanded) return;
 
         const rect = e.currentTarget.getBoundingClientRect();
@@ -27,7 +36,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
                     <img
                         src='/BarzMap Logo.png'
                         alt='BarzMap'
-                        className='h-20 w-20  shrink-0 rounded-lg object-contain'
+                        className='h-20 w-20  shrink-0 rounded-lg object-contain'
                     />
                     <span className={`text-base font-semibold tracking-tight text-slate-800 ${isExpanded ? '' : 'hidden'}`}>
                         BarzMap

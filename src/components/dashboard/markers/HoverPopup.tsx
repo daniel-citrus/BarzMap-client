@@ -1,4 +1,11 @@
-const HoverPopup = ({ title, address, distance, thumbnail }) => {
+interface HoverPopupProps {
+    title?: string;
+    address?: string;
+    distance?: string;
+    thumbnail?: string;
+}
+
+const HoverPopup = ({ title, address, distance, thumbnail }: HoverPopupProps) => {
     return (
         <div className='flex w-64 max-w-xs gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-lg shadow-slate-900/10 ring-1 ring-slate-900/5'>
             <div className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100'>

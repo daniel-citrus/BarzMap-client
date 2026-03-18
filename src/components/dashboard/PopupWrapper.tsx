@@ -1,4 +1,11 @@
-const PopupWrapper = ({ onClose, children }) => {
+import type { ReactNode } from 'react';
+
+interface PopupWrapperProps {
+    onClose: () => void;
+    children: ReactNode;
+}
+
+const PopupWrapper = ({ onClose, children }: PopupWrapperProps) => {
     return (
         <div className='relative z-10 flex h-full w-full items-start justify-center'>
             <div

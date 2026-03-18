@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 
-const MenuButton = ({ menuOpen, toggleMenu, className = '' }) => {
+interface MobileMenuButtonProps {
+    menuOpen: boolean;
+    toggleMenu: () => void;
+}
+
+const MobileMenuButton = ({ menuOpen, toggleMenu }: MobileMenuButtonProps) => {
     const onToggle = () => {
         toggleMenu();
     };
@@ -26,7 +31,7 @@ const MenuButton = ({ menuOpen, toggleMenu, className = '' }) => {
         <button
             type='button'
             onClick={onToggle}
-            className={`inline-flex h-12 w-12 flex-col items-center justify-center gap-[4px] rounded-full bg-white text-gray-800 shadow-lg shadow-slate-900/15 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-600/40 focus-visible:ring-offset-2 sm:h-13 sm:w-13 sm:gap-[5px] md:h-14 md:w-14 ${className}`}
+            className='pointer-events-auto inline-flex h-12 w-12 flex-col items-center justify-center gap-[4px] rounded-full bg-white text-gray-800 shadow-lg shadow-slate-900/15 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-600/40 focus-visible:ring-offset-2 sm:h-13 sm:w-13 sm:gap-[5px] md:h-14 md:w-14'
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
         >
@@ -37,4 +42,4 @@ const MenuButton = ({ menuOpen, toggleMenu, className = '' }) => {
     );
 };
 
-export default MenuButton;
+export default MobileMenuButton;

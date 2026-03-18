@@ -1,33 +1,51 @@
 import { useMemo, useState, useEffect } from 'react';
 
+interface ParkImage {
+    id?: number;
+    image_url?: string;
+    thumbnail_url?: string;
+    alt_text?: string;
+}
+
 // Helper: Get status badge styling
-const getStatusStyles = (status) => {
-    const styles = {
+const getStatusStyles = (status: string): string => {
+    const styles: Record<string, string> = {
         approved: 'bg-emerald-100 text-emerald-700',
         pending: 'bg-amber-100 text-amber-700',
         rejected: 'bg-rose-100 text-rose-700',
     };
-    return styles[status] || 'bg-slate-100 text-slate-700';
+    return styles[status] ?? 'bg-slate-100 text-slate-700';
 };
 
 // Helper: Format date for display
-const formatDate = (dateString) => {
+const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return '';
     return new Date(dateString).toLocaleString();
 };
 
 // Helper: Get image identifier for error tracking
-const getImageId = (image) => {
-    return image.id || image.image_url || image.thumbnail_url;
+const getImageId = (image: ParkImage): string | number => {
+    return image.id ?? image.image_url ?? image.thumbnail_url ?? '';
 };
 
 // Helper: Get image alt text
-const getImageAlt = (image, fallbackTitle, index, isThumbnail = false) => {
-    return image.alt_text || `${fallbackTitle || 'Location'} ${isThumbnail ? 'thumbnail' : 'photo'} ${index + 1}`;
+const getImageAlt = (image: ParkImage, fallbackTitle: string | undefined, index: number, isThumbnail = false): string => {
+    return image.alt_text ?? `${fallbackTitle ?? 'Location'} ${isThumbnail ? 'thumbnail' : 'photo'} ${index + 1}`;
 };
 
 // Component: Image Gallery
-const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedImages, title, onImageError }) => {
+interface ImageGalleryProps {
+    images: ParkImage[];
+    activeIndex: number;
+    onSelect: (index: number) => void;
+    onPrev: () => void;
+    onNext: () => void;
+    failedImages: Set<string | number>;
+    title: string;
+    onImageError: (imageId: string | number) => void;
+}
+
+const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedImages, title, onImageError }: ImageGalleryProps) => {
     const hasImages = images.length > 0;
     const hasMultipleImages = images.length > 1;
     const activeImage = hasImages ? images[activeIndex] : null;
@@ -58,11 +76,11 @@ const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedIma
                                 className='h-full w-full object-cover'
                                 style={{ font: '0/0 a', color: 'transparent' }}
                                 onError={(e) => {
-                                    e.target.style.display = 'none';
+                                    (e.target as HTMLImageElement).style.display = 'none';
                                     onImageError(getImageId(activeImage));
                                 }}
                                 onLoad={(e) => {
-                                    e.target.setAttribute('aria-label', getImageAlt(activeImage, title, activeIndex + 1));
+                                    e.currentTarget.setAttribute('aria-label', getImageAlt(activeImage, title, activeIndex + 1));
                                 }}
                             />
                         )}
@@ -116,7 +134,7 @@ const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedIma
                         return (
                             <button
                                 type='button'
-                                key={imageId}
+                                key={String(imageId)}
                                 onClick={() => onSelect(index)}
                                 className={`relative flex h-20 items-center justify-center overflow-hidden rounded-xl border ${isActive ? 'border-white ring-2 ring-white/80' : 'border-white/0'
                                     }`}
@@ -127,16 +145,16 @@ const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedIma
                                     </div>
                                 ) : (
                                     <img
-                                        src={image.thumbnail_url || image.image_url}
+                                        src={image.thumbnail_url ?? image.image_url}
                                         alt=""
                                         className='h-full w-full object-cover'
                                         style={{ font: '0/0 a', color: 'transparent' }}
                                         onError={(e) => {
-                                            e.target.style.display = 'none';
+                                            (e.target as HTMLImageElement).style.display = 'none';
                                             onImageError(getImageId(image));
                                         }}
                                         onLoad={(e) => {
-                                            e.target.setAttribute('aria-label', getImageAlt(image, title, index + 1, true));
+                                            e.currentTarget.setAttribute('aria-label', getImageAlt(image, title, index + 1, true));
                                         }}
                                     />
                                 )}
@@ -150,7 +168,13 @@ const ImageGallery = ({ images, activeIndex, onSelect, onPrev, onNext, failedIma
 };
 
 // Component: Admin Info Field
-const AdminInfoField = ({ label, value, isDate = false }) => {
+interface AdminInfoFieldProps {
+    label: string;
+    value: string | undefined;
+    isDate?: boolean;
+}
+
+const AdminInfoField = ({ label, value, isDate = false }: AdminInfoFieldProps) => {
     if (!value) return null;
 
     return (
@@ -166,7 +190,19 @@ const AdminInfoField = ({ label, value, isDate = false }) => {
 };
 
 // Component: Admin Information Section
-const AdminInformation = ({ isAdmin, admin_notes, approved_at, approved_by, submitted_by, submit_date, created_at, updated_at, id }) => {
+interface AdminInformationProps {
+    isAdmin: boolean;
+    admin_notes?: string;
+    approved_at?: string | null;
+    approved_by?: string | null;
+    submitted_by?: string;
+    submit_date?: string;
+    created_at?: string;
+    updated_at?: string;
+    id?: number | string;
+}
+
+const AdminInformation = ({ isAdmin, admin_notes, approved_at, approved_by, submitted_by, submit_date, created_at, updated_at, id }: AdminInformationProps) => {
     if (!isAdmin) return null;
 
     return (
@@ -176,14 +212,14 @@ const AdminInformation = ({ isAdmin, admin_notes, approved_at, approved_by, subm
             </h3>
 
             <AdminInfoField label="Admin Notes" value={admin_notes} />
-            <AdminInfoField label="Approved At" value={approved_at} isDate />
-            <AdminInfoField label="Approved By" value={approved_by} />
+            <AdminInfoField label="Approved At" value={approved_at ?? undefined} isDate />
+            <AdminInfoField label="Approved By" value={approved_by ?? undefined} />
             <AdminInfoField label="Submitted By" value={submitted_by} />
             <AdminInfoField label="Submit Date" value={submit_date} isDate />
             <AdminInfoField label="Created At" value={created_at} isDate />
             <AdminInfoField label="Updated At" value={updated_at} isDate />
 
-            {id && (
+            {id != null && (
                 <div className='flex flex-col gap-1'>
                     <span className='text-xs font-semibold uppercase tracking-wide text-slate-400'>
                         Park ID
@@ -197,6 +233,30 @@ const AdminInformation = ({ isAdmin, admin_notes, approved_at, approved_by, subm
     );
 };
 
+export interface DetailedPopupProps {
+    isAdmin?: boolean;
+    title?: string;
+    address?: string;
+    admin_notes?: string;
+    approved_at?: string | null;
+    approved_by?: string | null;
+    city?: string;
+    country?: string;
+    created_at?: string;
+    description?: string;
+    id?: number;
+    latitude?: number;
+    longitude?: number;
+    name?: string;
+    postal_code?: string;
+    state?: string;
+    status?: string;
+    submit_date?: string;
+    submitted_by?: string;
+    updated_at?: string;
+    onClose: () => void;
+}
+
 const DetailedPopup = ({
     isAdmin = true,
     title = '',
@@ -208,9 +268,9 @@ const DetailedPopup = ({
     country = '',
     created_at = '',
     description = '',
-    id = '',
-    latitude = '',
-    longitude = '',
+    id = undefined,
+    latitude,
+    longitude,
     name = '',
     postal_code = '',
     state = '',
@@ -219,10 +279,10 @@ const DetailedPopup = ({
     submitted_by = '',
     updated_at = '',
     onClose,
-}) => {
+}: DetailedPopupProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [images, setImages] = useState([]);
-    const [failedImages, setFailedImages] = useState(new Set());
+    const [images, setImages] = useState<ParkImage[]>([]);
+    const [failedImages, setFailedImages] = useState<Set<string | number>>(new Set());
 
     const displayTitle = title || name;
     const hasImages = images.length > 0;
@@ -241,15 +301,15 @@ const DetailedPopup = ({
         setActiveIndex((index) => (index + 1) % images.length);
     };
 
-    const handleSelect = (index) => {
+    const handleSelect = (index: number) => {
         setActiveIndex(index);
     };
 
-    const handleImageError = (imageId) => {
+    const handleImageError = (imageId: string | number) => {
         setFailedImages((prev) => new Set(prev).add(imageId));
     };
 
-    const handleBackdropClick = (e) => {
+    const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.currentTarget === e.target) {
             onClose();
         }
@@ -263,7 +323,7 @@ const DetailedPopup = ({
 
     // Fetch park images
     useEffect(() => {
-        if (!id) return;
+        if (id == null) return;
 
         const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
         const url = `${baseUrl}/api/images/park/${id}`;
@@ -349,7 +409,7 @@ const DetailedPopup = ({
                                 </div>
                             )}
 
-                            {latitude && longitude && (
+                            {latitude != null && longitude != null && (
                                 <p className='text-xs text-slate-400'>
                                     Coordinates: {latitude}, {longitude}
                                 </p>

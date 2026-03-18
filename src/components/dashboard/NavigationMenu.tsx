@@ -1,15 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 const STAGGER_MS = 50;
 const DURATION_MS = 300;
 
-const NavigationMenu = ({ isOpen, linkData }) => {
+export interface NavLinkData {
+    id: string;
+    title: string;
+    action: () => void;
+    icon: ReactNode;
+}
+
+interface NavigationMenuProps {
+    isOpen: boolean;
+    linkData: NavLinkData[];
+}
+
+const NavigationMenu = ({ isOpen, linkData }: NavigationMenuProps) => {
     const [visible, setVisible] = useState(false);
     const [mounted, setMounted] = useState(false);
-    const closeTimer = useRef(null);
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        clearTimeout(closeTimer.current);
+        clearTimeout(closeTimer.current ?? undefined);
 
         if (isOpen) {
             setMounted(true);
@@ -20,7 +33,7 @@ const NavigationMenu = ({ isOpen, linkData }) => {
             closeTimer.current = setTimeout(() => setMounted(false), totalClose);
         }
 
-        return () => clearTimeout(closeTimer.current);
+        return () => clearTimeout(closeTimer.current ?? undefined);
     }, [isOpen, linkData.length]);
 
     if (!mounted) return null;

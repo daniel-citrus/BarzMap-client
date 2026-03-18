@@ -8,25 +8,27 @@ import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import EventsBoard from '../events/EventsBoard';
 import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
 import DetailedPopup from './markers/DetailedPopup';
-import MenuButton from './MenuButton';
+import MobileMenuButton from './MobileMenuButton';
 import NavigationMenu from './NavigationMenu';
+import type { NavLinkData } from './NavigationMenu';
 import DesktopSidebar from './DesktopSidebar';
 import LoginWindow from '../authentication/Login';
+import type { ParkMarkerPayload } from '../../types/mapLibre';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
     const { mapInstance } = useMapLibreContext();
-    const [selectedMarker, setSelectedMarker] = useState(null);
+    const [selectedMarker, setSelectedMarker] = useState<ParkMarkerPayload | null>(null);
     const [selectedView, setSelectedView] = useState('dashboard');
     const [menuOpen, setMenuOpen] = useState(false);
     const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
-    const onNavSelect = (viewId) => {
+    const onNavSelect = (viewId: string) => {
         setSelectedView(viewId);
         setMenuOpen(false);
     };
 
-    const navLinks = [
+    const navLinks: NavLinkData[] = [
         {
             id: 'dashboard', title: 'Map', action: () => onNavSelect('dashboard'),
             icon: (
@@ -64,7 +66,7 @@ const Dashboard = () => {
         },
     ];
 
-    const onDetailedPopupOpen = useCallback((data) => {
+    const onDetailedPopupOpen = useCallback((data: ParkMarkerPayload) => {
         setSelectedMarker(data);
     }, []);
 
@@ -82,7 +84,7 @@ const Dashboard = () => {
         });
     }, [mapInstance, coordinates]);
 
-    const onNewAddress = (address) => {
+    const onNewAddress = (address: string) => {
         setAddress(address);
 
         // Always animate map to coordinates when search is clicked (even if same address)
@@ -104,7 +106,7 @@ const Dashboard = () => {
                         <div className='h-full w-full'>
                             <MapLibreMap />
                         </div>
-                        {/* Overlay: SearchInput, NavigationMenu, MenuButton */}
+                        {/* Overlay: SearchInput, NavigationMenu, MobileMenuButton */}
                         <div className='pointer-events-none absolute inset-0 z-30'>
                             <div
                                 className={`flex items-center justify-center gap-3 transition-[left] duration-200 left-3 right-3 sm:left-6 sm:right-6 sm:top-6 lg:right-6 top-3 absolute ${sidebarExpanded ? 'lg:left-56' : 'lg:left-16'
@@ -121,10 +123,9 @@ const Dashboard = () => {
                                     isOpen={menuOpen}
                                     linkData={navLinks.filter((l) => l.id !== 'dashboard')}
                                 />
-                                <MenuButton
+                                <MobileMenuButton
                                     menuOpen={menuOpen}
                                     toggleMenu={() => setMenuOpen((prev) => !prev)}
-                                    className='pointer-events-auto'
                                 />
                             </div>
                         </div>
@@ -175,8 +176,8 @@ const Dashboard = () => {
                     longitude={selectedMarker.longitude}
                     status={selectedMarker.status}
                     admin_notes={selectedMarker.admin_notes}
-                    approved_at={selectedMarker.approved_at}
-                    approved_by={selectedMarker.approved_by}
+                    approved_at={selectedMarker.approved_at ?? undefined}
+                    approved_by={selectedMarker.approved_by ?? undefined}
                     created_at={selectedMarker.created_at}
                     id={selectedMarker.id}
                     submit_date={selectedMarker.submit_date}

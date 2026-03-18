@@ -6,19 +6,23 @@ import {
     getCoordinates,
     resolveAddress,
 } from '../../../lib/geocoding';
+import type { LatLngState } from '../../../types/parkSubmission';
 
 const DEFAULT_ZOOM = 13;
-const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE;
-const DEFAULT_COORDINATES = { lat: 37.7749, lng: -122.4194 };
+const DEFAULT_STYLE_URL = import.meta.env.VITE_MAPLIBRE_DEFAULT_STYLE as string;
+const DEFAULT_COORDINATES: LatLngState = { lat: 37.7749, lng: -122.4194 };
 
-const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
-    const mapContainerRef = useRef(null);
-    const mapRef = useRef(null);
-    const markerRef = useRef(null);
-    const addressInputRef = useRef(null);
+interface LocationSelectorProps {
+    initialCoords?: LatLngState;
+}
+
+const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }: LocationSelectorProps) => {
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+    const mapRef = useRef<maplibregl.Map | null>(null);
+    const markerRef = useRef<maplibregl.Marker | null>(null);
+    const addressInputRef = useRef<HTMLInputElement>(null);
     const [address, setAddress] = useState('');
-    const [coordinates, setCoordinates] = useState(initialCoords);
-
+    const [coordinates, setCoordinates] = useState<LatLngState>(initialCoords);
     const [addressLoading, setAddressLoading] = useState(false);
 
     const onFindAddress = async () => {
@@ -34,7 +38,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                 return;
             }
 
-            const newCoords = {
+            const newCoords: LatLngState = {
                 lng: coords.longitude,
                 lat: coords.latitude,
             };
@@ -55,24 +59,23 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             const userAddress = await resolveAddress();
 
             if (addressInputRef.current) {
-                addressInputRef.current.value = userAddress;
+                addressInputRef.current.value = userAddress ?? '';
             }
         };
 
         getUserAddress();
     };
 
-    /* Initialize map instance */
     useEffect(() => {
         const container = mapContainerRef.current;
 
-        if (!container) {
+        if (!container || !DEFAULT_STYLE_URL) {
             return undefined;
         }
 
         const map = new maplibregl.Map({
             container,
-            center: [initialCoords.lng, initialCoords.lat],
+            center: [Number(initialCoords.lng), Number(initialCoords.lat)],
             zoom: DEFAULT_ZOOM,
             style: DEFAULT_STYLE_URL,
             attributionControl: false,
@@ -81,13 +84,11 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         map.addControl(new AttributionControl({ compact: true }));
 
         const marker = new maplibregl.Marker({ draggable: true })
-            .setLngLat([initialCoords.lng, initialCoords.lat])
+            .setLngLat([Number(initialCoords.lng), Number(initialCoords.lat)])
             .addTo(map);
 
-        /* Map interactions */
         marker.on('dragend', () => {
             const lngLat = marker.getLngLat();
-
             setCoordinates({
                 lat: lngLat.lat,
                 lng: lngLat.lng,
@@ -96,7 +97,6 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
 
         map.on('click', (event) => {
             marker.setLngLat(event.lngLat);
-
             setCoordinates({
                 lng: event.lngLat.lng,
                 lat: event.lngLat.lat,
@@ -111,9 +111,9 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             markerRef.current = null;
             mapRef.current = null;
         };
-    }, [initialCoords]);
+    }, [initialCoords.lat, initialCoords.lng]);
 
-    const centerMapOnCoordinates = (lat, lng) => {
+    const centerMapOnCoordinates = (lat: number | string, lng: number | string) => {
         if (!mapRef.current) {
             return;
         }
@@ -128,7 +128,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
             return;
         }
 
-        mapRef?.current.easeTo({
+        mapRef.current.easeTo({
             center: [lngNumber, latNumber],
             zoom: DEFAULT_ZOOM + 2,
             bearing: 0,
@@ -137,27 +137,23 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
         markerRef.current?.setLngLat([lngNumber, latNumber]);
     };
 
-    // Update physical address when coordinates are changed via map marker.
     useEffect(() => {
         const updateAddress = async () => {
             const { lng: longitude, lat: latitude } = coordinates;
 
-            if (!longitude || !latitude) {
+            if (longitude === '' || latitude === '' || typeof longitude !== 'number' || typeof latitude !== 'number') {
                 return;
             }
 
             const newAddress = await getAddress(longitude, latitude);
-
-            setAddress(newAddress);
+            setAddress(newAddress ?? '');
         };
 
         updateAddress();
-    }, [coordinates]);
+    }, [coordinates.lat, coordinates.lng]);
 
-    // if address is changed, clear coordinates
-    const onTypingAddress = (e) => {
+    const onTypingAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);
-
         setCoordinates({
             lat: '',
             lng: '',
@@ -280,6 +276,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             placeholder='Longitude'
                             className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
                             value={coordinates.lng}
+                            onChange={(e) => setCoordinates((c) => ({ ...c, lng: e.target.value }))}
                         />
                     </label>
                     <label className='grid gap-2' htmlFor='coordLat'>
@@ -293,6 +290,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }) => {
                             placeholder='Latitude'
                             className='w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100'
                             value={coordinates.lat}
+                            onChange={(e) => setCoordinates((c) => ({ ...c, lat: e.target.value }))}
                         />
                     </label>
                 </div>

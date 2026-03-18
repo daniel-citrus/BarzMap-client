@@ -1,4 +1,13 @@
-const SubmissionActionsMenu = ({ actions, submissionId, isOpen, onClose }) => {
+import type { SubmissionAction } from '../../../types/parkSubmission';
+
+interface SubmissionActionsMenuProps {
+    actions: SubmissionAction[];
+    submissionId: number | string;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+const SubmissionActionsMenu = ({ actions, submissionId, isOpen, onClose }: SubmissionActionsMenuProps) => {
     if (!isOpen) return null;
 
     return (

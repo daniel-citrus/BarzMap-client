@@ -1,9 +1,18 @@
+import type { ChangeEvent } from 'react';
+import type { SelectedImage } from '../../../types/parkSubmission';
+
+interface ImageUploadBoxProps {
+    isRequired?: boolean;
+    onImagesChange: React.Dispatch<React.SetStateAction<SelectedImage[]>>;
+    selectedImages: SelectedImage[];
+}
+
 const ImageUploadBox = ({
     isRequired = false,
     onImagesChange,
     selectedImages,
-}) => {
-    const handleImageChange = async (event) => {
+}: ImageUploadBoxProps) => {
+    const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files ?? []);
         if (!files.length) {
             event.target.value = '';
@@ -13,14 +22,13 @@ const ImageUploadBox = ({
         const newImages = await Promise.all(
             files.map(
                 (file, index) =>
-                    new Promise((resolve) => {
+                    new Promise<SelectedImage>((resolve) => {
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             resolve({
-                                id: `${file.name}-${file.lastModified
-                                    }-${Date.now()}-${index}`,
-                                preview: e.target?.result ?? '',
-                                file: file,
+                                id: `${file.name}-${file.lastModified}-${Date.now()}-${index}`,
+                                preview: (e.target?.result ?? '') as string,
+                                file,
                             });
                         };
                         reader.readAsDataURL(file);
@@ -36,7 +44,7 @@ const ImageUploadBox = ({
         event.target.value = '';
     };
 
-    const handleRemoveImage = (id) => {
+    const handleRemoveImage = (id: string) => {
         onImagesChange((prev) => prev.filter((image) => image.id !== id));
     };
 
@@ -70,8 +78,7 @@ const ImageUploadBox = ({
                                         onClick={() =>
                                             handleRemoveImage(image.id)
                                         }
-                                        aria-label={`Remove park preview ${index + 1
-                                            }`}
+                                        aria-label={`Remove park preview ${index + 1}`}
                                     >
                                         <svg
                                             aria-hidden='true'

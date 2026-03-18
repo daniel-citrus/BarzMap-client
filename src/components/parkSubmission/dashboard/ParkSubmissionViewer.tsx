@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
-
+import { useEffect, useMemo, useState } from 'react';
 import ParkSubmissionModeration from './ParkSubmissionModeration';
+import type { SubmissionView, SubmissionAction } from '../../../types/parkSubmission';
 
-const formatDateTime = (value) =>
+/** API image shape (or string URL for backward compat) */
+type ApiImage = string | { image_url?: string; thumbnail_url?: string; alt_text?: string; id?: number };
+
+const formatDateTime = (value: string | undefined): string | null =>
     value
         ? new Intl.DateTimeFormat('en-US', {
             timeZone: 'UTC',
@@ -14,7 +17,13 @@ const formatDateTime = (value) =>
         }).format(new Date(value))
         : null;
 
-const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
+interface ParkSubmissionViewerProps {
+    submission: SubmissionView | null | undefined;
+    actions?: SubmissionAction[];
+    onClose?: () => void;
+}
+
+const ParkSubmissionViewer = ({ submission, actions = [], onClose }: ParkSubmissionViewerProps) => {
     const {
         id,
         title,
@@ -32,19 +41,18 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
     } = submission ?? {};
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const [images, setImages] = useState([]);
-    const [equipment, setEquipment] = useState([]);
+    const [images, setImages] = useState<ApiImage[]>([]);
+    const [equipment, setEquipment] = useState<Array<{ id?: number; name?: string; description?: string } | string>>([]);
     const hasImages = images.length > 0;
-    const [failedImages, setFailedImages] = useState({});
+    const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
-    // Get images
     useEffect(() => {
         if (!id) {
             return;
         }
 
         const loadImages = async () => {
-            const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
+            const baseUrl = import.meta.env.VITE_BACKEND_API || import.meta.env.DEV_BACKEND_API;
             const url = `${baseUrl}/api/images/park/${id}`;
 
             try {
@@ -58,16 +66,14 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                 const imageArray = Array.isArray(result) ? result : [];
                 setImages(imageArray);
                 setFailedImages({});
-            }
-            catch (e) {
+            } catch (e) {
                 console.error('Error fetching images:', e);
             }
-        }
+        };
 
         loadImages();
     }, [id]);
 
-    // Get equipment
     useEffect(() => {
         if (!id) {
             return;
@@ -87,20 +93,18 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                 const result = await response.json();
                 const equipmentArray = Array.isArray(result) ? result : (result.data || []);
                 setEquipment(equipmentArray);
-            }
-            catch (e) {
+            } catch (e) {
                 console.error('Error fetching equipment:', e);
             }
         };
 
         loadEquipment();
-    }, [id])
+    }, [id]);
 
     const clampedIndex = useMemo(() => {
         if (!hasImages) {
             return 0;
         }
-
         return Math.min(activeIndex, images.length - 1);
     }, [activeIndex, hasImages, images.length]);
 
@@ -116,49 +120,31 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
     const equipmentCount = equipment.length;
 
     const activeImage = hasImages && images[clampedIndex] ? images[clampedIndex] : null;
-    const activeImageUrl = activeImage?.image_url || (typeof activeImage === 'string' ? activeImage : null);
+    const activeImageUrl = activeImage
+        ? (typeof activeImage === 'string' ? activeImage : activeImage.image_url)
+        : null;
     const isActiveImageFailed = activeImageUrl ? failedImages[activeImageUrl] : false;
 
-    const handleImageError = (imageUrl) => {
-        if (!imageUrl) {
-            return;
-        }
-
-        setFailedImages((prev) => {
-            if (prev[imageUrl]) {
-                return prev;
-            }
-
-            return {
-                ...prev,
-                [imageUrl]: true,
-            };
-        });
+    const handleImageError = (imageUrl: string) => {
+        if (!imageUrl) return;
+        setFailedImages((prev) => (prev[imageUrl] ? prev : { ...prev, [imageUrl]: true }));
     };
 
     const handlePrev = () => {
-        if (!hasImages) {
-            return;
-        }
-
-        setActiveIndex((index) =>
-            index === 0 ? images.length - 1 : index - 1
-        );
+        if (!hasImages) return;
+        setActiveIndex((index) => (index === 0 ? images.length - 1 : index - 1));
     };
 
     const handleNext = () => {
-        if (!hasImages) {
-            return;
-        }
-
+        if (!hasImages) return;
         setActiveIndex((index) => (index + 1) % images.length);
     };
 
-    const handleSelect = (index) => {
+    const handleSelect = (index: number) => {
         setActiveIndex(index);
     };
 
-    const handleBackdropClick = (event) => {
+    const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
             onClose?.();
         }
@@ -196,15 +182,18 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                                     {!isActiveImageFailed && activeImageUrl ? (
                                         <img
                                             src={activeImageUrl}
-                                            alt=""
-                                            className='h-full w-full object-cover'
-                                            style={{ font: '0/0 a', color: 'transparent' }}
+                                            alt=''
+                                            className='h-full w-full object-contain [font:0/0_a] text-transparent'
                                             onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                const target = e.currentTarget;
+                                                target.style.display = 'none';
                                                 handleImageError(activeImageUrl);
                                             }}
                                             onLoad={(e) => {
-                                                e.target.setAttribute('aria-label', activeImage?.alt_text || `${resolvedTitle || 'Park submission'} photo ${clampedIndex + 1}`);
+                                                const alt = typeof activeImage === 'object' && activeImage?.alt_text
+                                                    ? activeImage.alt_text
+                                                    : `${resolvedTitle || 'Park submission'} photo ${clampedIndex + 1}`;
+                                                e.currentTarget.setAttribute('aria-label', alt);
                                             }}
                                         />
                                     ) : (
@@ -256,9 +245,9 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                             {images.length > 1 && (
                                 <div className='flex gap-2 overflow-x-auto border-t border-slate-800 bg-slate-900/60 px-4 py-3 md:grid md:auto-rows-[minmax(3.5rem,auto)] md:grid-cols-4 md:place-items-center md:gap-2.5 md:overflow-visible md:px-5 lg:grid-cols-5'>
                                     {images.map((image, index) => {
-                                        const imageUrl = image?.image_url || (typeof image === 'string' ? image : null);
-                                        const thumbnailUrl = image?.thumbnail_url || imageUrl;
-                                        const imageKey = image?.id || imageUrl || index;
+                                        const imageUrl = typeof image === 'string' ? image : image?.image_url ?? null;
+                                        const thumbnailUrl = typeof image === 'object' && image?.thumbnail_url ? image.thumbnail_url : imageUrl;
+                                        const imageKey = typeof image === 'object' && image?.id != null ? image.id : imageUrl ?? index;
 
                                         return (
                                             <button
@@ -277,15 +266,14 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                                                 ) : thumbnailUrl ? (
                                                     <img
                                                         src={thumbnailUrl}
-                                                        alt=""
-                                                        className='h-full w-full object-cover'
-                                                        style={{ font: '0/0 a', color: 'transparent' }}
-                                                        onError={(e) => {
-                                                            e.target.style.display = 'none';
-                                                            handleImageError(thumbnailUrl);
-                                                        }}
+                                                        alt=''
+                                                        className='h-full w-full object-contain [font:0/0_a] text-transparent'
+                                                        onError={() => handleImageError(thumbnailUrl)}
                                                         onLoad={(e) => {
-                                                            e.target.setAttribute('aria-label', image?.alt_text || `${resolvedTitle || 'Park submission'} thumbnail ${index + 1}`);
+                                                            const alt = typeof image === 'object' && image?.alt_text
+                                                                ? image.alt_text
+                                                                : `${resolvedTitle || 'Park submission'} thumbnail ${index + 1}`;
+                                                            e.currentTarget.setAttribute('aria-label', alt ?? '');
                                                         }}
                                                     />
                                                 ) : null}
@@ -375,15 +363,14 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                                 {equipment.length ? (
                                     <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3'>
                                         {equipment.map((item) => {
-                                            // Handle both object format and string format (backward compatible)
-                                            const equipmentName = item?.name || (typeof item === 'string' ? item : 'Unknown');
-                                            const equipmentId = item?.id || equipmentName;
+                                            const equipmentName = typeof item === 'string' ? item : (item?.name ?? 'Unknown');
+                                            const equipmentId = typeof item === 'object' && item?.id != null ? item.id : equipmentName;
 
                                             return (
                                                 <li
                                                     key={equipmentId}
                                                     className='flex h-12 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50 px-3 text-center text-sm font-medium text-indigo-600 shadow-sm shadow-indigo-100/60'
-                                                    title={item?.description || ''}
+                                                    title={typeof item === 'object' ? item?.description ?? '' : ''}
                                                 >
                                                     {equipmentName}
                                                 </li>
@@ -397,12 +384,14 @@ const ParkSubmissionViewer = ({ submission, actions = [], onClose }) => {
                                 )}
                             </div>
 
-                            <ParkSubmissionModeration
-                                id={id}
-                                actions={actions.filter((a) => a.showInModeration)}
-                                onClose={onClose}
-                                initialComment={moderationComment}
-                            />
+                            {id != null && (
+                                <ParkSubmissionModeration
+                                    id={id}
+                                    actions={actions.filter((a) => a.showInModeration)}
+                                    onClose={onClose}
+                                    initialComment={moderationComment}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

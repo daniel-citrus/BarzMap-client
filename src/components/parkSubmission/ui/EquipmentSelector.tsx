@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useEquipment from '../../../hooks/useEquipment';
 
-const EquipmentSelector = ({ isRequired = false, onEquipmentChange }) => {
-    const { equipment } = useEquipment();
-    const [selectedEquipment, setSelectedEquipment] = useState(new Set());
+interface EquipmentSelectorProps {
+    isRequired?: boolean;
+    onEquipmentChange?: (ids: number[]) => void;
+}
 
-    // Handle checkbox toggle
-    const handleToggle = (itemId) => {
+const EquipmentSelector = ({ isRequired = false, onEquipmentChange }: EquipmentSelectorProps) => {
+    const { equipment } = useEquipment();
+    const [selectedEquipment, setSelectedEquipment] = useState<Set<number>>(new Set());
+
+    const handleToggle = (itemId: number) => {
         const newSet = new Set(selectedEquipment);
         if (newSet.has(itemId)) {
             newSet.delete(itemId);
@@ -19,7 +23,6 @@ const EquipmentSelector = ({ isRequired = false, onEquipmentChange }) => {
         }
     };
 
-    // Ensure equipment is an array
     const equipmentList = Array.isArray(equipment) ? equipment : [];
     const selectedCount = selectedEquipment.size;
 
@@ -43,11 +46,10 @@ const EquipmentSelector = ({ isRequired = false, onEquipmentChange }) => {
                 </div>
             ) : (
                 <div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-3'>
-                    {equipmentList.map((item, index) => {
-                        // Handle different data formats from API
+                    {equipmentList.map((item) => {
                         const itemId = item?.id;
                         const itemLabel = item?.name;
-                        const isSelected = selectedEquipment.has(itemId);
+                        const isSelected = itemId !== undefined && selectedEquipment.has(itemId);
 
                         return (
                             <label

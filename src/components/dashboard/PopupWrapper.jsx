@@ -5,7 +5,7 @@ const PopupWrapper = ({ onClose, children }) => {
                 className='absolute inset-0 bg-black/30 backdrop-blur-xs'
                 onClick={onClose}
             />
-            <div className='relative m-4 w-[calc(100%-2rem)] max-w-2xl max-h-[calc(100%-2rem)] overflow-y-auto rounded-2xl bg-slate-100 shadow-xl sm:m-6 sm:w-[calc(100%-3rem)] sm:max-h-[calc(100%-3rem)]'>
+            <div className='relative m-4 flex min-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-2xl max-h-[calc(100vh-2rem)] flex-col overflow-y-auto rounded-2xl bg-slate-100 shadow-xl sm:m-6 sm:min-h-[calc(100vh-3rem)] sm:w-[calc(100%-3rem)] sm:max-h-[calc(100vh-3rem)]'>
                 <button
                     type='button'
                     onClick={onClose}

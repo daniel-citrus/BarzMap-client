@@ -8,7 +8,16 @@ export interface UseParkEventsOptions {
     fromDate?: string;
 }
 
-interface ParkEvent {
+export interface ParkEvent {
+    id?: number | string;
+    parkName?: string;
+    address?: string;
+    distance?: string;
+    date?: string;
+    time?: string;
+    description?: string;
+    host?: string;
+    ctaLabel?: string;
     [key: string]: unknown;
 }
 

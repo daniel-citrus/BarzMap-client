@@ -12,6 +12,7 @@ const EquipmentSelector = ({ isRequired = false, onEquipmentChange }: EquipmentS
 
     const handleToggle = (itemId: number) => {
         const newSet = new Set(selectedEquipment);
+
         if (newSet.has(itemId)) {
             newSet.delete(itemId);
         } else {

@@ -1,6 +1,10 @@
 import PopupWrapper from '../dashboard/PopupWrapper';
 
-const LoginWindow = ({ onClose }) => {
+interface LoginWindowProps {
+    onClose: () => void;
+}
+
+const LoginWindow = ({ onClose }: LoginWindowProps) => {
     return (
         <PopupWrapper onClose={onClose}>
             <div />

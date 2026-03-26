@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
-import { useMapLibreContext } from '../../context/MapLibreContext';
+import { useContext, useEffect, useCallback, useRef, useState } from 'react';
+import { MapLibreContext } from '../../context/MapLibreContext';
 import maplibregl from 'maplibre-gl';
 import useParkFeatures from './useParkFeatures';
 import type { ParkMarkerPayload, UseMapMarkersParams } from '../../types/mapLibre';
@@ -9,7 +9,7 @@ import type { ParkMarkerPayload, UseMapMarkersParams } from '../../types/mapLibr
  **/
 const useMapMarkers = ({ onMarkerOpen }: UseMapMarkersParams) => {
     const mapMarkers = useRef<maplibregl.Marker[]>([]);
-    const { mapInstance, mapReady } = useMapLibreContext();
+    const { mapInstance, mapReady } = useContext(MapLibreContext)!;
     const [bounds, setBounds] = useState<{
         northEast: { lat: number; lng: number } | null;
         southWest: { lat: number; lng: number } | null;

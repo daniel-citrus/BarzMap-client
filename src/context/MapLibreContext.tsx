@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useMemo, type ReactNode } from 'react';
 import type { MapLibreInstanceValue } from '../types/mapLibre';
 import useMapLibreInstance from '../hooks/MapLibre Hooks/useMapLibreInstance';
 
@@ -19,17 +19,4 @@ const MapLibreProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-/** All descendants of the MapLibreProvider can use this hook to access the MapLibre context value */
-const useMapLibreContext = (): MapLibreInstanceValue => {
-    const context = useContext(MapLibreContext);
-
-    if (!context) {
-        throw new Error(
-            'useMapLibreContext must be used inside a MapLibreProvider.'
-        );
-    }
-
-    return context;
-};
-
-export { MapLibreProvider, useMapLibreContext };
+export { MapLibreProvider, MapLibreContext };

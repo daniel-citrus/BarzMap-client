@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 const STAGGER_MS = 50;
 const DURATION_MS = 300;
 
-export interface NavLinkData {
+interface NavLinkData {
     id: string;
     title: string;
     action: () => void;
@@ -68,4 +68,4 @@ const NavigationMenu = ({ isOpen, linkData }: NavigationMenuProps) => {
     );
 };
 
-export default NavigationMenu;
+export { NavigationMenu, type NavLinkData };

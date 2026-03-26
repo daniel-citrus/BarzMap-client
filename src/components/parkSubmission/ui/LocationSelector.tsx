@@ -150,7 +150,7 @@ const LocationSelector = ({ initialCoords = DEFAULT_COORDINATES }: LocationSelec
         };
 
         updateAddress();
-    }, [coordinates.lat, coordinates.lng]);
+    }, [coordinates]);
 
     const onTypingAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);

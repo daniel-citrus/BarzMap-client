@@ -1,23 +1,22 @@
 import MapLibreMap from './MapLibreMap';
 import SearchInput from './SearchInput';
 import useClientAddress from '../../hooks/useClientAddress';
-import { useCallback, useEffect, useState } from 'react';
-import { useMapLibreContext } from '../../context/MapLibreContext';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { MapLibreContext } from '../../context/MapLibreContext';
 import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
 import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import EventsBoard from '../events/EventsBoard';
 import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
 import DetailedPopup from './markers/DetailedPopup';
 import MobileMenuButton from './MobileMenuButton';
-import NavigationMenu from './NavigationMenu';
-import type { NavLinkData } from './NavigationMenu';
+import { NavigationMenu, type NavLinkData } from './NavigationMenu';
 import DesktopSidebar from './DesktopSidebar';
 import LoginWindow from '../authentication/Login';
 import type { ParkMarkerPayload } from '../../types/mapLibre';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();
-    const { mapInstance } = useMapLibreContext();
+    const { mapInstance } = useContext(MapLibreContext)!;
     const [selectedMarker, setSelectedMarker] = useState<ParkMarkerPayload | null>(null);
     const [selectedView, setSelectedView] = useState('dashboard');
     const [menuOpen, setMenuOpen] = useState(false);

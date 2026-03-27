@@ -3,11 +3,11 @@ import { MapLibreProvider } from './context/MapLibreContext';
 
 function App() {
     return (
-        <div className='flex h-full min-h-[100dvh] w-full flex-col'>
-            <MapLibreProvider>
+        <MapLibreProvider>
+            <div className='flex h-full min-h-[100dvh] w-full flex-col'>
                 <Dashboard />
-            </MapLibreProvider>
-        </div>
+            </div>
+        </MapLibreProvider>
     );
 }
 

@@ -11,12 +11,12 @@ interface NavLinkData {
     icon: ReactNode;
 }
 
-interface NavigationMenuProps {
+interface MobileNavigationMenuProps {
     isOpen: boolean;
     linkData: NavLinkData[];
 }
 
-const NavigationMenu = ({ isOpen, linkData }: NavigationMenuProps) => {
+const MobileNavigationMenu = ({ isOpen, linkData }: MobileNavigationMenuProps) => {
     const [visible, setVisible] = useState(false);
     const [mounted, setMounted] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,4 +68,4 @@ const NavigationMenu = ({ isOpen, linkData }: NavigationMenuProps) => {
     );
 };
 
-export { NavigationMenu, type NavLinkData };
+export { MobileNavigationMenu, type NavLinkData };

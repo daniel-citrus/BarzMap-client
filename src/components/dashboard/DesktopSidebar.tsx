@@ -29,7 +29,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
 
     return (
         <aside
-            className={`absolute left-0 top-0 z-20 hidden h-full flex-col border-r border-slate-200 bg-white shadow-sm transition-[width] duration-200 lg:flex ${isExpanded ? 'w-56' : 'w-16'}`}
+            className={`pointer-events-auto absolute left-0 top-0 z-20 hidden h-full flex-col border-r border-slate-200 bg-white shadow-sm transition-[width] duration-200 lg:flex ${isExpanded ? 'w-56' : 'w-16'}`}
         >
             <div className={`flex flex-1 flex-col gap-1 overflow-hidden p-4 ${!isExpanded ? 'items-center' : ''}`}>
                 <div className={`mb-3 flex flex-col items-center gap-2 px-0 ${isExpanded ? 'px-3' : ''}`}>

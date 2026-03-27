@@ -9,7 +9,7 @@ import EventsBoard from '../events/EventsBoard';
 import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
 import DetailedPopup from './markers/DetailedPopup';
 import MobileMenuButton from './MobileMenuButton';
-import { NavigationMenu, type NavLinkData } from './NavigationMenu';
+import { MobileNavigationMenu, type NavLinkData } from './NavigationMenu';
 import DesktopSidebar from './DesktopSidebar';
 import LoginWindow from '../authentication/Login';
 import type { ParkMarkerPayload } from '../../types/mapLibre';
@@ -97,15 +97,13 @@ const Dashboard = () => {
 
     return (
         <div className='relative flex h-full w-full overflow-hidden bg-slate-100 pb-[env(safe-area-inset-bottom)]'>
-            {/* Main content area - full width */}
             <div className='relative flex flex-1 flex-col overflow-hidden'>
-                {/* Map container - always mounted */}
                 <div className='absolute inset-0 z-0 h-full w-full'>
                     <div className='relative h-full w-full overflow-hidden bg-slate-100'>
                         <div className='h-full w-full'>
                             <MapLibreMap />
                         </div>
-                        {/* Overlay: SearchInput, NavigationMenu, MobileMenuButton */}
+                        {/* Overlay: SearchInput, MobileNavigationMenu, MobileMenuButton */}
                         <div className='pointer-events-none absolute inset-0 z-30'>
                             <div
                                 className={`flex items-center justify-center gap-3 transition-[left] duration-200 left-3 right-3 sm:left-6 sm:right-6 sm:top-6 lg:right-6 top-3 absolute ${sidebarExpanded ? 'lg:left-56' : 'lg:left-16'
@@ -118,15 +116,25 @@ const Dashboard = () => {
                                 />
                             </div>
                             <div className='pointer-events-auto absolute bottom-6 left-4 flex flex-col items-start gap-3 sm:bottom-8 sm:left-6 lg:hidden'>
-                                <NavigationMenu
+                                <MobileNavigationMenu
                                     isOpen={menuOpen}
-                                    linkData={navLinks.filter((l) => l.id !== 'dashboard')}
+                                    linkData={
+                                        navLinks.filter((link) => link.id !== 'dashboard')
+                                    }
                                 />
                                 <MobileMenuButton
                                     menuOpen={menuOpen}
                                     toggleMenu={() => setMenuOpen((prev) => !prev)}
                                 />
                             </div>
+                            {/* Desktop sidebar - overlays map on lg and up */}
+                            <DesktopSidebar
+                                linkData={navLinks}
+                                selectedView={selectedView}
+                                onNavigate={onNavSelect}
+                                expanded={sidebarExpanded}
+                                onExpandedChange={setSidebarExpanded}
+                            />
                         </div>
                     </div>
                 </div>
@@ -149,16 +157,6 @@ const Dashboard = () => {
                     <LoginWindow onClose={() => setSelectedView('dashboard')} />
                 )}
             </div>
-
-            {/* Desktop sidebar - overlays map on lg and up */}
-            <DesktopSidebar
-                linkData={navLinks}
-                selectedView={selectedView}
-                onNavigate={onNavSelect}
-                expanded={sidebarExpanded}
-                onExpandedChange={setSidebarExpanded}
-            />
-
             {/* Detailed Popup */}
             {selectedMarker && (
                 <DetailedPopup

@@ -11,7 +11,6 @@ import DetailedPopup from './markers/DetailedPopup';
 import MobileMenuButton from './MobileMenuButton';
 import { MobileNavigationMenu, type NavLinkData } from './NavigationMenu';
 import DesktopSidebar from './DesktopSidebar';
-import LoginWindow from '../authentication/Login';
 import type { ParkMarkerPayload } from '../../types/mapLibre';
 
 const Dashboard = () => {
@@ -152,9 +151,6 @@ const Dashboard = () => {
                 )}
                 {selectedView === 'submissionDashboard' && (
                     <ParkSubmissionDashboard onClose={() => setSelectedView('dashboard')} />
-                )}
-                {selectedView === 'Login' && (
-                    <LoginWindow onClose={() => setSelectedView('dashboard')} />
                 )}
             </div>
             {/* Detailed Popup */}

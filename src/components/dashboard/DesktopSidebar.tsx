@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { NavLinkData } from './NavigationMenu';
+import LoginButton from '../authentication/Login';
 
 interface DesktopSidebarProps {
     linkData: NavLinkData[];
@@ -18,7 +19,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
 
     const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>, title: string) => {
         if (isExpanded) return;
-
+        // Position tooltip on mouse hover
         const rect = e.currentTarget.getBoundingClientRect();
         setHoveredTooltip({ title, top: rect.top + rect.height / 2, left: rect.right });
     }, [isExpanded]);
@@ -70,6 +71,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
                         </div>
                     );
                 })}
+                <LoginButton />
             </div>
             <button
                 type='button'

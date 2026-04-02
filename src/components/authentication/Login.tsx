@@ -1,15 +1,11 @@
-import PopupWrapper from '../dashboard/PopupWrapper';
+import { useAuth0 } from '@auth0/auth0-react';
 
-interface LoginWindowProps {
-    onClose: () => void;
-}
+const LoginButton = () => {
+    const { loginWithRedirect: login } = useAuth0();
 
-const LoginWindow = ({ onClose }: LoginWindowProps) => {
-    return (
-        <PopupWrapper onClose={onClose}>
-            <div />
-        </PopupWrapper>
-    );
+    return <button onClick={() =>
+        login({ authorizationParams: { screen_hint: "signup" } })
+    }>Log In</button>;
 };
 
-export default LoginWindow;
+export default LoginButton;

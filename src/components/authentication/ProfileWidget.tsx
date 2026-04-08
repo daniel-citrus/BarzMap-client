@@ -21,11 +21,7 @@ const ProfileWidget = ({ sidebarExpanded = true, mobileNav = false }: ProfileWid
     }
 
     if (mobileNav && !isAuthenticated) {
-        return (
-            <div className={`${mobileNavShellBase} flex flex-col gap-1`}>
-                <LoginButton variant='full' />
-            </div>
-        );
+        return <LoginButton variant='mobileNav' />;
     }
 
     if (mobileNav && isAuthenticated) {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import ProfileWidget from '../authentication/ProfileWidget';
 
 const STAGGER_MS = 50;
 const DURATION_MS = 300;
@@ -64,6 +65,9 @@ const MobileNavigationMenu = ({ isOpen, linkData }: MobileNavigationMenuProps) =
                     </li>
                 );
             })}
+            <li>
+                <ProfileWidget mobileNav />
+            </li>
         </ul>
     );
 };

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { NavLinkData } from './NavigationMenu';
-import LoginButton from '../authentication/Login';
+import ProfileWidget from '../authentication/ProfileWidget';
 
 interface DesktopSidebarProps {
     linkData: NavLinkData[];
@@ -37,7 +37,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
                     <img
                         src='/BarzMap Logo.png'
                         alt='BarzMap'
-                        className='h-20 w-20  shrink-0 rounded-lg object-contain'
+                        className={`h-20 w-20 shrink-0 object-contain ${isExpanded ? 'rounded-lg' : 'rounded-full'}`}
                     />
                     <span className={`text-base font-semibold tracking-tight text-slate-800 ${isExpanded ? '' : 'hidden'}`}>
                         BarzMap
@@ -71,7 +71,7 @@ const DesktopSidebar = ({ linkData, selectedView, onNavigate, expanded = true, o
                         </div>
                     );
                 })}
-                <LoginButton />
+                <ProfileWidget sidebarExpanded={isExpanded} />
             </div>
             <button
                 type='button'

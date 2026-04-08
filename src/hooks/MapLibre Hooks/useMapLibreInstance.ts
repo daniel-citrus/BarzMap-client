@@ -29,7 +29,7 @@ const useMapLibreInstance = (): MapLibreInstanceValue => {
         });
 
         instance.addControl(new AttributionControl({ compact: true }));
-        instance.addControl(new maplibregl.NavigationControl({ showZoom: false }), 'bottom-right');
+        instance.addControl(new maplibregl.NavigationControl({ showZoom: true }), 'bottom-right');
         instance.addControl(geolocateControl, 'bottom-right');
 
         instance.on('load', () => {

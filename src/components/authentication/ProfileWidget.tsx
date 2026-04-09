@@ -2,14 +2,14 @@ import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 
-/** Matches MobileMenuButton surface (mobile map chrome). */
+/** Same height and horizontal padding as mobile nav row buttons (NavigationMenu). */
 const mobileNavShellBase =
-    'pointer-events-auto w-full rounded-full bg-white px-3 py-2 text-gray-800 shadow-lg shadow-slate-900/15 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-900 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-600/40 focus-within:ring-offset-2 min-h-12 sm:min-h-[3.25rem] sm:px-3.5 md:min-h-14';
+    'pointer-events-auto flex h-12 w-full flex-row items-center gap-2 rounded-full bg-white pl-3 pr-4 text-gray-800 shadow-lg shadow-slate-900/15 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-900 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-600/40 focus-within:ring-offset-2 sm:h-13 sm:pl-3.5 sm:pr-5 md:h-14';
 
 interface ProfileWidgetProps {
-    /** When false (collapsed desktop sidebar), show profile image and icon-only log out (no name row). */
+    // When false (collapsed desktop sidebar), show profile image and icon-only log out (no name row).
     sidebarExpanded?: boolean;
-    /** Mobile flyout menu: use same floating control styling as MobileMenuButton. */
+    // Mobile flyout menu: use same floating control styling as MobileMenuButton.
     mobileNav?: boolean;
 }
 
@@ -26,10 +26,10 @@ const ProfileWidget = ({ sidebarExpanded = true, mobileNav = false }: ProfileWid
 
     if (mobileNav && isAuthenticated) {
         return (
-            <div className={`${mobileNavShellBase} flex flex-row items-center gap-2`}>
-                <div className='flex min-w-0 flex-1 items-center gap-3 py-0.5 pl-0.5'>
+            <div className={mobileNavShellBase}>
+                <div className='flex min-w-0 flex-1 items-center gap-2.5 pl-0.5'>
                     {user?.picture ? (
-                        <div className='h-9 w-9 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-2 ring-white shadow-sm ring-offset-1 ring-offset-white'>
+                        <div className='h-8 w-8 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-white shadow-sm ring-offset-1 ring-offset-white'>
                             <img
                                 src={user.picture}
                                 alt=''
@@ -38,7 +38,7 @@ const ProfileWidget = ({ sidebarExpanded = true, mobileNav = false }: ProfileWid
                         </div>
                     ) : (
                         <div
-                            className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-600'
+                            className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-600'
                             aria-hidden
                         >
                             {(user?.name ?? user?.email ?? '?').slice(0, 1).toUpperCase()}
@@ -49,7 +49,7 @@ const ProfileWidget = ({ sidebarExpanded = true, mobileNav = false }: ProfileWid
                     </span>
                 </div>
                 <div
-                    className='h-8 w-px shrink-0 self-center bg-slate-200'
+                    className='h-6 w-px shrink-0 bg-slate-200'
                     aria-hidden
                 />
                 <div className='flex shrink-0 items-center justify-end'>

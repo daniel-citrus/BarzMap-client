@@ -28,6 +28,7 @@ const LoginButton = ({ variant = 'full' }: LoginButtonProps) => {
     const onClick = () =>
         login({ authorizationParams: { screen_hint: 'signup' } });
 
+    // Mobile UI
     if (variant === 'mobileNav') {
         return (
             <button
@@ -43,7 +44,7 @@ const LoginButton = ({ variant = 'full' }: LoginButtonProps) => {
             </button>
         );
     }
-
+    // Collapsed Desktop
     if (variant === 'icon') {
         return (
             <button
@@ -59,6 +60,7 @@ const LoginButton = ({ variant = 'full' }: LoginButtonProps) => {
         );
     }
 
+    // Uncollapsed Desktop
     return (
         <button
             type='button'

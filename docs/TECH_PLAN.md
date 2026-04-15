@@ -50,6 +50,7 @@ Deliver a mobile-first responsive web client that helps visitors discover outdoo
 
 ## P2
 - [x] Integrate Auth0 provider with login/logout buttons and profile display.
+- [ ] Create user profile page for user settings
 - [ ] Gate the park submission flow behind authentication
 - [ ] Implement WebSocket for real time submission updates
 - [ ] New events board submissions

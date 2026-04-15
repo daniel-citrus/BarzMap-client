@@ -2,17 +2,26 @@ import type { ReactNode } from 'react';
 
 interface PopupWrapperProps {
     onClose: () => void;
+    fullHeight?: boolean;
     children: ReactNode;
 }
 
-const PopupWrapper = ({ onClose, children }: PopupWrapperProps) => {
+const panelBaseClass =
+    'relative m-4 flex w-[calc(100%-2rem)] max-w-2xl flex-col overflow-y-auto rounded-2xl bg-slate-100 shadow-xl sm:m-6 sm:w-[calc(100%-3rem)]';
+
+const PopupWrapper = ({ onClose, fullHeight = true, children }: PopupWrapperProps) => {
+
+    const panelClass = fullHeight
+        ? `${panelBaseClass} min-h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] sm:min-h-[calc(100vh-3rem)] sm:max-h-[calc(100vh-3rem)]`
+        : `${panelBaseClass} h-fit max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)]`;
+
     return (
         <div className='relative z-10 flex h-full w-full items-start justify-center'>
             <div
                 className='absolute inset-0 bg-black/30 backdrop-blur-xs'
                 onClick={onClose}
             />
-            <div className='relative m-4 flex min-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-2xl max-h-[calc(100vh-2rem)] flex-col overflow-y-auto rounded-2xl bg-slate-100 shadow-xl sm:m-6 sm:min-h-[calc(100vh-3rem)] sm:w-[calc(100%-3rem)] sm:max-h-[calc(100vh-3rem)]'>
+            <div className={panelClass}>
                 <button
                     type='button'
                     onClick={onClose}

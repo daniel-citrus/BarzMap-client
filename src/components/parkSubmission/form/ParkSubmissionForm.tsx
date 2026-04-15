@@ -5,6 +5,8 @@ import EquipmentSelector from '../ui/EquipmentSelector';
 import useParkSubmissionActions from '../../../hooks/useParkSubmissionActions';
 import PopupWrapper from '../../dashboard/PopupWrapper';
 import type { SelectedImage } from '../../../types/parkSubmission';
+import { useAuth0 } from '@auth0/auth0-react';
+import BecomeaSpotter from './BecomeaSpotter';
 
 interface ParkSubmissionFormProps {
     onClose: () => void;
@@ -15,6 +17,7 @@ const ParkSubmissionForm = ({ onClose }: ParkSubmissionFormProps) => {
     const [selectedEquipment, setSelectedEquipment] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { submitPark } = useParkSubmissionActions();
+    const { isAuthenticated } = useAuth0();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -44,6 +47,14 @@ const ParkSubmissionForm = ({ onClose }: ParkSubmissionFormProps) => {
             setIsSubmitting(false);
         }
     };
+
+    if (!isAuthenticated) {
+        return (
+            <PopupWrapper fullHeight={false} onClose={onClose}>
+                <BecomeaSpotter />
+            </PopupWrapper>
+        );
+    }
 
     return (
         <PopupWrapper onClose={onClose}>

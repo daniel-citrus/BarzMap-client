@@ -1,17 +1,21 @@
+import DesktopSidebar from './DesktopSidebar';
+import DetailedPopup from './markers/DetailedPopup';
+import EventsBoard from '../events/EventsBoard';
 import MapLibreMap from './MapLibreMap';
+import MobileMenuButton from './MobileMenuButton';
+import MobileNavigationMenu from './NavigationMenu';
+import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
+import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import SearchInput from './SearchInput';
+
+import { MapLibreContext } from '../../context/MapLibreContext';
+
+import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
 import useClientAddress from '../../hooks/useClientAddress';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { MapLibreContext } from '../../context/MapLibreContext';
-import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
-import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
-import EventsBoard from '../events/EventsBoard';
-import ParkSubmissionDashboard from '../parkSubmission/dashboard/ParkSubmissionDashboard';
-import DetailedPopup from './markers/DetailedPopup';
-import MobileMenuButton from './MobileMenuButton';
-import { MobileNavigationMenu, type NavLinkData } from './NavigationMenu';
-import DesktopSidebar from './DesktopSidebar';
+
 import type { ParkMarkerPayload } from '../../types/mapLibre';
+import type { NavLinkData } from './NavigationMenu';
 
 const Dashboard = () => {
     const { address, setAddress, coordinates } = useClientAddress();

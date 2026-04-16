@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { resolveAddress, getCoordinates } from '../lib/geocoding';
 import type { Coordinates } from '../lib/geocoding';
 
-/** Resolves client address and coordinates via MapTiler geocoding, with localStorage caching. */
+/** Resolves client address and coordinates via MapTiler geocoding. */
 const useClientAddress = () => {
     const [address, setAddress] = useState('');
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
@@ -11,7 +11,7 @@ const useClientAddress = () => {
     useEffect(() => {
         let isCancelled = false;
 
-        const initialPageLoad = async () => {
+        const getAddress = async () => {
             if (!address || address.trim() === '') {
                 try {
                     const newAddress = await resolveAddress();
@@ -44,7 +44,8 @@ const useClientAddress = () => {
         };
 
         if (!address || address.trim() === '') {
-            initialPageLoad();
+            // Get address on initial page load
+            getAddress();
         }
 
         if (address && address.trim() !== '' && address !== previousAddressRef.current) {

@@ -78,4 +78,5 @@ const MobileNavigationMenu = ({ isOpen, linkData }: MobileNavigationMenuProps) =
     );
 };
 
-export { MobileNavigationMenu, type NavLinkData };
+export default MobileNavigationMenu;
+export type { NavLinkData };

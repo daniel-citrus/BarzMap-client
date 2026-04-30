@@ -4,4 +4,5 @@ export interface AuthenticatedUserDetails {
     lastName?: string;
     profile_picture_url?: string;
     email?: string;
+
 }

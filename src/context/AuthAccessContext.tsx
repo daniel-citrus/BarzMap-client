@@ -12,6 +12,7 @@ const AuthAccessProvider = ({ children }: { children: ReactNode }) => {
     )
 
     useEffect(() => {
+
     }, [barzUser])
 
     return <AuthAccessContext.Provider value={value}>
@@ -19,4 +20,5 @@ const AuthAccessProvider = ({ children }: { children: ReactNode }) => {
     </AuthAccessContext.Provider>
 }
 
+export { AuthAccessContext };
 export default AuthAccessProvider;

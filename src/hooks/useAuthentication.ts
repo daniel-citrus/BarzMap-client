@@ -24,8 +24,10 @@ const useAuthentication = () => {
     // User login sequence
     useEffect(() => {
         async function processUser() {
+            if (!userToken) { return }
+
             const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-            const url = new URL(`${baseUrl}/api/events/`);
+            const url = new URL(`${baseUrl}/api/users/${user?.user_id}`);
             const payload = {
                 userToken,
                 auth0Id: user?.user_id,
@@ -36,7 +38,6 @@ const useAuthentication = () => {
             }
 
             try {
-                console.log('helloo')
                 const response = await fetch(url.toString(), {
                     method: 'POST',
                     headers: {

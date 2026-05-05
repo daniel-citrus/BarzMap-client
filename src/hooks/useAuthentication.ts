@@ -30,7 +30,7 @@ const useAuthentication = () => {
             const url = new URL(`${baseUrl}/api/users/${user?.user_id}`);
             const payload = {
                 userToken,
-                auth0Id: user?.user_id,
+                auth0Id: user?.sub,
                 firstName: user?.given_name,
                 lastName: user?.family_name,
                 profile_picture_url: user?.picture,

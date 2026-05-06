@@ -19,7 +19,7 @@ const useAuthentication = () => {
         }
 
         fetchData();
-    }, [user, getAccessTokenSilently]);
+    }, [user]);
 
     // User login sequence
     useEffect(() => {

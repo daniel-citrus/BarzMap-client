@@ -26,7 +26,13 @@ const LoginButton = ({ variant = 'full' }: LoginButtonProps) => {
     const { loginWithRedirect: login } = useAuth0();
 
     const onClick = () =>
-        login({ authorizationParams: { screen_hint: 'signup' } });
+        login({
+            authorizationParams: {
+                screen_hint: 'signup',
+                audience: import.meta.env.VITE_AUTH0_API_AUDIENCE,
+                scope: 'openid profile email offline_access',
+            },
+        });
 
     // Mobile UI
     if (variant === 'mobileNav') {

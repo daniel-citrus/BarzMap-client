@@ -9,7 +9,6 @@ import ParkSubmissionForm from '../parkSubmission/form/ParkSubmissionForm';
 import SearchInput from './SearchInput';
 
 import { MapLibreContext } from '../../context/MapLibreContext';
-/* import { AuthAccessContext } from '../../context/AuthAccessContext'; */
 
 import useMapMarkers from '../../hooks/MapLibre Hooks/useMapMarkers';
 import useClientAddress from '../../hooks/useClientAddress';

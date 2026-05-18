@@ -19,7 +19,7 @@ const useAuthentication = () => {
         }
 
         fetchData();
-    }, [user]);
+    }, [user, getAccessTokenSilently]);
 
     // User login sequence
     useEffect(() => {
@@ -27,7 +27,7 @@ const useAuthentication = () => {
             if (!userToken) { return }
 
             const baseUrl = import.meta.env.VITE_BACKEND_API || 'http://127.0.0.1:8000';
-            const url = new URL(`${baseUrl}/api/users/${user?.user_id}`);
+            const url = new URL(`${baseUrl}/api/users/${user?.sub}`);
             const payload = {
                 userToken,
                 auth0Id: user?.sub,
@@ -49,7 +49,7 @@ const useAuthentication = () => {
 
                 const barzUserResponse = await response.json();
                 setBarzUser(barzUserResponse)
-
+                console.log(barzUserResponse)
             } catch (e) {
                 console.error('Login sequence failed:', e);
             }
